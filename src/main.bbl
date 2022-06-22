@@ -1,0 +1,10 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{BGI{\etalchar{+}}18}
+
+\bibitem[BGI{\etalchar{+}}18]{band_pressure_2018}
+Stefan Band, Christoph Gissler, Markus Ihmsen, Jens Cornelis, Andreas Peer, and
+  Matthias Teschner.
+\newblock Pressure {Boundaries} for {Implicit} {Incompressible} {SPH}.
+\newblock {\em ACM Transactions on Graphics}, 37(2):1--11, April 2018.
+
+\end{thebibliography}
