@@ -1,10 +1,16 @@
-\newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{BGI{\etalchar{+}}18}
+\begin{thebibliography}{GM77}
 
-\bibitem[BGI{\etalchar{+}}18]{band_pressure_2018}
-Stefan Band, Christoph Gissler, Markus Ihmsen, Jens Cornelis, Andreas Peer, and
-  Matthias Teschner.
-\newblock Pressure {Boundaries} for {Implicit} {Incompressible} {SPH}.
-\newblock {\em ACM Transactions on Graphics}, 37(2):1--11, April 2018.
+\bibitem[GM77]{gingold_smoothed_1977}
+Robert~A. Gingold and Joseph~J. Monaghan.
+\newblock Smoothed particle hydrodynamics: theory and application to
+  non-spherical stars.
+\newblock {\em Monthly notices of the royal astronomical society},
+  181(3):375--389, 1977.
+\newblock ISBN: 1365-2966 Publisher: Oxford University Press Oxford, UK.
+
+\bibitem[Luc77]{lucy_numerical_1977}
+L.~B. Lucy.
+\newblock A numerical approach to the testing of the fission hypothesis.
+\newblock {\em The Astronomical Journal}, 82:1013, December 1977.
 
 \end{thebibliography}
