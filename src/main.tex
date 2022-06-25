@@ -6,7 +6,7 @@
 \usepackage{graphicx}
 \usepackage[section]{placeins}
 
-\title{Bachelorarbeit}
+\title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH- Flüssigkeitssimulationen}
 \author{Pascal Hunkler}
 \date{May 2022}
 
@@ -31,6 +31,32 @@ wurde ursprünglich entwickelt, um astrophysikalische Phänomene
 besser darstellen zu können.
 \cite{gingold_smoothed_1977}, \cite{lucy_numerical_1977}.
 \subsection{Diskretisierung mit SPH}
+Die Inhalte dieses Abschnittes basieren auf den Arbeiten
+von Monaghan \cite{monaghan_smoothed_2005}, von Price \cite{price_smoothed_2012} und von Koshier et al. \cite{koschier_smoothed_2020}.
+Für eine beliebige skalare Variable A gilt die Identität
+\begin{equation}
+    \label{equation:dirac_integral}
+    A(\textbf{x}) = \int A(\textbf{x}') \delta(\textbf{x} - \textbf{x}') d\textbf{x}'
+\end{equation}
+$\delta$ ist hierbei die Dirac'sche Deltafunktion die definiert ist als
+\begin{equation}
+    \delta(x) = \begin{cases}
+        \infty, &\text{falls } x = 0\\
+        0, &\text{sonst}
+    \end{cases}
+\end{equation}
+Die Dirac'sche Deltafunktion in Gleichung \ref{equation:dirac_integral} kann mithilfe einer glättenden Kernelfunktion $W$ mit endlicher Breite $h$ approximiert werden.
+\begin{equation}
+    A(\textbf{x}) = \int A(\textbf{x}') W(\textbf{x} - \textbf{x'}, h) d\textbf{x}' + O(h^2)
+\end{equation}
+$W$ hat dabei die Eigenschaft
+\begin{equation}
+    \lim_{h \to 0} W(\textbf{x} - \textbf{x'}, h) = \delta(\textbf{x} - \textbf{x'})
+\end{equation}
+und
+\begin{equation}
+    \int
+\end{equation}
 \subsection{SPH in partikelbasierten Simulationen}
 % \section{Nachbarschaftssuche}
 % \subsection{Uniformes Gitter}

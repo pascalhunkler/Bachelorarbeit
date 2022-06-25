@@ -10,6 +10,9 @@
 \@writefile{loa}{\addvspace {10\p@ }}
 \citation{gingold_smoothed_1977}
 \citation{lucy_numerical_1977}
+\citation{monaghan_smoothed_2005}
+\citation{price_smoothed_2012}
+\citation{koschier_smoothed_2020}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}Grundlagen}{6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -19,58 +22,62 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Gitterbasierte Simulation}{6}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}SPH}{6}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Diskretisierung mit SPH}{6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}SPH in partikelbasierten Simulationen}{6}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Druckberechnung}{7}\protected@file@percent }
+\newlabel{equation:dirac_integral}{{3.1}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}SPH in partikelbasierten Simulationen}{7}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Druckberechnung}{8}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Druckberechnung mit einer Zustandsgleichung}{7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Druckberechnung mit IISPH}{7}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Implementierung}{8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Druckberechnung mit einer Zustandsgleichung}{8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Druckberechnung mit IISPH}{8}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Implementierung}{9}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Programmierumgebung}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}Architektur der Software}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Kernelfunktion, Kernelgradient}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.4}Nachbarschaftssuche}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Uniformes Gitter Aufbau}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Bestimmung der Nachbarn mithilfe des uniformen Gitters}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.5}Simulationsschritt}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Berechnung der Dichte}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}Berechnung des Drucks}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.3}Berechnung der Druckbeschleunigung}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.4}Berechnung der restlichen Beschleunigungen}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.6}Visualisierung}{8}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Analyse}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Programmierumgebung}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Architektur der Software}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Kernelfunktion, Kernelgradient}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Nachbarschaftssuche}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Uniformes Gitter Aufbau}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Bestimmung der Nachbarn mithilfe des uniformen Gitters}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}Simulationsschritt}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Berechnung der Dichte}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}Berechnung des Drucks}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.3}Berechnung der Druckbeschleunigung}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.4}Berechnung der restlichen Beschleunigungen}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.6}Visualisierung}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Analyse}{10}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Szenarien}{9}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Rechen- und Speicheraufwand}{9}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}Einfluss des Zeitschritts}{9}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Szenarien}{10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Rechen- und Speicheraufwand}{10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Einfluss des Zeitschritts}{10}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{11}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
 \bibstyle{alpha}
 \bibdata{literaturverzeichnis}
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}Literaturverzeichnis}{11}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}Literaturverzeichnis}{12}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
 \bibcite{gingold_smoothed_1977}{GM77}
+\bibcite{koschier_smoothed_2020}{KBST20}
 \bibcite{lucy_numerical_1977}{Luc77}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Simulationsschritt}}{12}\protected@file@percent }
-\newlabel{alg:simulationsschritt}{{1}{12}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Berechnung der Dichte der Partikel}}{13}\protected@file@percent }
-\newlabel{alg:dichte}{{2}{13}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Berechnung der restlichen Beschleunigungen}}{13}\protected@file@percent }
-\newlabel{alg:restliche_beschleunigung}{{3}{13}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Berechnung der Druckbeschleunigungen}}{14}\protected@file@percent }
-\newlabel{alg:druckbeschleunigung}{{4}{14}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces Berechnung des Drucks der Partikel}}{15}\protected@file@percent }
-\newlabel{alg:druck}{{5}{15}}
+\bibcite{monaghan_smoothed_2005}{Mon05}
+\bibcite{price_smoothed_2012}{Pri12}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Simulationsschritt}}{13}\protected@file@percent }
+\newlabel{alg:simulationsschritt}{{1}{13}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Berechnung der Dichte der Partikel}}{14}\protected@file@percent }
+\newlabel{alg:dichte}{{2}{14}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Berechnung der restlichen Beschleunigungen}}{14}\protected@file@percent }
+\newlabel{alg:restliche_beschleunigung}{{3}{14}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Berechnung der Druckbeschleunigungen}}{15}\protected@file@percent }
+\newlabel{alg:druckbeschleunigung}{{4}{15}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces Berechnung des Drucks der Partikel}}{16}\protected@file@percent }
+\newlabel{alg:druck}{{5}{16}}
 \global\@namedef{scr@dte@chapter@lastmaxnumwidth}{10.84047pt}
 \global\@namedef{scr@dte@section@lastmaxnumwidth}{18.37163pt}
 \global\@namedef{scr@dte@subsection@lastmaxnumwidth}{26.8883pt}

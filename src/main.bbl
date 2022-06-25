@@ -1,4 +1,4 @@
-\begin{thebibliography}{GM77}
+\begin{thebibliography}{KBST20}
 
 \bibitem[GM77]{gingold_smoothed_1977}
 Robert~A. Gingold and Joseph~J. Monaghan.
@@ -8,9 +8,27 @@ Robert~A. Gingold and Joseph~J. Monaghan.
   181(3):375--389, 1977.
 \newblock ISBN: 1365-2966 Publisher: Oxford University Press Oxford, UK.
 
+\bibitem[KBST20]{koschier_smoothed_2020}
+Dan Koschier, Jan Bender, Barbara Solenthaler, and Matthias Teschner.
+\newblock Smoothed particle hydrodynamics techniques for the physics based
+  simulation of fluids and solids.
+\newblock {\em arXiv preprint arXiv:2009.06944}, 2020.
+
 \bibitem[Luc77]{lucy_numerical_1977}
 L.~B. Lucy.
 \newblock A numerical approach to the testing of the fission hypothesis.
 \newblock {\em The Astronomical Journal}, 82:1013, December 1977.
+
+\bibitem[Mon05]{monaghan_smoothed_2005}
+Joe~J. Monaghan.
+\newblock Smoothed particle hydrodynamics.
+\newblock {\em Reports on progress in physics}, 68(8):1703, 2005.
+\newblock ISBN: 0034-4885 Publisher: IOP Publishing.
+
+\bibitem[Pri12]{price_smoothed_2012}
+Daniel~J. Price.
+\newblock Smoothed particle hydrodynamics and magnetohydrodynamics.
+\newblock {\em Journal of Computational Physics}, 231(3):759--794, February
+  2012.
 
 \end{thebibliography}
