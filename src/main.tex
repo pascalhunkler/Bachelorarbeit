@@ -28,10 +28,10 @@
 \section{SPH}
 Das Konzept \textit{Smoothed Particle Hydrodynamics}
 wurde ursprünglich entwickelt, um astrophysikalische Phänomene
-besser darstellen zu können.
+besser darstellen zu können
 \cite{gingold_smoothed_1977}, \cite{lucy_numerical_1977}.
 \subsection{Diskretisierung mit SPH}
-Die Inhalte dieses Abschnittes basieren auf den Arbeiten
+Die Inhalte dieses Abschnittes basieren hauptsächlich auf den Arbeiten
 von Monaghan \cite{monaghan_smoothed_2005}, von Price \cite{price_smoothed_2012} und von Koshier et al. \cite{koschier_smoothed_2020}.
 Für eine beliebige skalare Variable A gilt die Identität
 \begin{equation}
@@ -47,16 +47,21 @@ $\delta$ ist hierbei die Dirac'sche Deltafunktion die definiert ist als
 \end{equation}
 Die Dirac'sche Deltafunktion in Gleichung \ref{equation:dirac_integral} kann mithilfe einer glättenden Kernelfunktion $W$ mit endlicher Breite $h$ approximiert werden.
 \begin{equation}
+    \label{equation:approximation_by_kernel}
     A(\textbf{x}) = \int A(\textbf{x}') W(\textbf{x} - \textbf{x'}, h) d\textbf{x}' + O(h^2)
 \end{equation}
-$W$ hat dabei die Eigenschaft
-\begin{equation}
-    \lim_{h \to 0} W(\textbf{x} - \textbf{x'}, h) = \delta(\textbf{x} - \textbf{x'})
-\end{equation}
-und
-\begin{equation}
-    \int
-\end{equation}
+Damit die Approximation aus Gleichung \ref{equation:approximation_by_kernel} gültig ist, muss $W$ folgende Eigenschaften besitzen:
+\begin{align}
+    \int_{\mathbb{R}^d} W(\textbf{r}', h)dv' = 1\\
+    \lim_{h \to 0} W(\textbf{r}, h) = \delta(\textbf{r})
+\end{align}
+Weitere wünschenswerte Eigenschaften der Kernelfunktion $W$ sind:
+\begin{align}
+    W(\textbf{r}, h) \geq 0\\
+    W(\textbf{r}, h) = W(-\textbf{r}, h)\\
+    W(\textbf{r}, h) = 0 \text{ für } \| \textbf{r} \| \geq \hbar
+\end{align}
+
 \subsection{SPH in partikelbasierten Simulationen}
 % \section{Nachbarschaftssuche}
 % \subsection{Uniformes Gitter}
