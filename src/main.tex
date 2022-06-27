@@ -5,6 +5,7 @@
 \usepackage{algorithm, algorithmic}
 \usepackage{graphicx}
 \usepackage[section]{placeins}
+\usepackage{textgreek}
 
 \title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH- Flüssigkeitssimulationen}
 \author{Pascal Hunkler}
@@ -26,10 +27,14 @@
 \subsection{Partikelbasierte Simulation}
 \subsection{Gitterbasierte Simulation}
 \section{SPH}
-Das Konzept \textit{Smoothed Particle Hydrodynamics}
-wurde ursprünglich entwickelt, um astrophysikalische Phänomene
-besser darstellen zu können
-\cite{gingold_smoothed_1977}, \cite{lucy_numerical_1977}.
+Das Konzept Smoothed Particle Hydrodynamics (SPH),
+ursprünglich formuliert von Lucy \cite{lucy_numerical_1977} und unabhängig davon von Monaghan und Gingold \cite{gingold_smoothed_1977},
+entstand ursprünglich aus dem Bereich der Astrophysik, wird aber heute auch in diversen anderen Bereichen,
+unter anderem auch der Computergrafik angewandt.
+Mithilfe von SPH kann durch Diskretisierung und Berechnung von Größen wie der Druckbeschleunigung oder der Viskositätsbeschleunigung
+die Navier-Stokes-Gleichung gelöst werden.
+Es eignet sich daher gut für partikelbasierte Simulationen.
+
 \subsection{Diskretisierung mit SPH}
 Die Inhalte dieses Abschnittes basieren hauptsächlich auf den Arbeiten
 von Monaghan \cite{monaghan_smoothed_2005}, von Price \cite{price_smoothed_2012} und von Koshier et al. \cite{koschier_smoothed_2020}.
@@ -38,7 +43,7 @@ Für eine beliebige skalare Variable A gilt die Identität
     \label{equation:dirac_integral}
     A(\textbf{x}) = \int A(\textbf{x}') \delta(\textbf{x} - \textbf{x}') d\textbf{x}'
 \end{equation}
-$\delta$ ist hierbei die Dirac'sche Deltafunktion die definiert ist als
+$\delta$ ist hierbei die Dirac'sche Deltafunktion, die definiert ist als
 \begin{equation}
     \delta(x) = \begin{cases}
         \infty, &\text{falls } x = 0\\
@@ -52,15 +57,47 @@ Die Dirac'sche Deltafunktion in Gleichung \ref{equation:dirac_integral} kann mit
 \end{equation}
 Damit die Approximation aus Gleichung \ref{equation:approximation_by_kernel} gültig ist, muss $W$ folgende Eigenschaften besitzen:
 \begin{align}
-    \int_{\mathbb{R}^d} W(\textbf{r}', h)dv' = 1\\
-    \lim_{h \to 0} W(\textbf{r}, h) = \delta(\textbf{r})
+    &\int_{\mathbb{R}^d} W(\textbf{x}', h)dv' = 1 & \text{(Normalisierung)}\\
+    &\lim_{h \to 0} W(\textbf{x}, h) = \delta(\textbf{x}) & \text{(Dirac-\textdelta)}
 \end{align}
 Weitere wünschenswerte Eigenschaften der Kernelfunktion $W$ sind:
 \begin{align}
-    W(\textbf{r}, h) \geq 0\\
-    W(\textbf{r}, h) = W(-\textbf{r}, h)\\
-    W(\textbf{r}, h) = 0 \text{ für } \| \textbf{r} \| \geq \hbar
+    &W(\textbf{x}, h) \geq 0 & \text{(Positivität)}\\
+    &W(\textbf{x}, h) = W(-\textbf{x}, h) & \text{(Symmetrie)}\\
+    &W(\textbf{x}, h) = 0 \text{ für } \| \textbf{x} \| \geq \hbar & \text{(Kompakter Support)}
 \end{align}
+$\forall \textbf{x} \in \mathbb{R}^d, h \in \mathbb{R}^+$, während $\hbar$ der Kernelsupport ist.
+Eine beliebte Kernelfunktion ist der Cubic Spline Kernel \cite{monaghan_smoothed_1992}.
+Er ist definiert als
+\begin{equation}
+    W(\textbf{x}, h) = \sigma_d \begin{cases}
+        (2-q)^3 - 4(1-q)^3, &\text{für } 0 \leq q \leq 1\\
+        (2-q)^3, &\text{für } 1 \leq q \leq 2\\
+        0, &\text{sonst}
+    \end{cases}
+    %    6(q^3 - q^2) + 1, &\text{für } 0 \leq q \leq \frac{1}{2}\\
+    %    2(1 - q)^3, &\text{für } \frac{1}{2} < q \leq 1\\
+    %    0, &\text{sonst}
+    %\end{cases}
+\end{equation}
+mit $q = \frac{1}{h}\|\textbf{x}\|$. Der Kernelnormalisierungsfaktor $\sigma_d$ ist abhängig von der Dimension $d$
+und beträgt für $d = 1,2,3$ $\sigma_1 = \frac{1}{6h}, \sigma_2 = \frac{5}{14\pi h^2}, \sigma_1 = \frac{1}{4\pi h^3}$.
+In der Literatur gibt es verschiedene Formulierungen für den Cubic Spline Kernel, die sich im Wesentlichen in der Parametrisierung unterscheiden.
+Der Vorteil dieser Kernelfunktion ist, dass die Eigenschaften zu Positivität, Symmetrie, und kompakten Support, erfüllt werden.
+Zudem erzielt Cubic Spline trotz seiner Einfachkeit gute Ergebnisse.
+
+Um die Interpolation aus Gleichung \ref{equation:approximation_by_kernel} bei einer Flüssigkeit zu diskretisieren,
+wird die Flüssigkeit in mehrere Partikel unterteilt. Jedes Partikel $f$ besitzt eine Masse $m_f$, Dichte $\rho_f$ und Position $\textbf{x}_f$.
+Der Wert von $A$ an einem Partikel $f$ wird notiert als $A_f$.
+Der Integral aus Gleichung \ref{equation:approximation_by_kernel} kann nun durch eine Summe, und die Masse $\rho dV$ durch die Partikelmasse $m_f$ ersetzt werden.
+\begin{align}
+    A(\textbf{x}) &= \int \frac{A(\textbf{x}')}{\rho(\textbf{x}')} W(\textbf{x} - \textbf{x}', h) \rho(\textbf{x}')d\textbf{x}'\\
+                  &\approx \sum_{f_f} m_{f_f} \frac{A_{f_f}}{\rho_{f_f}} W(\textbf{x}_f - \textbf{x}_{f_f}, h) = A_f
+\end{align}
+$f_f$ sind hierbei alle Partikel der Flüssigkeit.
+Da beispielsweise der Cubic Spline Kernel einen Kernelsupport von $2h$ besitzt, muss hier nur über Partikel $f_f$ summiert werden, die in direkter Nachbarschaft sind,
+da die Kernelfunktion für Partikel, die weiter als $2h$ von dem Partikel $f$ entfernt sind, null ist.
+Daher ist die Eigenschaft, dass der Support der Kernelfunktion kompakt ist, wünschenswert.
 
 \subsection{SPH in partikelbasierten Simulationen}
 % \section{Nachbarschaftssuche}
