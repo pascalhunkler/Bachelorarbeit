@@ -3,9 +3,9 @@
 \contentsline {chapter}{\numberline {3}Grundlagen}{6}%
 \contentsline {section}{\numberline {3.1}Navier-Stokes-Gleichung und Flüssigkeitssimulationen}{6}%
 \contentsline {subsection}{\numberline {3.1.1}Partikelbasierte Simulation}{6}%
-\contentsline {subsection}{\numberline {3.1.2}Gitterbasierte Simulation}{6}%
-\contentsline {section}{\numberline {3.2}SPH}{6}%
-\contentsline {subsection}{\numberline {3.2.1}Diskretisierung mit SPH}{6}%
+\contentsline {subsection}{\numberline {3.1.2}Gitterbasierte Simulation}{7}%
+\contentsline {section}{\numberline {3.2}SPH}{7}%
+\contentsline {subsection}{\numberline {3.2.1}Diskretisierung mit SPH}{7}%
 \contentsline {subsection}{\numberline {3.2.2}SPH in partikelbasierten Simulationen}{8}%
 \contentsline {chapter}{\numberline {4}Druckberechnung}{9}%
 \contentsline {section}{\numberline {4.1}Druckberechnung mit einer Zustandsgleichung}{9}%
