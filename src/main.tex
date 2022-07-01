@@ -30,24 +30,44 @@ Für die Navier-Stokes-Gleichung gibt es verschiedene Formen, die auf den eulers
 Diese Arbeit beschäftigt sich im Wesentlichen auf lagrangesche, partikelbasierte Simulationen,
 der Vollständigkeit wegen wird jedoch auch noch kurz auf eulersche, gitterbasierte Ansätze eingegangen.
 Die Inhalte dieses Abschnitts beziehen sich auf Ihmsen et al. \cite{ihmsen_sph_2014}.
+
 \subsection{Partikelbasierte Simulation}
-In einer partikelbasierten Flüssigkeitssimulation wird die Flüssigkeit in so genannte Partikel unterteilt,
+In einer lagrangeschen, partikelbasierten Flüssigkeitssimulation wird die Flüssigkeit in so genannte Partikel unterteilt,
 die sich mit der Flüssigkeit mitbewegen. Jedes Partikel nimmt ein Teilvolumen der Flüssigkeit ein und besitzt eine Masse.
 In einem partikelbasierten Ansatz kann die Navier-Stokes-Gleichung wie folgt beschrieben werden:
 \begin{equation}
     \frac{d\textbf{v}_i}{dt} = -\frac{1}{\rho_i} \nabla p_i + \nu \nabla^2 \textbf{v}_i + \frac{\textbf{F}_i^{other}}{m_i}
 \end{equation}
-Sie zeigt die verschiedenen Beschleunigungen, die auf ein Partikel $i$ wirken, und damit die Geschwindigkeit des Partikels beeinflussen:
+Sie gibt die Änderungsrate der Geschwindigkeit $\frac{d\textbf{v}_i}{dt}$ eines beweglichen Partikels mit Positionen $\textbf{x}_i$ nach Zeit an,
+welche durch verschiedene Beschleunigungen beeinflusst wird:
 Die Druckbeschleunigung $-\frac{1}{\rho_i} \nabla p_i$,
-die Viskositätsbeschleunigung $\nu \nabla^2 \textbf{v}_i$
+die Viskositätsbeschleunigung $\nu \nabla^2 \textbf{v}_i$, die durch die Viskosität $\nu$ beeinflusst wird,
 und der Einfluss anderer Kräfte $\frac{\textbf{F}_i^{other}}{m_i}$,
 wie beispielsweise die Gravitation.
 Ziel einer partikelbasierten Simulation ist es, die verschiedenen Beschleunigungen zu berechnen,
 um die Geschwindigkeiten und Positionen der Partikel stets anzupassen.
-Eine Methode, um die Beschleunigungen an den Partikeln zu berechnen ist Smoothed Particle Hydrodynamics (SPH),
+Eine Methode, um die Beschleunigungen an den Partikeln zu berechnen, ist Smoothed Particle Hydrodynamics (SPH),
 welches im nächsten Abschnitt vorgestellt wird.
+In partikelbasierten Simulationen muss regelmäßig die Nachbarschaft eines Partikels bestimmt werden,
+da diese frei beweglich sind und sich somit die Nachbarschaft ändert.
+Die Nachbarschaft eines Partikels wird benötigt, um die Beschleunigungen an einem Partikel mit SPH zu bestimmen.
+Im Gegensatz zu gitterbasierten Simulationen, welche im nächsten Unterabschnitt vorgestellt werden,
+muss hier jedoch ein Term aus der Navier-Stokes-Gleichung weniger berechnet werden.
 
 \subsection{Gitterbasierte Simulation}
+In eulerschen, gitterbasierten Simulationen wird im Gegensatz zu partikelbasierten Simulationen mit Gittern statt Partikeln gearbeitet.
+Hier wird die Flüssigkeit nicht in frei bewegliche Partikel unterteilt, sondern in Teilvolumina, die fest an einem Ort sind und meist ein Gitter bilden.
+Die Navier-Stokes-Gleichung hat durch diesen anderen Ansatz folgende Form:
+\begin{equation}
+    \frac{\delta\textbf{v}_i}{\delta t} = -\frac{1}{\rho_i} \nabla p_i + \nu \nabla^2 \textbf{v}_i + \frac{\textbf{F}_i^{other}}{m_i} - \textbf{v}_i \cdot \nabla \textbf{v}_i
+\end{equation}
+Betrachtet wird hier die Änderungsrate der Geschwindigkeit $\frac{\delta\textbf{v}_i}{\delta t}$ an einer festen Position $\textbf{x}_i$.
+Dadurch, dass die Positionen fest sind,
+kommt in der Navier-Stokes-Gleichung neben den Beschleunigungen noch der Term $- \textbf{v}_i \cdot \nabla \textbf{v}_i$ vor,
+welcher die Bewegung der Flüssigkeit ausgleicht.
+Im Gegensatz zu partikelbasierten Simulationen muss hier jedoch direkt erst einmal keine Nachbarschaftssuche stattfinden,
+da die Punkte nicht frei beweglich sind.
+Generell kann jedoch die Performance und Genauigkeit zwischen partikelbasierten und gitterbasierten nicht allgemein verglichen werden.
 
 \section{SPH}
 Das Konzept Smoothed Particle Hydrodynamics (SPH),
