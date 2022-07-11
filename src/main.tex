@@ -131,11 +131,11 @@ Zudem erzielt Cubic Spline trotz seiner Einfachkeit gute Ergebnisse.
 
 Um die Interpolation aus Gleichung \ref{equation:approximation_by_kernel} bei einer Flüssigkeit zu diskretisieren,
 wird die Flüssigkeit in mehrere Partikel unterteilt. Jedes Partikel $f$ besitzt eine Masse $m_f$, Dichte $\rho_f$ und Position $\textbf{x}_f$.
-Der Wert von $A$ an einem Partikel $f$ wird notiert als $A_f$.
+Der Wert von $A$ an einem Partikel $f$ wird notiert als $A_f$, die Approximation davon als $\langle A_f \rangle$.
 Der Integral aus Gleichung \ref{equation:approximation_by_kernel} kann nun durch eine Summe, und die Masse $\rho dV$ durch die Partikelmasse $m_f$ ersetzt werden.
 \begin{align}
-    A(\textbf{x}) &= \int \frac{A(\textbf{x}')}{\rho(\textbf{x}')} W(\textbf{x} - \textbf{x}', h) \rho(\textbf{x}')d\textbf{x}'\\
-                  &\approx \sum_{f_f} m_{f_f} \frac{A_{f_f}}{\rho_{f_f}} W(\textbf{x}_f - \textbf{x}_{f_f}, h) = A_f
+    A(\textbf{x}) &= \int \frac{A(\textbf{x}')}{\rho(\textbf{x}')} W(\textbf{x} - \textbf{x}', h) \rho(\textbf{x}')d\textbf{x}' + O(h^2)\\
+                  &\approx \sum_{f_f} m_{f_f} \frac{A_{f_f}}{\rho_{f_f}} W(\textbf{x}_f - \textbf{x}_{f_f}, h) =: \langle A_f \rangle
 \end{align}
 $f_f$ sind hierbei alle Partikel der Flüssigkeit.
 $W(\textbf{x}_f - \textbf{x}_{f_f}, h)$ wird ab nun durch $W_{ff_f}$ abgekürzt.
@@ -148,6 +148,15 @@ Der Gradient einer Variable $A$ kann durch folgende Approximation bestimmt werde
 \begin{equation}
     \nabla A_f \approx \sum_{f_f} A_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \nabla W_{ff_f}
 \end{equation}
+Diese Approximation hat eine Genauigkeit 0-ter Ordnung, wenn folgende Bedingung erfüllt wird:
+\begin{equation}
+    \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \nabla W_{ff_f} = \textbf{0}
+\end{equation}
+Wird zusätzlich die Bedingung
+\begin{equation}
+    \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} (\textbf{x}_{f_f} - \textbf{x}_f) \otimes \nabla W_{ff_f} = \mathbb{1}
+\end{equation}
+erfüllt, hat sie eine Genauigkeit erster Ordnung.
 Ist $\textbf{A}$ höherdimensional, so können komplexere Differentialoperatoren wie folgt diskretisiert werden:
 \begin{align}
     \nabla \textbf{A}_f &\approx \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \textbf{A}_{f_f} \otimes \nabla W_{ff_f}\\
@@ -155,8 +164,58 @@ Ist $\textbf{A}$ höherdimensional, so können komplexere Differentialoperatoren
     \nabla \times \textbf{A}_f &\approx -\sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \textbf{A}_{f_f} \times \nabla W_{ff_f}
 \end{align}
 wobei $a \otimes b = ab^T$ das dyadische Produkt ist.
+Leider führen diese "`direkten"' Ableitungen zu einer schlechten Approximationsqualität und instabilen Simulationen.
+Daher gibt es mittlerweile viele alternative Formulierungen für diese Differentialoperatoren.
+Zwei davon werden im nächsten Unterabschnitt gezeigt.
+%Die Taylorentwicklung von $\langle \nabla A_f \rangle$ um die Entwicklungsstelle an den Partikeln $f_f$ zeigt die Diskretisierungsgenauigkeit.
+%\begin{align}
+%    \langle \nabla A_f \rangle = &A_f \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \nabla W_{ff_f} + \\
+%    &\nabla A_f \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} (\textbf{x}_{f_f} - \textbf{x}_f)\nabla W_{ff_f} + O((\textbf{x}_{f_f} - \textbf{x}_f)^2)
+%\end{align}
+
 
 \subsection{SPH in partikelbasierten Simulationen}
+Ziel einer partikelbasierten Simulation ist es, die Beschleunigungen zu bestimmen, die in der Navier-Stokes-Gleichung angegeben sind.
+Die Navier-Stokes-Gleichung für einen partikelbasierten Ansatz hat folgende Form:
+\begin{equation}
+    \frac{d\textbf{v}_i}{dt} = -\frac{1}{\rho_i} \nabla p_i + \nu \nabla^2 \textbf{v}_i + \frac{\textbf{F}_i^{other}}{m_i}
+\end{equation}
+Es muss also in erster Linie die Druckbeschleunigung $-\frac{1}{\rho_i} \nabla p_i$ und
+die Viskositätsbeschleunigung $\nu \nabla^2 \textbf{v}_i$ bestimmt werden.
+Die SPH Diskretisierung einer Variable $A$ sieht wie folgt aus:
+\begin{equation}
+    \label{equation:sph_discretisation}
+    A_f \approx \sum_{f_f} m_{f_f} \frac{A_{f_f}}{\rho_{f_f}} W_{ff_f}
+\end{equation}
+Hieraus ist ersichtlich, dass zur Berechnung von $A$ die Dichte $\rho_f$ aller Partikel benötigt wird.
+Diese kann jedoch leicht ermittelt werden, indem in Gleichung \ref{equation:sph_discretisation} $A$ durch $\rho$ ersetzt wird.
+Der Faktor $\frac{\rho_{f_f}}{\rho_{f_f}}$ kürzt sich weg und man erhält:
+\begin{equation}
+    \rho_f \approx \sum_{f_f} m_{f_f} \frac{\rho_{f_f}}{\rho_{f_f}} W_{ff_f} = \sum_{f_f} m_{f_f} W_{ff_f}
+\end{equation}
+Für die Berechnung der Druckbeschleunigung $-\frac{1}{\rho_i} \nabla p_i$ wird die Diskretisierung des Druckgradienten benötigt.
+Wie der Druck berechnet werden kann, wird im nächsten Kapitel vorgestellt.
+Ist der Druck berechnet, ist es naheliegend, die normale SPH Diskretisierung für den Gradienten zu verwenden:
+\begin{equation}
+    -\frac{1}{\rho_i} \nabla p_f \approx -\frac{1}{\rho_i} \sum_{f_f} A_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \nabla W_{ff_f}
+\end{equation}
+Das Problem bei dieser Näherung ist jedoch, dass die daraus resultierende Beschleunigung nicht den Impuls und Drehimpuls der Flüssigkeit erhält,
+was zu einer instabilen Simulation führt.
+Für die Druckberechnung wird häufig stattdessen eine alternative Approximation verwendet,
+die auf folgender Diskretisierung des Gradienten einer Variable $A$ beruht:
+\begin{equation}
+    \nabla A_f \approx \rho_f \sum_{f_f} m_{f_f} \left( \frac{A_f}{\rho_f^2} + \frac{A_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
+\end{equation}
+Der Vorteil an dieser Approximation ist, dass das eben genannte Problem,
+dass daraus resultierende Kräfte oder Beschleunigungen den Impuls und Drehimpuls der Flüssigkeit nicht erhalten, behoben wird.
+Dies ist essentiell für robuste, stabile Simulationen.
+Der Nachteil, der in Kauf genommen wird, ist, dass nun konstante oder lineare Gradienten nicht mehr exakt berechnet werden können.
+Berechnet man die Druckbeschleunigung anhand dieser Diskretisierung erhält man:
+\begin{equation}
+    -\frac{1}{\rho_i} \nabla p_f \approx -\sum_{f_f} m_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
+\end{equation}
+
+
 % \section{Nachbarschaftssuche}
 % \subsection{Uniformes Gitter}
 % \subsection{Weitere Methoden zur effizienteren Nachbarschaftssuche}
