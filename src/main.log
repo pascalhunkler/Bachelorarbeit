@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.6.20)  11 JUL 2022 05:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.6.20)  13 JUL 2022 02:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -670,34 +670,29 @@ chapter 2.
 chapter 3.
 [6
 
-] [7] [8] [9]
-Overfull \hbox (2.10495pt too wide) in paragraph at lines 195--199
-\OT1/cmr/m/n/10.95 F[]ur die Be-rech-nung der Druck-be-schleu-ni-gung $\OMS/cmsy/m/n/10.95 ^^@[]r\OML/cmm/m/it/10.95 p[]$ \OT1/cmr/m/n/10.95 wird die Dis-kre-ti-sie-rung des Druck-
- []
-
-[10]
+] [7] [8] [9] [10] [11]
 chapter 4.
-[11
-
-]
-chapter 5.
 [12
 
 ]
-chapter 6.
+chapter 5.
 [13
 
 ]
-chapter 7.
+chapter 6.
 [14
 
 ]
+chapter 7.
+[15
+
+]
 chapter 8.
-(/home/pascal/Bachelorarbeit/src/main.bbl [15
+(/home/pascal/Bachelorarbeit/src/main.bbl [16
 
-]) [16
+]) [17
 
-] [17] [18] [19] (/home/pascal/Bachelorarbeit/src/main.aux) ) 
+] [18] [19] [20] (/home/pascal/Bachelorarbeit/src/main.aux) ) 
 Here is how much of TeX's memory you used:
  6763 strings out of 483057
  118768 string characters out of 5962301
@@ -707,10 +702,10 @@ Here is how much of TeX's memory you used:
  59 hyphenation exceptions out of 8191
  43i,11n,72p,10158b,570s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cbfonts/grmn1095.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on /home/pascal/Bachelorarbeit/src/main.pdf (19 pages, 219495 bytes).
+Output written on /home/pascal/Bachelorarbeit/src/main.pdf (20 pages, 221363 bytes).
 PDF statistics:
- 138 PDF objects out of 1000 (max. 8388607)
- 98 compressed objects within 1 object stream
+ 141 PDF objects out of 1000 (max. 8388607)
+ 100 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

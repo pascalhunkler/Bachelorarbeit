@@ -59,9 +59,9 @@ In eulerschen, gitterbasierten Simulationen wird im Gegensatz zu partikelbasiert
 Hier wird die Flüssigkeit nicht in frei bewegliche Partikel unterteilt, sondern in Teilvolumina, die fest an einem Ort sind und meist ein Gitter bilden.
 Die Navier-Stokes-Gleichung hat durch diesen anderen Ansatz folgende Form:
 \begin{equation}
-    \frac{\delta\textbf{v}_i}{\delta t} = -\frac{1}{\rho_i} \nabla p_i + \nu \nabla^2 \textbf{v}_i + \frac{\textbf{F}_i^{other}}{m_i} - \textbf{v}_i \cdot \nabla \textbf{v}_i
+    \frac{\partial\textbf{v}_i}{\partial t} = -\frac{1}{\rho_i} \nabla p_i + \nu \nabla^2 \textbf{v}_i + \frac{\textbf{F}_i^{other}}{m_i} - \textbf{v}_i \cdot \nabla \textbf{v}_i
 \end{equation}
-Betrachtet wird hier die Änderungsrate der Geschwindigkeit $\frac{\delta\textbf{v}_i}{\delta t}$ an einer festen Position $\textbf{x}_i$.
+Betrachtet wird hier die Änderungsrate der Geschwindigkeit $\frac{\partial\textbf{v}_i}{\partial t}$ an einer festen Position $\textbf{x}_i$.
 Dadurch, dass die Positionen fest sind,
 kommt in der Navier-Stokes-Gleichung neben den Beschleunigungen noch der Term $- \textbf{v}_i \cdot \nabla \textbf{v}_i$ vor,
 welcher die Bewegung der Flüssigkeit ausgleicht.
@@ -175,13 +175,14 @@ Zwei davon werden im nächsten Unterabschnitt gezeigt.
 
 
 \subsection{SPH in partikelbasierten Simulationen}
+Dieser Unterabschnitt basiert auf die Arbeit von Koshier et al. \cite{koschier_smoothed_2020}.
 Ziel einer partikelbasierten Simulation ist es, die Beschleunigungen zu bestimmen, die in der Navier-Stokes-Gleichung angegeben sind.
 Die Navier-Stokes-Gleichung für einen partikelbasierten Ansatz hat folgende Form:
 \begin{equation}
-    \frac{d\textbf{v}_i}{dt} = -\frac{1}{\rho_i} \nabla p_i + \nu \nabla^2 \textbf{v}_i + \frac{\textbf{F}_i^{other}}{m_i}
+    \frac{d\textbf{v}_f}{dt} = -\frac{1}{\rho_f} \nabla p_f + \nu \nabla^2 \textbf{v}_f + \frac{\textbf{F}_f^{other}}{m_f}
 \end{equation}
-Es muss also in erster Linie die Druckbeschleunigung $-\frac{1}{\rho_i} \nabla p_i$ und
-die Viskositätsbeschleunigung $\nu \nabla^2 \textbf{v}_i$ bestimmt werden.
+Es muss also in erster Linie die Druckbeschleunigung $-\frac{1}{\rho_f} \nabla p_f$ und
+die Viskositätsbeschleunigung $\nu \nabla^2 \textbf{v}_f$ bestimmt werden.
 Die SPH Diskretisierung einer Variable $A$ sieht wie folgt aus:
 \begin{equation}
     \label{equation:sph_discretisation}
@@ -193,11 +194,12 @@ Der Faktor $\frac{\rho_{f_f}}{\rho_{f_f}}$ kürzt sich weg und man erhält:
 \begin{equation}
     \rho_f \approx \sum_{f_f} m_{f_f} \frac{\rho_{f_f}}{\rho_{f_f}} W_{ff_f} = \sum_{f_f} m_{f_f} W_{ff_f}
 \end{equation}
-Für die Berechnung der Druckbeschleunigung $-\frac{1}{\rho_i} \nabla p_i$ wird die Diskretisierung des Druckgradienten benötigt.
+
+Für die Berechnung der Druckbeschleunigung $-\frac{1}{\rho_f} \nabla p_f$ wird die Diskretisierung des Druckgradienten benötigt.
 Wie der Druck berechnet werden kann, wird im nächsten Kapitel vorgestellt.
 Ist der Druck berechnet, ist es naheliegend, die normale SPH Diskretisierung für den Gradienten zu verwenden:
 \begin{equation}
-    -\frac{1}{\rho_i} \nabla p_f \approx -\frac{1}{\rho_i} \sum_{f_f} A_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \nabla W_{ff_f}
+    -\frac{1}{\rho_f} \nabla p_f \approx -\frac{1}{\rho_f} \sum_{f_f} A_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \nabla W_{ff_f}
 \end{equation}
 Das Problem bei dieser Näherung ist jedoch, dass die daraus resultierende Beschleunigung nicht den Impuls und Drehimpuls der Flüssigkeit erhält,
 was zu einer instabilen Simulation führt.
@@ -212,9 +214,26 @@ Dies ist essentiell für robuste, stabile Simulationen.
 Der Nachteil, der in Kauf genommen wird, ist, dass nun konstante oder lineare Gradienten nicht mehr exakt berechnet werden können.
 Berechnet man die Druckbeschleunigung anhand dieser Diskretisierung erhält man:
 \begin{equation}
-    -\frac{1}{\rho_i} \nabla p_f \approx -\sum_{f_f} m_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
+    -\frac{1}{\rho_f} \nabla p_f \approx -\sum_{f_f} m_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
 \end{equation}
 
+Nun muss noch die Viskositätsbeschleunigung $\nu \nabla^2 \textbf{v}_f$ berechnet werden.
+Die normale SPH Diskretisierung für den Laplace Operator ist bestimmt durch
+\begin{equation}
+    \nabla^2 \textbf{v}_f = \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \textbf{v}_{f_f} \nabla^2 W_{ff_f}
+\end{equation}
+Diese Formulierung führt jedoch zu schlechteren Ergebnissen als eine alternative Formulierung:
+\begin{equation}
+    \nabla^2 \textbf{v}_f = 2(d + 2) \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
+    0.01h^2} \nabla W_{ff_f}
+\end{equation}
+$\textbf{x}_{ff_f} = \textbf{x}_f - \textbf{x}_{f_f}$, $\textbf{x}_{ff_f} = \textbf{x}_f - \textbf{x}_{f_f}$ und $d$ ist die Anzahl der räumlichen Dimensionen.
+Der Vorfaktor $2(d+2)$ kann für die Berechnung von $\nu \nabla^2 \textbf{v}_f$ weggelassen werden und als Teil des Viskositätsparameters $\nu$ gesehen werden.
+Schließlich erhält man zur Berechnung der Viskositätsbeschleunigung:
+\begin{equation}
+    \nu \nabla^2 \textbf{v}_f = \nu \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
+    0.01h^2} \nabla W_{ff_f}
+\end{equation}
 
 % \section{Nachbarschaftssuche}
 % \subsection{Uniformes Gitter}
