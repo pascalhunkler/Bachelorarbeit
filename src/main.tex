@@ -228,18 +228,29 @@ Diese Formulierung führt jedoch zu schlechteren Ergebnissen als eine alternativ
     0.01h^2} \nabla W_{ff_f}
 \end{equation}
 $\textbf{x}_{ff_f} = \textbf{x}_f - \textbf{x}_{f_f}$, $\textbf{x}_{ff_f} = \textbf{x}_f - \textbf{x}_{f_f}$ und $d$ ist die Anzahl der räumlichen Dimensionen.
-Der Vorfaktor $2(d+2)$ kann für die Berechnung von $\nu \nabla^2 \textbf{v}_f$ weggelassen werden und als Teil des Viskositätsparameters $\nu$ gesehen werden.
+%Der Vorfaktor $2(d+2)$ kann für die Berechnung von $\nu \nabla^2 \textbf{v}_f$ weggelassen werden und als Teil des Viskositätsparameters $\nu$ gesehen werden.
 Schließlich erhält man zur Berechnung der Viskositätsbeschleunigung:
 \begin{equation}
-    \nu \nabla^2 \textbf{v}_f = \nu \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
+    \nu \nabla^2 \textbf{v}_f = 2(d + 2) \nu \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
     0.01h^2} \nabla W_{ff_f}
 \end{equation}
+
+\subsection{Zeitintegration}
+Sind in einer partikelbasierten Simulation die Beschleunigungen für den Druck, die Viskosität und die restlichen Beschleunigungen, wie z.B. die Gravitation berechnet,
+muss eine Zeitintegration durchgeführt werden, um die Geschwindigkeiten und Positionen der Partikel zu aktualisieren.
+
+\subsection{Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}
 
 % \section{Nachbarschaftssuche}
 % \subsection{Uniformes Gitter}
 % \subsection{Weitere Methoden zur effizienteren Nachbarschaftssuche}
 % \section{Grenzbehandlung}
 \chapter{Druckberechnung}
+Dieses Kapitel behandelt die Druckberechnung in partikelbasierten Flüssigkeitssimulationen.
+Die Berechnung des Drucks ist Voraussetzung für die Bestimmung der Druckbeschleunigung, welche Teil der Navier-Stokes-Gleichung ist.
+Es werden zwei Methoden vorgestellt, um den Druck zu bestimmen:
+Die Druckberechnung mithilfe einer Zustandsgleichung und das globale Berechnen des Drucks mithilfe von Implicit Incompressible SPH (IISPH) \cite{ihmsen_implicit_2014}, 
+welches auf Incompressible SPH (ISPH) \cite{shao_incompressible_2003} basiert.
 \section{Druckberechnung mit einer Zustandsgleichung}
 \section{Druckberechnung mit IISPH}
 \chapter{Implementierung}

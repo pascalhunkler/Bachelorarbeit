@@ -9,6 +9,13 @@ Robert~A. Gingold and Joseph~J. Monaghan.
   181(3):375--389, 1977.
 \newblock ISBN: 1365-2966 Publisher: Oxford University Press Oxford, UK.
 
+\bibitem[ICS{\etalchar{+}}14]{ihmsen_implicit_2014}
+Markus Ihmsen, Jens Cornelis, Barbara Solenthaler, Christopher Horvath, and
+  Matthias Teschner.
+\newblock Implicit {Incompressible} {SPH}.
+\newblock {\em IEEE Transactions on Visualization and Computer Graphics},
+  20(3):426--435, March 2014.
+
 \bibitem[IOS{\etalchar{+}}14]{ihmsen_sph_2014}
 Markus Ihmsen, Jens Orthmann, Barbara Solenthaler, Andreas Kolb, and Matthias
   Teschner.
@@ -44,5 +51,11 @@ Daniel~J. Price.
 \newblock Smoothed particle hydrodynamics and magnetohydrodynamics.
 \newblock {\em Journal of Computational Physics}, 231(3):759--794, February
   2012.
+
+\bibitem[SL03]{shao_incompressible_2003}
+Songdong Shao and Edmond~Y.M. Lo.
+\newblock Incompressible {SPH} method for simulating {Newtonian} and
+  non-{Newtonian} flows with a free surface.
+\newblock {\em Advances in Water Resources}, 26(7):787--800, July 2003.
 
 \end{thebibliography}
