@@ -222,7 +222,9 @@ Die normale SPH Diskretisierung für den Laplace Operator ist bestimmt durch
 \begin{equation}
     \nabla^2 \textbf{v}_f = \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \textbf{v}_{f_f} \nabla^2 W_{ff_f}
 \end{equation}
-Diese Formulierung führt jedoch zu schlechteren Ergebnissen als eine alternative Formulierung:
+Es hat sich jedoch gezeigt,
+dass die Verwendung der zweiten Ableitung der Kernelfunktion sensibel ist gegenüber Störungen der Partikelanordnung
+und zu schlechteren Ergebnissen führt als eine alternative Formulierung, die ohne die zweite Ableitung auskommt:
 \begin{equation}
     \nabla^2 \textbf{v}_f = 2(d + 2) \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
     0.01h^2} \nabla W_{ff_f}
@@ -234,6 +236,11 @@ Schließlich erhält man zur Berechnung der Viskositätsbeschleunigung:
     \nu \nabla^2 \textbf{v}_f = 2(d + 2) \nu \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
     0.01h^2} \nabla W_{ff_f}
 \end{equation}
+Diese Formulierung erfüllt einige wünschenswerte Eigenschaften:
+Sie ist galilei-invariant, was bedeutet, dass beispielsweise in einer sich gleichmäßig bewegenden Flüssigkeit
+die Viskositätsbeschleunigung nicht sich anders verhält als in einer äquivalenten ruhenden Flüssigkeit.
+Es entsteht unter anderem auch keine Reibung, wenn alle Partikel gleichmäßig rotieren.
+Zudem wird der Impuls und Drehimpuls erhalten.
 
 \subsection{Zeitintegration}
 Sind in einer partikelbasierten Simulation die Beschleunigungen für den Druck, die Viskosität und die restlichen Beschleunigungen, wie z.B. die Gravitation berechnet,
