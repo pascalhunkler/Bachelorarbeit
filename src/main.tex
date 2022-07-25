@@ -31,6 +31,7 @@ Diese Arbeit beschäftigt sich im Wesentlichen auf lagrangesche, partikelbasiert
 der Vollständigkeit wegen wird jedoch auch noch kurz auf eulersche, gitterbasierte Ansätze eingegangen.
 Die Inhalte dieses Abschnitts beziehen sich auf Ihmsen et al. \cite{ihmsen_sph_2014}.
 
+
 \subsection{Partikelbasierte Simulation}
 In einer lagrangeschen, partikelbasierten Flüssigkeitssimulation wird die Flüssigkeit in so genannte Partikel unterteilt,
 die sich mit der Flüssigkeit mitbewegen. Jedes Partikel nimmt ein Teilvolumen der Flüssigkeit ein und besitzt eine Masse.
@@ -54,6 +55,7 @@ Die Nachbarschaft eines Partikels wird benötigt, um die Beschleunigungen an ein
 Im Gegensatz zu gitterbasierten Simulationen, welche im nächsten Unterabschnitt vorgestellt werden,
 muss hier jedoch ein Term aus der Navier-Stokes-Gleichung weniger berechnet werden.
 
+
 \subsection{Gitterbasierte Simulation}
 In eulerschen, gitterbasierten Simulationen wird im Gegensatz zu partikelbasierten Simulationen mit Gittern statt Partikeln gearbeitet.
 Hier wird die Flüssigkeit nicht in frei bewegliche Partikel unterteilt, sondern in Teilvolumina, die fest an einem Ort sind und meist ein Gitter bilden.
@@ -69,6 +71,7 @@ Im Gegensatz zu partikelbasierten Simulationen muss hier jedoch direkt erst einm
 da die Punkte nicht frei beweglich sind.
 Generell kann jedoch die Performance und Genauigkeit zwischen partikelbasierten und gitterbasierten nicht allgemein verglichen werden.
 
+
 \section{SPH}
 Das Konzept Smoothed Particle Hydrodynamics (SPH),
 ursprünglich formuliert von Lucy \cite{lucy_numerical_1977} und unabhängig davon von Monaghan und Gingold \cite{gingold_smoothed_1977},
@@ -77,6 +80,7 @@ unter anderem auch der Computergrafik angewandt.
 Mithilfe von SPH kann durch Diskretisierung und Berechnung von Größen wie der Druckbeschleunigung oder der Viskositätsbeschleunigung
 die Navier-Stokes-Gleichung gelöst werden.
 Es eignet sich daher gut für partikelbasierte Simulationen.
+
 
 \subsection{Diskretisierung mit SPH}
 Die Inhalte dieses Abschnittes basieren hauptsächlich auf den Arbeiten
@@ -242,11 +246,27 @@ die Viskositätsbeschleunigung nicht sich anders verhält als in einer äquivale
 Es entsteht unter anderem auch keine Reibung, wenn alle Partikel gleichmäßig rotieren.
 Zudem wird der Impuls und Drehimpuls erhalten.
 
+
 \subsection{Zeitintegration}
 Sind in einer partikelbasierten Simulation die Beschleunigungen für den Druck, die Viskosität und die restlichen Beschleunigungen, wie z.B. die Gravitation berechnet,
-muss eine Zeitintegration durchgeführt werden, um die Geschwindigkeiten und Positionen der Partikel zu aktualisieren.
+muss eine numerische Zeitintegration durchgeführt werden, um die Geschwindigkeiten und Positionen der Partikel zu aktualisieren.
+Häufig wird dazu das Euler-Cromer Verfahren genutzt. \cite{koschier_smoothed_2020}
+Die Position $\textbf{x}_f^{t+1}$ und Geschwindigkeit $\textbf{v}_f^{t+1}$ eines Partikels $f$ zum Zeitpunkt $t+1$ 
+wird hier aus der berechneten Beschleunigung $\textbf{a}_f^t$ zum Zeitpunkt $t$ wie folgt aktualisiert:
+\begin{align}
+    \textbf{v}_f^{t+1} &= \textbf{v}_f^t + \Delta t \textbf{a}_f^t\\
+    \textbf{x}_f^{t+1} &= \textbf{x}_f^t + \Delta t \textbf{v}_f^{t+1}
+\end{align}
+$\Delta t$ ist hierbei die vergangene Zeit zwischen zwei Simulationsschritten, und wird auch als Zeitschritt bezeichnet.
+
+Die Wahl des Zeitschritts $\Delta t$ ist entscheidend für die Performanz und Stabilität der Simulation.
+Generell ist es gewollt, möglichst wenige Simulationsschritte berechnen zu müssen, damit die Simulation insgesamt schneller berechnet wird.
+Daher wird ein möglichst großer Zeitschritt $\Delta t$ gewählt.
+Ist der Zeitschritt jedoch zu groß gewählt, wird die numerische Integration ungenauer, was zu instabilen Simulationen führt, die zusammenbrechen.
+
 
 \subsection{Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}
+
 
 % \section{Nachbarschaftssuche}
 % \subsection{Uniformes Gitter}
@@ -256,10 +276,25 @@ muss eine Zeitintegration durchgeführt werden, um die Geschwindigkeiten und Pos
 Dieses Kapitel behandelt die Druckberechnung in partikelbasierten Flüssigkeitssimulationen.
 Die Berechnung des Drucks ist Voraussetzung für die Bestimmung der Druckbeschleunigung, welche Teil der Navier-Stokes-Gleichung ist.
 Es werden zwei Methoden vorgestellt, um den Druck zu bestimmen:
-Die Druckberechnung mithilfe einer Zustandsgleichung und das globale Berechnen des Drucks, welches von einer inkrompressiblen Flüssigkeit ausgeht,
+Die Druckberechnung mithilfe einer Zustandsgleichung und das globale Berechnen des Drucks, welches von einer inkompressiblen Flüssigkeit ausgeht,
 mithilfe von Implicit Incompressible SPH (IISPH) \cite{ihmsen_implicit_2014}, 
-welches auf Incompressible SPH (ISPH) \cite{shao_incompressible_2003} basiert.
+welches auf Incompressible SPH (ISPH) \cite{shao_incompressible_2003} aufbaut.
+
+
 \section{Druckberechnung mit einer Zustandsgleichung}
+Eine Methode, um den Druck zu berechnen, ist das Verwenden einer Zustandsgleichung.
+Hierbei wird der Druck direkt aus der Abweichung der berechneten Dichte $\rho_f$ eines Partikels von der Ruhedichte $\rho^0$ bestimmt.
+Ein Beispiel für eine solche Gleichung ist folgende:
+\begin{equation}
+    p_f = \max \left(k \left( \frac{\rho_f}{\rho^0} - 1 \right), 0\right)
+\end{equation}
+Der Druck ist immer positiv, da es sonst zu Problemen kommt, wenn $\rho_f < \rho^0$, was vor allem an der Oberfläche der Flüssigkeit auftritt,
+da die Partikel an der Oberfläche weniger Nachbarn haben.
+Die Konstante $k$ ist eine Steifigkeitskonstante.
+In \cite{koschier_smoothed_2020} ist beschrieben, dass die Wahl von $k$ einen Einfluss auf die Dichteabweichung hat.
+Größere Werte für $k$ führen zu einer geringeren Dichteabweichung, jedoch muss ein kleinerer Zeitschritt gewählt werden, da die Simulation sonst instabil wird.
+Kleinere Werte für $k$ hingegen führen zu größeren Dichteabweichungen und damit auch zu weniger realistischen Simulationen.
+
 \section{Druckberechnung mit IISPH}
 \chapter{Implementierung}
 \section{Programmierumgebung}
