@@ -235,7 +235,7 @@ und zu schlechteren Ergebnissen führt als eine alternative Formulierung, die oh
 \end{equation}
 $\textbf{x}_{ff_f} = \textbf{x}_f - \textbf{x}_{f_f}$, $\textbf{x}_{ff_f} = \textbf{x}_f - \textbf{x}_{f_f}$ und $d$ ist die Anzahl der räumlichen Dimensionen.
 %Der Vorfaktor $2(d+2)$ kann für die Berechnung von $\nu \nabla^2 \textbf{v}_f$ weggelassen werden und als Teil des Viskositätsparameters $\nu$ gesehen werden.
-Schließlich erhält man zur Berechnung der Viskositätsbeschleunigung:
+Schließlich erhält man zur Berechnung der Viskositätsbeschleunigung \cite{koschier_smoothed_2020}:
 \begin{equation}
     \nu \nabla^2 \textbf{v}_f = 2(d + 2) \nu \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
     0.01h^2} \nabla W_{ff_f}
@@ -251,11 +251,11 @@ Zudem wird der Impuls und Drehimpuls erhalten.
 Sind in einer partikelbasierten Simulation die Beschleunigungen für den Druck, die Viskosität und die restlichen Beschleunigungen, wie z.B. die Gravitation berechnet,
 muss eine numerische Zeitintegration durchgeführt werden, um die Geschwindigkeiten und Positionen der Partikel zu aktualisieren.
 Häufig wird dazu das Euler-Cromer Verfahren genutzt. \cite{koschier_smoothed_2020}
-Die Position $\textbf{x}_f^{t+1}$ und Geschwindigkeit $\textbf{v}_f^{t+1}$ eines Partikels $f$ zum Zeitpunkt $t+1$ 
+Die Position $\textbf{x}_f^{t + \Delta t}$ und Geschwindigkeit $\textbf{v}_f^{t + \Delta t}$ eines Partikels $f$ zum Zeitpunkt $t + \Delta t$ 
 wird hier aus der berechneten Beschleunigung $\textbf{a}_f^t$ zum Zeitpunkt $t$ wie folgt aktualisiert:
 \begin{align}
-    \textbf{v}_f^{t+1} &= \textbf{v}_f^t + \Delta t \textbf{a}_f^t\\
-    \textbf{x}_f^{t+1} &= \textbf{x}_f^t + \Delta t \textbf{v}_f^{t+1}
+    \textbf{v}_f^{t + \Delta t} &= \textbf{v}_f^t + \Delta t \textbf{a}_f^t\\
+    \textbf{x}_f^{t + \Delta t} &= \textbf{x}_f^t + \Delta t \textbf{v}_f^{t + \Delta t}
 \end{align}
 $\Delta t$ ist hierbei die vergangene Zeit zwischen zwei Simulationsschritten, und wird auch als Zeitschritt bezeichnet.
 
