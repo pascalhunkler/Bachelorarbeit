@@ -294,6 +294,21 @@ Die Konstante $k$ ist eine Steifigkeitskonstante.
 In \cite{koschier_smoothed_2020} ist beschrieben, dass die Wahl von $k$ einen Einfluss auf die Dichteabweichung hat.
 Größere Werte für $k$ führen zu einer geringeren Dichteabweichung, jedoch muss ein kleinerer Zeitschritt gewählt werden, da die Simulation sonst instabil wird.
 Kleinere Werte für $k$ hingegen führen zu größeren Dichteabweichungen und damit auch zu weniger realistischen Simulationen.
+Anschaulich erklären lässt sich dies anhand eines Beispiels mit einer ruhenden Flüssigkeit, die unter dem Einfluss von Gravitation steht.
+Da die Flüssigkeit ruht, gilt
+\begin{equation}
+    \textbf{g} - \frac{1}{\rho_f}\nabla p_f = \textbf{0}
+\end{equation}
+Durch Diskretisierung des Druckgradienten erhält man
+\begin{equation}
+    \textbf{g} = \sum_{f_f} m_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
+\end{equation}
+Verwendet man beispielsweise die Zustandsgleichung $p_f = k(\rho_f - \rho^0)$ erhält man daraus
+\begin{equation}
+    \textbf{g} = k \sum_{f_f} m_{f_f} \left( \frac{\rho_f - \rho^0}{\rho_f^2} + \frac{\rho_{f_f} - \rho^0}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
+\end{equation}
+Die Gravitation ist konstant,
+also kann man aus dieser Gleichung schließen, dass sich insgesamt aus einer großen Steifigkeitskonstante $k$ geringere Dichteabweichungen ergeben.
 
 \section{Druckberechnung mit IISPH}
 \chapter{Implementierung}
