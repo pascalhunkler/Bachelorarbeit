@@ -7,8 +7,8 @@
 \contentsline {section}{\numberline {3.2}SPH}{7}%
 \contentsline {subsection}{\numberline {3.2.1}Diskretisierung mit SPH}{7}%
 \contentsline {subsection}{\numberline {3.2.2}SPH in partikelbasierten Simulationen}{9}%
-\contentsline {subsection}{\numberline {3.2.3}Zeitintegration}{11}%
-\contentsline {subsection}{\numberline {3.2.4}Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}{12}%
+\contentsline {section}{\numberline {3.3}Zeitintegration}{11}%
+\contentsline {section}{\numberline {3.4}Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}{12}%
 \contentsline {chapter}{\numberline {4}Druckberechnung}{13}%
 \contentsline {section}{\numberline {4.1}Druckberechnung mit einer Zustandsgleichung}{13}%
 \contentsline {section}{\numberline {4.2}Druckberechnung mit IISPH}{14}%

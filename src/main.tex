@@ -247,7 +247,7 @@ Es entsteht unter anderem auch keine Reibung, wenn alle Partikel gleichmäßig r
 Zudem wird der Impuls und Drehimpuls erhalten.
 
 
-\subsection{Zeitintegration}
+\section{Zeitintegration}
 Sind in einer partikelbasierten Simulation die Beschleunigungen für den Druck, die Viskosität und die restlichen Beschleunigungen, wie z.B. die Gravitation berechnet,
 muss eine numerische Zeitintegration durchgeführt werden, um die Geschwindigkeiten und Positionen der Partikel zu aktualisieren.
 Häufig wird dazu das Euler-Cromer Verfahren genutzt. \cite{koschier_smoothed_2020}
@@ -263,10 +263,43 @@ Die Wahl des Zeitschritts $\Delta t$ ist entscheidend für die Performanz und St
 Generell ist es gewollt, möglichst wenige Simulationsschritte berechnen zu müssen, damit die Simulation insgesamt schneller berechnet wird.
 Daher wird ein möglichst großer Zeitschritt $\Delta t$ gewählt.
 Ist der Zeitschritt jedoch zu groß gewählt, wird die numerische Integration ungenauer, was zu instabilen Simulationen führt, die zusammenbrechen.
+Um einen möglichst großen Zeitschritt zu wählen, der noch zu einer stabilen Simulation führt, kann sich an der CFL-Bedingung orientiert werden.
+Die CFL-Bedingung begrenzt den Zeitschritt $\Delta t$ abhängig eines Parameters $\lambda$, 
+der Partikelgröße $\hbar$, und der Geschwindigkeit des schnellsten Partikels $\textbf{v}^{max}$:
+\begin{equation}
+    \Delta t \leq \lambda \frac{\hbar}{\|\textbf{v}^{max}\| }
+\end{equation}
+Die Idee dahinter ist, dass für z.B. $\lambda = 1$ sich die Partikel nicht weiter als eine Partikelgröße bewegen. \cite{koschier_smoothed_2020}
 
 
-\subsection{Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}
-
+\section{Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}
+Dieser Abschnitt beschreibt, wie sich die Konzepte aus den vorigen Abschnitten und der Druckberechnung, die im nächsten Kapitel erklärt wird, kombinieren lassen,
+um daraus eine einfache Flüssigkeitssimulation umzusetzen.
+Zuerst wird für jedes Partikel $f$ die Dichte berechnet mithilfe folgender Gleichung:
+\begin{equation}
+    \rho_f = \sum_{f_f} m_{f_f} W_{ff_f}
+\end{equation}
+Dann wird die Viskositätsbeschleunigung berechnet:
+\begin{equation}
+    \textbf{a}_f^v = 2(d + 2) \nu \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
+    0.01h^2} \nabla W_{ff_f}
+\end{equation}
+Es wird dann eine vorläufige Geschwindigkeit $\textbf{v}_f^*$ der Partikel bestimmt,
+die unter dem Einfluss der Viskositätsbeschleunigung und anderen Beschleunigungen wie z.B. der Gravitation
+aus der ursprünglichen Geschwindigkeit $\textbf{v}_f^t$ durch eine Zeitintegration berechnet wird:
+\begin{equation}
+    \textbf{v}_f^* = \textbf{v}_f^t + \Delta t \left(\textbf{a}_f^v + \textbf{a}_f^{ext}\right)
+\end{equation}
+Nun muss noch der Druck der Partikel $p_f$ berechnet werden. Dies wird im nächsten Kapitel beschrieben.
+Wenn der Druck berechnet ist, wird die Druckbeschleunigung an jedem Partikel berechnet:
+\begin{equation}
+    \textbf{a}_f^p = -\sum_{f_f} m_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
+\end{equation}
+Anschließend werden die Geschwindigkeit und Position jedes Partikels aktualisiert:
+\begin{align}
+    \textbf{v}_f^{t + \Delta t} &= \textbf{v}_f^* + \Delta t \textbf{a}_f^p\\
+    \textbf{x}_f^{t + \Delta t} &= \textbf{x}_f^t + \Delta t \textbf{v}_f^{t + \Delta t}
+\end{align}
 
 % \section{Nachbarschaftssuche}
 % \subsection{Uniformes Gitter}
