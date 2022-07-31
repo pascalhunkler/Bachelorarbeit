@@ -345,7 +345,73 @@ also kann man aus dieser Gleichung schließen, dass sich insgesamt aus einer gro
 
 
 \section{Druckberechnung mit IISPH}
-Dieser Abschnitt behandelt die Druckberechnung mit der IISPH-Methode. Implicit Incompressible SPH (IISPH) wurde zuerst 
+Dieser Abschnitt behandelt die Druckberechnung mit der IISPH-Methode.
+Implicit Incompressible SPH (IISPH) wurde erstmals von Ihmsen et al. entwickelt \cite{ihmsen_implicit_2014}, worauf dieser Abschnitt auch basiert.
+Im Gegensatz zu Standard SPH (SSPH), also der Druckberechnung durch eine Zustandsgleichung, wird hier ein lineares Gleichungssystem gelöst,
+um den Druck der Partikel zu berechnen.
+
+
+\subsection{Herleitung des Gleichungssystems}
+Um das lineare Gleichungssystem herzuleiten, wird erst einmal die Kontinuitätsgleichung betrachet:
+\begin{equation}
+    \frac{D\rho}{Dt} = -\rho \nabla \cdot \textbf{v}
+\end{equation}
+Die Kontinuitätsgleichung stellt einen Zusammenhang her zwischen der Änderungsrate der Dichte und der Divergenz des Geschwindigkeitsfeldes.
+Diese Gleichung wird dann diskretisiert,
+indem die Änderungsrate der Dichte durch den Vorwärtsdifferenzquotienten $\frac{\rho_f(t+\Delta t) - \rho_f(t)}{\Delta t}$ ersetzt und 
+die Divergenz des Geschwindigkeitsfeldes durch
+das SPH-Konzept der Divergenz $\nabla \cdot \textbf{v}_f = -\frac{1}{\rho_f} \sum_{f_f} m_{f_f} \textbf{v}_{ff_f} \nabla W_{ff_f}$.
+Dadurch erhält man:
+\begin{equation}
+    \label{equation:continuity_discretization}
+    \frac{\rho_f(t+\Delta t) - \rho_f(t)}{\Delta t} = \sum_{f_f} m_{f_f} \textbf{v}_{ff_f}(t+\Delta t) \nabla W_{ff_f}(t)
+\end{equation}
+$\textbf{v}_{ff_f}(t+\Delta t)$ ist hierbei $\textbf{v}_{f}(t+\Delta t)$ - $\textbf{v}_{f_f}(t+\Delta t)$.
+Diese Geschwindigkeiten basieren auf Druckbeschleunigungen, welche linear in den Werten für den Druck sind, da
+\begin{equation}
+    \label{equation:pressure_acceleration}
+    \textbf{a}_f^p = -\sum_{f_f} m_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
+\end{equation}
+Verwendet man das Euler-Cromer Verfahren, so kann die Geschwindigkeit eines Partikels zum Zeitpunkt $t + \Delta t$ wie folgt geschrieben werden:
+\begin{equation}
+    \textbf{v}_f(t + \Delta t) = \textbf{v}_f(t) + \Delta t \left(\textbf{a}_f^{nonp} + \textbf{a}_f^p\right)
+\end{equation}
+$\textbf{a}_f^{nonp}$ ist hierbei die Beschleunigung, die durch die Viskosität und andere Kräfte wie die Gravitation, entsteht.
+Wir betrachten ebenfalls die geschätzte Zwischen-Geschwindigkeit $\textbf{v}_f^*$:
+\begin{equation}
+    \textbf{v}_f^* = \textbf{v}_f(t) + \Delta t \textbf{a}_f^{nonp}
+\end{equation}
+Durch diese Zwischen-Geschwindigkeit entsteht auch eine Zwischen-Dichte
+\begin{equation}
+    \rho_f^* = \rho_f(t) + \Delta t \sum_{f_f} m_{f_f} \textbf{v}_{ff_f}^* \nabla W_{ff_f}(t)
+\end{equation}
+Zudem gilt:
+\begin{equation}
+    \label{equation:intermediate_velocity_integration}
+    \textbf{v}_f(t + \Delta t) = \textbf{v}_f^* + \Delta t \textbf{a}_f^p
+\end{equation}
+Setzt man \eqref{equation:intermediate_velocity_integration} in \eqref{equation:continuity_discretization} ein, kann man Umformen:
+\begin{align}
+    \frac{\rho_f(t+\Delta t) - \rho_f(t)}{\Delta t} &= \sum_{f_f} m_{f_f} \textbf{v}_{ff_f}(t+\Delta t) \nabla W_{ff_f}(t) \\
+        &= \sum_{f_f} m_{f_f} \textbf{v}_{ff_f}^* \nabla W_{ff_f}(t) + \Delta t \sum_{f_f} m_{f_f} \textbf{a}_{ff_f}^p \nabla W_{ff_f}(t) \\
+        &= \frac{\rho_f^* - \rho_f(t)}{\Delta t} + \Delta t \sum_{f_f} m_{f_f} \textbf{a}_{ff_f}^p \nabla W_{ff_f}(t)
+\end{align}
+Da wir erreichen wollen, dass die Dichte $\rho_f(t+\Delta t)$ die Ruhedichte ist, damit die Partikel in einem unkomprimierten Zustand sind,
+wird $\rho_f(t+\Delta t) = \rho^0$ angenommen.
+Mit Umformen erhält man dann:
+\begin{equation}
+    \label{equation:almost_linear_system}
+    \Delta t^2 \sum_{f_f} m_{f_f} \left(\textbf{a}_f^p - \textbf{a}_{ff_f}^p\right) \nabla W_{ff_f}(t) = \rho^0 - \rho_f^*
+\end{equation}
+Setzt man nun \eqref{equation:pressure_acceleration} in \eqref{equation:almost_linear_system} ein, ist der Druck linear und man erhält ein lineares Gleichungssystem
+\begin{equation}
+    \textbf{A}(t) \textbf{p}(t) = \textbf{b}(t)
+\end{equation}
+Für jedes Partikel haben wir eine Gleichung der Form
+\begin{equation}
+    \sum_{f_f} a_{ff_f} p_{f_f} = b_f = \rho_0 - \rho_f^*
+\end{equation}
+
 \chapter{Implementierung}
 \section{Programmierumgebung}
 \section{Architektur der Software}
