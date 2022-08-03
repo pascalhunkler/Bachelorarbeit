@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{ngerman}
 \usepackage{amsmath, amsfonts, amssymb}
-\usepackage{algorithm, algorithmic}
+\usepackage{algorithm, algpseudocode}
 \usepackage{graphicx}
 \usepackage[section]{placeins}
 \usepackage{textgreek}
@@ -465,10 +465,91 @@ Der iterative Schritt in \eqref{equation:iterative_pressure_update} kann nun ber
 \section{Programmierumgebung}
 \section{Architektur der Software}
 \section{Kernelfunktion, Kernelgradient}
+In der Implementierung wird der Cubic Spline Kernel verwendet.
+Da die Simulation zweidimensional ist, hat die Kernelfunktion damit folgende Form:
+\begin{equation}
+    W(\textbf{x}_f - \textbf{x}_{f_f}, h) = \frac{5}{14\pi h^2} \begin{cases}
+        (2-q)^3 - 4(1-q)^3, &\text{für } 0 \leq q \leq 1\\
+        (2-q)^3, &\text{für } 1 \leq q \leq 2\\
+        0, &\text{sonst}
+    \end{cases}
+    %    6(q^3 - q^2) + 1, &\text{für } 0 \leq q \leq \frac{1}{2}\\
+    %    2(1 - q)^3, &\text{für } \frac{1}{2} < q \leq 1\\
+    %    0, &\text{sonst}
+    %\end{cases}
+\end{equation}
+mit $q = \frac{1}{h}\|\textbf{x}_f - \textbf{x}_{f_f}\|$ und $h$ die Partikelgröße.
+
+Diese Funktion lässt sich recht einfach mit Algorithmus \ref{alg:kernel_function} implementieren.
+\begin{algorithm}
+    \caption{Cubic Spline Kernelfunktion}
+    \label{alg:kernel_function}
+    \begin{algorithmic}[1]
+        \Function{W}{$\textbf{x}_f - \textbf{x}_{f_f}$}
+            \State $q \gets \frac{\|\textbf{x}_f - \textbf{x}_{f_f}\|}{h}$
+            \State $t_1 \gets \max(1 - q, 0)$
+            \State $t_2 \gets \max(2 - q, 0)$
+            \State $\sigma \gets \frac{5}{14 \pi h^2}$
+            \State \textbf{return} $\sigma \cdot (t_2^3 - 4t_1^3)$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+Nun, da die Kernelfunktion in Form des Cubic Spline Kernels implementiert ist, muss noch der Kernelgradient implementiert werden.
+Der Kernelgradient des Cubic Spline Kernels hat folgende Form:
+\begin{equation}
+    \nabla W(\textbf{x}_f - \textbf{x}_{f_f}, h) = \frac{5}{14\pi h^2} \cdot \frac{\textbf{x}_f - \textbf{x}_{f_f}}{\|\textbf{x}_f - \textbf{x}_{f_f}\| h} \begin{cases}
+        -3(2-q)^2 + 12(1-q)^2, &\text{für } 0 \leq q \leq 1\\
+        -3(2-q)^2, &\text{für } 1 \leq q \leq 2\\
+        0, &\text{sonst}
+    \end{cases}
+\end{equation}
+ebenfalls mit $q = \frac{1}{h}\|\textbf{x}_f - \textbf{x}_{f_f}\|$ und $h$ die Partikelgröße.
+
+Für den Kernelgradient wird Algorithmus \ref{alg:kernel_gradient} angewandt.
+\begin{algorithm}
+    \caption{Cubic Spline Kernelgradient}
+    \label{alg:kernel_gradient}
+    \begin{algorithmic}[1]
+        \Function{$\nabla W$}{$\textbf{x}_f - \textbf{x}_{f_f}$}
+            \State $q \gets \frac{\|\textbf{x}_f - \textbf{x}_{f_f}\|}{h}$
+            \If{$q == 0$}
+                \State \textbf{return} $\begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+            \EndIf
+            \State $t_1 \gets \max(1 - q, 0)$
+            \State $t_2 \gets \max(2 - q, 0)$
+            \State $\sigma \gets \frac{5}{14 \pi h^2}$
+            \State \textbf{return} $\sigma \frac{\textbf{x}_f - \textbf{x}_{f_f}}{\|\textbf{x}_f - \textbf{x}_{f_f}\| h} \cdot (-3 t_2^2 + 12t_1^2)$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+
 \section{Nachbarschaftssuche}
+Da für die SPH-Berechnungen die Nachbarn eines Partikels benötigt werden, muss eine Nachbarschaftssuche durchgeführt werden.
+Diese muss in jedem Simulationsschritt erfolgen, da sich die Nachbarn eines Partikels in jedem Simulationsschritt ändern können.
+Daher ist es sehr wichtig, dass die Nachbarschaftssuche effizient abläuft und nicht zu viel Zeit dafür aufgewandt wird.
+
+Der naive Ansatz ist es, wenn man für jedes Partikel die Distanz zu den restlichen Partikeln misst und überprüft, ob die Distanz geringer ist als der Kernelsupport.
+Pro Simulationsschritt gibt es damit einen Zeitaufwand in $O(n^2)$ für $n$ Partikel in der Simulation.
+Dies ist nicht gerade optimal, denn schon bei etwas größeren Simulationen wird sehr viel Zeit für die Nachbarschaftssuche angewandt.
+
+
+\subsection{Uniformes Gitter}
+Um das Problem zu lösen, dass die Nachbarschaftssuche in quadratischer Zeit nach der Partikelanzahl abläuft,
+kann stattdessen ein Uniformes Gitter aufgebaut werden, was zur Folge hat, dass der Zeitaufwand für die Nachbarschaftssuche nun in $O(n)$ ist.
+Das Uniforme Gitter unterteilt den Raum, in dem sich die Partikel bewegen, in mehrere gleich große quadratische Zellen,
+deren Größe dem Kernelsupport entspricht.
+Sinn dahinter ist, dass als Nachbarn eines Partikels nur die Partikel in der gleichen Zelle oder einer Nachbarzelle in Frage kommen.
+
+
 \subsection{Uniformes Gitter Aufbau}
+In der Implementierung wird ein Uniformes Gitter verwendet, das dem kompakten Gitter entspricht,
+was in der Arbeit von Lagae und Dutré \cite{lagae_compact_2008} vorgeschlagen wurde.
+Zum Aufbau des Uniformen Gitters
+
+
 \subsection{Bestimmung der Nachbarn mithilfe des uniformen Gitters}
-\subsection{}
 \section{Simulationsschritt}
 \subsection{Berechnung der Dichte}
 \subsection{Berechnung des Drucks}
@@ -489,65 +570,49 @@ Der iterative Schritt in \eqref{equation:iterative_pressure_update} kann nun ber
 \caption{Simulationsschritt}
 \label{alg:simulationsschritt}
 \begin{algorithmic}[1]
-    \STATE Determine neighbors of each particle
-    \STATE Compute density $\rho_f$ of each fluid particle using algorithm \ref{alg:dichte}
-    \STATE Compute non-pressure accelerations $\textbf{a}_f^n$ using algorithm \ref{alg:restliche_beschleunigung}
-    \FORALL{fluid particle f}
-        \STATE $\textbf{v}_f^* \gets \textbf{v}_f + \Delta t \textbf{a}_f^n$
-    \ENDFOR
-    \STATE Compute pressure $p_f$ of each fluid particle using algorithm \ref{alg:druck}
-    \STATE Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:druckbeschleunigung}
-    \FORALL{fluid particle f}
-        \STATE $\textbf{v}_f \gets \textbf{v}_f^* + \Delta t \textbf{a}_f^p$
-    \ENDFOR
-    \FORALL{fluid particle f}
-        \STATE $\textbf{x}_f \gets \textbf{x}_f + \Delta t \textbf{v}_f$
-    \ENDFOR
-    \STATE 
+    \State Determine neighbors of each particle
+    \State Compute density $\rho_f$ of each fluid particle using algorithm \ref{alg:dichte}
+    \State Compute non-pressure accelerations $\textbf{a}_f^n$ using algorithm \ref{alg:restliche_beschleunigung}
+    \ForAll{fluid particle f}
+        \State $\textbf{v}_f^* \gets \textbf{v}_f + \Delta t \textbf{a}_f^n$
+    \EndFor
+    \State Compute pressure $p_f$ of each fluid particle using algorithm \ref{alg:druck}
+    \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:druckbeschleunigung}
+    \ForAll{fluid particle f}
+        \State $\textbf{v}_f \gets \textbf{v}_f^* + \Delta t \textbf{a}_f^p$
+    \EndFor
+    \ForAll{fluid particle f}
+        \State $\textbf{x}_f \gets \textbf{x}_f + \Delta t \textbf{v}_f$
+    \EndFor
+    \State 
 \end{algorithmic}
 \end{algorithm}
 
-\begin{algorithm}
-\caption{Berechnung der Dichte der Partikel}
-\label{alg:dichte}
-\begin{algorithmic}
-    \FORALL{particle i}
-        \IF{particle i belongs to the boundary}
-            \STATE continue
-        \ENDIF
-        \STATE $\rho_i \gets 0$
-        \FORALL{neighbor j of particle i}
-            \STATE $\rho_i \gets \rho_i + W_{ij}$
-        \ENDFOR
-        \STATE $\rho_i \gets \rho_i \cdot m_f$
-    \ENDFOR
-\end{algorithmic}
-\end{algorithm}
 
 \begin{algorithm}
 \caption{Berechnung der restlichen Beschleunigungen}
 \label{alg:restliche_beschleunigung}
 \begin{algorithmic}
-    \FORALL{particle i}
-    \IF{particle i belongs to the boundary}
-        \STATE $\textbf{a}_i^n \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
-        \STATE continue
-    \ENDIF
-    \STATE $\textbf{acc}_g \gets \begin{pmatrix}0 &-9.81 \end{pmatrix}^\intercal$
-    \STATE $\textbf{acc}_v \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
-    \STATE
-    \STATE \text{// Viskositätsbeschleunigung an Partikel i}
-    \FORALL{neighbor j of particle i}
-        \IF{particle j belongs to the boundary}
-            \STATE $\textbf{acc}_v \gets \textbf{acc}_v + \frac{1}{\rho_i} \frac{(\textbf{v}_i - \textbf{v}_j)(\textbf{x}_i - \textbf{x}_j)}{(\textbf{x}_i - \textbf{x}_j)(\textbf{x}_i - \textbf{x}_j) + 0.01h^2} \cdot \nabla W_{ij}$
-        \ELSE
-            \STATE $\textbf{acc}_v \gets \textbf{acc}_v + \frac{1}{\rho_j} \frac{(\textbf{v}_i - \textbf{v}_j)(\textbf{x}_i - \textbf{x}_j)}{(\textbf{x}_i - \textbf{x}_j)(\textbf{x}_i - \textbf{x}_j) + 0.01h^2} \cdot \nabla W_{ij}$
-        \ENDIF
-    \ENDFOR
-    \STATE $\textbf{acc}_v \gets 2\nu m_f \cdot \textbf{acc}_v$
-    \STATE
-    \STATE $\textbf{a}_i^n \gets \textbf{acc}_g + \textbf{acc}_v$
-\ENDFOR
+    \ForAll{particle i}
+    \If{particle i belongs to the boundary}
+        \State $\textbf{a}_i^n \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+        \State continue
+    \EndIf
+    \State $\textbf{acc}_g \gets \begin{pmatrix}0 &-9.81 \end{pmatrix}^\intercal$
+    \State $\textbf{acc}_v \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+    \State
+    \State \text{// Viskositätsbeschleunigung an Partikel i}
+    \ForAll{neighbor j of particle i}
+        \If{particle j belongs to the boundary}
+            \State $\textbf{acc}_v \gets \textbf{acc}_v + \frac{1}{\rho_i} \frac{(\textbf{v}_i - \textbf{v}_j)(\textbf{x}_i - \textbf{x}_j)}{(\textbf{x}_i - \textbf{x}_j)(\textbf{x}_i - \textbf{x}_j) + 0.01h^2} \cdot \nabla W_{ij}$
+        \Else
+            \State $\textbf{acc}_v \gets \textbf{acc}_v + \frac{1}{\rho_j} \frac{(\textbf{v}_i - \textbf{v}_j)(\textbf{x}_i - \textbf{x}_j)}{(\textbf{x}_i - \textbf{x}_j)(\textbf{x}_i - \textbf{x}_j) + 0.01h^2} \cdot \nabla W_{ij}$
+        \EndIf
+    \EndFor
+    \State $\textbf{acc}_v \gets 2\nu m_f \cdot \textbf{acc}_v$
+    \State
+    \State $\textbf{a}_i^n \gets \textbf{acc}_g + \textbf{acc}_v$
+\EndFor
 \end{algorithmic}
 \end{algorithm}
 
@@ -555,25 +620,25 @@ Der iterative Schritt in \eqref{equation:iterative_pressure_update} kann nun ber
 \caption{Berechnung der Druckbeschleunigungen}
 \label{alg:druckbeschleunigung}
 \begin{algorithmic}
-    \FORALL{particle i}
-    \IF{particle i belongs to the boundary}
-        \STATE $\textbf{a}_i^p \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
-        \STATE continue
-    \ENDIF
-    \STATE $\textbf{acc}_p \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
-    \STATE
-    \STATE \text{// Druckbeschleunigung an Partikel i}
-    \FORALL{neighbor j of particle i}
-        \IF{particle j belongs to the boundary}
-            \STATE $\textbf{acc}_p \gets \textbf{acc}_p - \left(\frac{p_i}{\rho_i^2} + \frac{p_i}{\left(\rho_f^0\right)^2}\right) \cdot \nabla W_{ij}$ 
-        \ELSE
-            \STATE $\textbf{acc}_p \gets \textbf{acc}_p - \left(\frac{p_i}{\rho_i^2} + \frac{p_j}{\rho_j^2}\right) \cdot \nabla W_{ij}$
-        \ENDIF
-    \ENDFOR
-    \STATE $\textbf{acc}_p \gets \textbf{acc}_p \cdot m_f$
-    \STATE
-    \STATE $\textbf{a}_i^p \gets \textbf{acc}_p$
-\ENDFOR
+    \ForAll{particle i}
+    \If{particle i belongs to the boundary}
+        \State $\textbf{a}_i^p \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+        \State continue
+    \EndIf
+    \State $\textbf{acc}_p \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+    \State
+    \State \text{// Druckbeschleunigung an Partikel i}
+    \ForAll{neighbor j of particle i}
+        \If{particle j belongs to the boundary}
+            \State $\textbf{acc}_p \gets \textbf{acc}_p - \left(\frac{p_i}{\rho_i^2} + \frac{p_i}{\left(\rho_f^0\right)^2}\right) \cdot \nabla W_{ij}$ 
+        \Else
+            \State $\textbf{acc}_p \gets \textbf{acc}_p - \left(\frac{p_i}{\rho_i^2} + \frac{p_j}{\rho_j^2}\right) \cdot \nabla W_{ij}$
+        \EndIf
+    \EndFor
+    \State $\textbf{acc}_p \gets \textbf{acc}_p \cdot m_f$
+    \State
+    \State $\textbf{a}_i^p \gets \textbf{acc}_p$
+\EndFor
 \end{algorithmic}
 \end{algorithm}
 
@@ -581,25 +646,25 @@ Der iterative Schritt in \eqref{equation:iterative_pressure_update} kann nun ber
 \caption{Berechnung des Drucks der Partikel}
 \label{alg:druck}
 \begin{algorithmic}[1]
-    \FORALL{fluid particle f}
-        \STATE $A_{ff} \gets -\Delta t^2 \frac{m_f^2}{\rho_f^2} \cdot \left(\sum_{f_f}\nabla W_{ff_f} \nabla W_{ff_f} + \sum_{f_b}\nabla W_{ff_b} \nabla W_{ff_b}\right)$
-        \STATE $s_f \gets \rho_f^0 - \rho_f - m_f \Delta t \left(\sum_{f_f}(\textbf{v}_f^* - \textbf{v}_{f_f}^*) \nabla W_{ff_f} + \sum_{f_b}\textbf{v}_f^* \nabla W_{ff_b}\right)$
-        \STATE $p_f \gets 0$
-    \ENDFOR
-     \STATE $e \gets \infty$
-     \WHILE{$e \geq 0.001$}
-        \STATE $e \gets 0$
-        \STATE Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:druckbeschleunigung}
-        \FORALL{fluid particle f}
-            \STATE $(\textbf{A}\textbf{p})_f \gets m_f \Delta t^2\left(\sum_{f_f}(\textbf{a}_f^p - \textbf{a}_{f_f}^p) \nabla W_{ff_f} + \sum_{f_b}\textbf{a}_f^p \nabla W_{ff_b}\right)$
-            \IF{$f$ has no neighbors}
-                \STATE $(\textbf{A}\textbf{p})_f \gets 0$
-            \ENDIF
-            \STATE $p_f \gets \max(p_f + \omega \frac{s_f - (\textbf{A}\textbf{p})_f}{\textbf{A}_{ff}}, 0)$
-            \STATE $e \gets e + \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$
-        \ENDFOR
-        \STATE $e \gets \frac{e}{n}$
-    \ENDWHILE
+    \ForAll{fluid particle f}
+        \State $A_{ff} \gets -\Delta t^2 \frac{m_f^2}{\rho_f^2} \cdot \left(\sum_{f_f}\nabla W_{ff_f} \nabla W_{ff_f} + \sum_{f_b}\nabla W_{ff_b} \nabla W_{ff_b}\right)$
+        \State $s_f \gets \rho_f^0 - \rho_f - m_f \Delta t \left(\sum_{f_f}(\textbf{v}_f^* - \textbf{v}_{f_f}^*) \nabla W_{ff_f} + \sum_{f_b}\textbf{v}_f^* \nabla W_{ff_b}\right)$
+        \State $p_f \gets 0$
+    \EndFor
+     \State $e \gets \infty$
+     \While{$e \geq 0.001$}
+        \State $e \gets 0$
+        \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:druckbeschleunigung}
+        \ForAll{fluid particle f}
+            \State $(\textbf{A}\textbf{p})_f \gets m_f \Delta t^2\left(\sum_{f_f}(\textbf{a}_f^p - \textbf{a}_{f_f}^p) \nabla W_{ff_f} + \sum_{f_b}\textbf{a}_f^p \nabla W_{ff_b}\right)$
+            \If{$f$ has no neighbors}
+                \State $(\textbf{A}\textbf{p})_f \gets 0$
+            \EndIf
+            \State $p_f \gets \max(p_f + \omega \frac{s_f - (\textbf{A}\textbf{p})_f}{\textbf{A}_{ff}}, 0)$
+            \State $e \gets e + \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$
+        \EndFor
+        \State $e \gets \frac{e}{n}$
+    \EndWhile
 \end{algorithmic}
 \end{algorithm}
 

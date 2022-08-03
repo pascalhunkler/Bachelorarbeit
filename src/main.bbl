@@ -29,6 +29,13 @@ Dan Koschier, Jan Bender, Barbara Solenthaler, and Matthias Teschner.
   simulation of fluids and solids.
 \newblock {\em arXiv preprint arXiv:2009.06944}, 2020.
 
+\bibitem[LD08]{lagae_compact_2008}
+Ares Lagae and Philip Dutré.
+\newblock Compact, fast and robust grids for ray tracing.
+\newblock In {\em Computer {Graphics} {Forum}}, volume~27, pages 1235--1244.
+  Wiley Online Library, 2008.
+\newblock Issue: 4.
+
 \bibitem[Luc77]{lucy_numerical_1977}
 L.~B. Lucy.
 \newblock A numerical approach to the testing of the fission hypothesis.
