@@ -542,11 +542,49 @@ Das Uniforme Gitter unterteilt den Raum, in dem sich die Partikel bewegen, in me
 deren Größe dem Kernelsupport entspricht.
 Sinn dahinter ist, dass als Nachbarn eines Partikels nur die Partikel in der gleichen Zelle oder einer Nachbarzelle in Frage kommen.
 
+In der Implementierung wird ein Uniformes Gitter verwendet, das dem kompakten Gitter entspricht,
+was in der Arbeit von Lagae und Dutré \cite{lagae_compact_2008} beschrieben wird.
 
 \subsection{Uniformes Gitter Aufbau}
-In der Implementierung wird ein Uniformes Gitter verwendet, das dem kompakten Gitter entspricht,
-was in der Arbeit von Lagae und Dutré \cite{lagae_compact_2008} vorgeschlagen wurde.
-Zum Aufbau des Uniformen Gitters
+Kern des Uniformen Gitters sind zwei Arrays $C$ und $L$.
+Der Array $L$ enthält die Partikelindizes, welche sortiert sind nach den Zellen, in denen diese sich befinden.
+Der Array $C$ wird zum Aufbau von $L$ benötigt und enthält für jeden Zellenindex den Offset, an dem in $L$ ein Partikelindex eingefügt wird.
+Nach dem Aufbau von $L$ gibt $C$ jeweils anhand eines Zellenindex den Index für das erste Partikel in dieser Zelle in $L$ an.
+Beispielsweise sind alle Partikel von $L[C[j]]$ bis $L[C[j+1] - 1]$ in der Zelle mit Zellenindex $j$.
+Der Zellenindex eines Partikels wird anhand dessen Position bestimmt.
+
+%\begin{algorithm}
+%    \caption{Berechnung des Zellenindex}
+%    \label{alg:cell_index}
+%    \begin{algorithmic}
+%        \Function{getCellIndex}{$\textbf{x}_i$}
+%
+%        \EndFunction
+%    \end{algorithmic}
+%\end{algorithm}
+
+
+\begin{algorithm}
+    \caption{Aufbau des Uniformen Gitters}
+    \label{alg:uniform_grid_initialization}
+    \begin{algorithmic}[1]
+        \For{$j \gets 0, \text{cells}$}
+            \State $C[j] \gets 0$
+        \EndFor
+        \ForAll{particle i}
+            \State $j \gets$ \Call{getCellIndex}{$\textbf{x}_i$}
+            \State $C[j] \gets C[j] + 1$
+        \EndFor
+        \For{$i \gets 1, \text{cells}$}
+            \State $C[j] \gets C[j] + C[j-1]$
+        \EndFor
+        \ForAll{particle i}
+            \State $j \gets$ \Call{getCellIndex}{$\textbf{x}_i$}
+            \State $C[j] \gets C[j] - 1$
+            \State $L[C[j]] \gets i$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
 
 
 \subsection{Bestimmung der Nachbarn mithilfe des uniformen Gitters}
