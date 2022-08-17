@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage[section]{placeins}
 \usepackage{textgreek}
+\usepackage{scrhack}
 
 \title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH- Flüssigkeitssimulationen}
 \author{Pascal Hunkler}
@@ -251,6 +252,7 @@ Zudem wird der Impuls und Drehimpuls erhalten.
 Sind in einer partikelbasierten Simulation die Beschleunigungen für den Druck, die Viskosität und die restlichen Beschleunigungen, wie z.B. die Gravitation berechnet,
 muss eine numerische Zeitintegration durchgeführt werden, um die Geschwindigkeiten und Positionen der Partikel zu aktualisieren.
 Häufig wird dazu das Euler-Cromer Verfahren genutzt. \cite{koschier_smoothed_2020}
+
 Die Position $\textbf{x}_f^{t + \Delta t}$ und Geschwindigkeit $\textbf{v}_f^{t + \Delta t}$ eines Partikels $f$ zum Zeitpunkt $t + \Delta t$ 
 wird hier aus der berechneten Beschleunigung $\textbf{a}_f^t$ zum Zeitpunkt $t$ wie folgt aktualisiert:
 \begin{align}
@@ -541,17 +543,21 @@ kann stattdessen ein Uniformes Gitter aufgebaut werden, was zur Folge hat, dass 
 Das Uniforme Gitter unterteilt den Raum, in dem sich die Partikel bewegen, in mehrere gleich große quadratische Zellen,
 deren Größe dem Kernelsupport entspricht.
 Sinn dahinter ist, dass als Nachbarn eines Partikels nur die Partikel in der gleichen Zelle oder einer Nachbarzelle in Frage kommen.
+Da die Anzahl der Nachbarzellen und die Anzahl der Partikel in einer Zelle konstant ist,
+kommen für jedes Partikel nur konstant viele Nachbarpartikel in Frage.
+Daher ist die Nachbarschaftssuche durch das Uniforme Gitter in $O(n)$ für jeden Simulationsschritt.
 
 In der Implementierung wird ein Uniformes Gitter verwendet, das dem kompakten Gitter entspricht,
 was in der Arbeit von Lagae und Dutré \cite{lagae_compact_2008} beschrieben wird.
 
 \subsection{Uniformes Gitter Aufbau}
-Kern des Uniformen Gitters sind zwei Arrays $C$ und $L$.
+Kern der Implementierung des Uniformen Gitters sind zwei Arrays $C$ und $L$.
 Der Array $L$ enthält die Partikelindizes, welche sortiert sind nach den Zellen, in denen diese sich befinden.
 Der Array $C$ wird zum Aufbau von $L$ benötigt und enthält für jeden Zellenindex den Offset, an dem in $L$ ein Partikelindex eingefügt wird.
 Nach dem Aufbau von $L$ gibt $C$ jeweils anhand eines Zellenindex den Index für das erste Partikel in dieser Zelle in $L$ an.
 Beispielsweise sind alle Partikel von $L[C[j]]$ bis $L[C[j+1] - 1]$ in der Zelle mit Zellenindex $j$.
 Der Zellenindex eines Partikels wird anhand dessen Position bestimmt.
+
 
 %\begin{algorithm}
 %    \caption{Berechnung des Zellenindex}
@@ -587,12 +593,165 @@ Der Zellenindex eines Partikels wird anhand dessen Position bestimmt.
 \end{algorithm}
 
 
-\subsection{Bestimmung der Nachbarn mithilfe des uniformen Gitters}
+\subsection{Bestimmung der Nachbarn mithilfe des Uniformen Gitters}
+Ist das Uniforme Gitter aufgebaut, indem die Arrays $L$ und $C$ initialisiert wurden, so kann dieses für die Nachbarschaftssuche genutzt werden.
+Um die Nachbarn eines Partikels zu ermitteln,
+werden zuerst die Zelle des Partikels und dessen Nachbarzellen (bis zu 8 Nachbarzellen, je nachdem ob die Zelle am Rand ist oder nicht) überprüft.
+Alle Partikel in diesen Zellen kommen als Nachbar in Frage.
+
+In einem zweiten Schritt wird dann überprüft, ob der Abstand zwischen diesen Partikeln und des Urprungspartikels geringer als der Kernelsupport $\hbar$ ist.
+Die Partikel, deren Abstand zum Ursprungspartikel geringer als der Kernelsupport ist, sind die Nachbarn des Ursprungspartikels.
+
+Algorithmus \ref{alg:uniform_grid_neighborhood_search} zeigt, wie die Ermittlung der Nachbarn eines Partikels $f$ implementiert werden kann.
+
+\begin{algorithm}
+    \caption{Nachbarschaftssuche mithilfe des Uniformen Gitters}
+    \label{alg:uniform_grid_neighborhood_search}
+    \begin{algorithmic}[1]
+        \State $\text{possibleNeighbors} \gets \textit{empty list}$
+        \State $\text{neighbors} \gets \textit{empty list}$
+        \ForAll{neighbor cell index j}
+            \For{$i \gets C[j], C[j+1] - 1$}
+                \State $\text{possibleNeighbors.} \Call{add}{L[i]}$
+            \EndFor
+        \EndFor
+        \ForAll{$i$ in possibleNeighbors}
+            \If{$\| \textbf{x}_i - \textbf{x}_f \| < \hbar$}
+            \State $\text{neighbors.} \Call{add}{i}$
+            \EndIf
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+
+\section{Berechnung der Dichte}
+\begin{algorithm}
+    \caption{Dichteberechnung}
+    \label{alg:density}
+    \begin{algorithmic}
+        \ForAll{fluid particle f}
+            \State $\rho_f \gets m_f \sum_{f_i} W_{fi}$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\section{Berechnung des Drucks}
+\begin{algorithm}
+    \caption{Berechnung des Drucks der Partikel mit einer Zustandsgleichung}
+    \label{alg:pressure_state_equation}
+    \begin{algorithmic}[1]
+        \ForAll{fluid particle f}
+            \State $p_f \gets \max\left(k \left(\frac{\rho_f}{\rho^0} - 1\right), 0\right)$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \caption{Berechnung des Drucks der Partikel mit IISPH}
+    \label{alg:pressure_iisph}
+    \begin{algorithmic}[1]
+        \ForAll{fluid particle f}
+            \State $A_{ff} \gets -\Delta t^2 \frac{m_f^2}{\rho_f^2} \cdot \left(\sum_{f_f}\nabla W_{ff_f} \nabla W_{ff_f} + \sum_{f_b}\nabla W_{ff_b} \nabla W_{ff_b}\right)$
+            \State $s_f \gets \rho_f^0 - \rho_f - m_f \Delta t \left(\sum_{f_f}(\textbf{v}_f^* - \textbf{v}_{f_f}^*) \nabla W_{ff_f} + \sum_{f_b}\textbf{v}_f^* \nabla W_{ff_b}\right)$
+            \State $p_f \gets 0$
+        \EndFor
+         \State $e \gets \infty$
+         \While{$e \geq 0.001$}
+            \State $e \gets 0$
+            \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:pressure_acceleration}
+            \ForAll{fluid particle f}
+                \State $(\textbf{A}\textbf{p})_f \gets m_f \Delta t^2\left(\sum_{f_f}(\textbf{a}_f^p - \textbf{a}_{f_f}^p) \nabla W_{ff_f} + \sum_{f_b}\textbf{a}_f^p \nabla W_{ff_b}\right)$
+                \If{$f$ has no neighbors}
+                    \State $(\textbf{A}\textbf{p})_f \gets 0$
+                \EndIf
+                \State $p_f \gets \max(p_f + \omega \frac{s_f - (\textbf{A}\textbf{p})_f}{\textbf{A}_{ff}}, 0)$
+                \State $e \gets e + \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$
+            \EndFor
+            \State $e \gets \frac{e}{n}$
+        \EndWhile
+    \end{algorithmic}
+    \end{algorithm}
+
+
+\section{Berechnung der Druckbeschleunigung}
+\begin{algorithm}
+    \caption{Berechnung der Druckbeschleunigungen}
+    \label{alg:pressure_acceleration}
+    \begin{algorithmic}
+        \ForAll{particle i}
+        \If{particle i belongs to the boundary}
+            \State $\textbf{a}_i^p \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+            \State continue
+        \EndIf
+        \State $\textbf{acc}_p \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+        \State
+        \State \text{// Druckbeschleunigung an Partikel i}
+        \ForAll{neighbor j of particle i}
+            \If{particle j belongs to the boundary}
+                \State $\textbf{acc}_p \gets \textbf{acc}_p - \left(\frac{p_i}{\rho_i^2} + \frac{p_i}{\left(\rho_f^0\right)^2}\right) \cdot \nabla W_{ij}$ 
+            \Else
+                \State $\textbf{acc}_p \gets \textbf{acc}_p - \left(\frac{p_i}{\rho_i^2} + \frac{p_j}{\rho_j^2}\right) \cdot \nabla W_{ij}$
+            \EndIf
+        \EndFor
+        \State $\textbf{acc}_p \gets \textbf{acc}_p \cdot m_f$
+        \State
+        \State $\textbf{a}_i^p \gets \textbf{acc}_p$
+    \EndFor
+    \end{algorithmic}
+    \end{algorithm}
+
+
+\section{Berechnung der restlichen Beschleunigungen}
+\begin{algorithm}
+    \caption{Berechnung der restlichen Beschleunigungen}
+    \label{alg:other_accelerations}
+    \begin{algorithmic}
+        \ForAll{particle i}
+        \If{particle i belongs to the boundary}
+            \State $\textbf{a}_i^n \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+            \State continue
+        \EndIf
+        \State $\textbf{acc}_g \gets \begin{pmatrix}0 &-9.81 \end{pmatrix}^\intercal$
+        \State $\textbf{acc}_v \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
+        \State
+        \State \text{// Viskositätsbeschleunigung an Partikel i}
+        \ForAll{neighbor j of particle i}
+            \If{particle j belongs to the boundary}
+                \State $\textbf{acc}_v \gets \textbf{acc}_v + \frac{1}{\rho_i} \frac{(\textbf{v}_i - \textbf{v}_j)(\textbf{x}_i - \textbf{x}_j)}{(\textbf{x}_i - \textbf{x}_j)(\textbf{x}_i - \textbf{x}_j) + 0.01h^2} \cdot \nabla W_{ij}$
+            \Else
+                \State $\textbf{acc}_v \gets \textbf{acc}_v + \frac{1}{\rho_j} \frac{(\textbf{v}_i - \textbf{v}_j)(\textbf{x}_i - \textbf{x}_j)}{(\textbf{x}_i - \textbf{x}_j)(\textbf{x}_i - \textbf{x}_j) + 0.01h^2} \cdot \nabla W_{ij}$
+            \EndIf
+        \EndFor
+        \State $\textbf{acc}_v \gets 2\nu m_f \cdot \textbf{acc}_v$
+        \State
+        \State $\textbf{a}_i^n \gets \textbf{acc}_g + \textbf{acc}_v$
+    \EndFor
+    \end{algorithmic}
+    \end{algorithm}
+
+
 \section{Simulationsschritt}
-\subsection{Berechnung der Dichte}
-\subsection{Berechnung des Drucks}
-\subsection{Berechnung der Druckbeschleunigung}
-\subsection{Berechnung der restlichen Beschleunigungen}
+\begin{algorithm}
+    \caption{Simulationsschritt}
+    \label{alg:simulationsschritt}
+    \begin{algorithmic}[1]
+        \State Determine neighbors of each particle
+        \State Compute density $\rho_f$ of each fluid particle using algorithm \ref{alg:density}
+        \State Compute non-pressure accelerations $\textbf{a}_f^n$ using algorithm \ref{alg:other_accelerations}
+        \ForAll{fluid particle f}
+            \State $\textbf{v}_f^* \gets \textbf{v}_f + \Delta t \textbf{a}_f^n$
+        \EndFor
+        \State Compute pressure $p_f$ of each fluid particle using algorithm \ref{alg:pressure_iisph}
+        \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:pressure_acceleration}
+        \ForAll{fluid particle f}
+            \State $\textbf{v}_f \gets \textbf{v}_f^* + \Delta t \textbf{a}_f^p$
+        \EndFor
+        \ForAll{fluid particle f}
+            \State $\textbf{x}_f \gets \textbf{x}_f + \Delta t \textbf{v}_f$
+        \EndFor
+        \State 
+    \end{algorithmic}
+    \end{algorithm}
 \section{Visualisierung}
 \chapter{Analyse}
 \section{Szenarien}
@@ -604,106 +763,13 @@ Der Zellenindex eines Partikels wird anhand dessen Position bestimmt.
 \bibliographystyle{alpha}
 \bibliography{literaturverzeichnis}
 
-\begin{algorithm}
-\caption{Simulationsschritt}
-\label{alg:simulationsschritt}
-\begin{algorithmic}[1]
-    \State Determine neighbors of each particle
-    \State Compute density $\rho_f$ of each fluid particle using algorithm \ref{alg:dichte}
-    \State Compute non-pressure accelerations $\textbf{a}_f^n$ using algorithm \ref{alg:restliche_beschleunigung}
-    \ForAll{fluid particle f}
-        \State $\textbf{v}_f^* \gets \textbf{v}_f + \Delta t \textbf{a}_f^n$
-    \EndFor
-    \State Compute pressure $p_f$ of each fluid particle using algorithm \ref{alg:druck}
-    \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:druckbeschleunigung}
-    \ForAll{fluid particle f}
-        \State $\textbf{v}_f \gets \textbf{v}_f^* + \Delta t \textbf{a}_f^p$
-    \EndFor
-    \ForAll{fluid particle f}
-        \State $\textbf{x}_f \gets \textbf{x}_f + \Delta t \textbf{v}_f$
-    \EndFor
-    \State 
-\end{algorithmic}
-\end{algorithm}
 
 
-\begin{algorithm}
-\caption{Berechnung der restlichen Beschleunigungen}
-\label{alg:restliche_beschleunigung}
-\begin{algorithmic}
-    \ForAll{particle i}
-    \If{particle i belongs to the boundary}
-        \State $\textbf{a}_i^n \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
-        \State continue
-    \EndIf
-    \State $\textbf{acc}_g \gets \begin{pmatrix}0 &-9.81 \end{pmatrix}^\intercal$
-    \State $\textbf{acc}_v \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
-    \State
-    \State \text{// Viskositätsbeschleunigung an Partikel i}
-    \ForAll{neighbor j of particle i}
-        \If{particle j belongs to the boundary}
-            \State $\textbf{acc}_v \gets \textbf{acc}_v + \frac{1}{\rho_i} \frac{(\textbf{v}_i - \textbf{v}_j)(\textbf{x}_i - \textbf{x}_j)}{(\textbf{x}_i - \textbf{x}_j)(\textbf{x}_i - \textbf{x}_j) + 0.01h^2} \cdot \nabla W_{ij}$
-        \Else
-            \State $\textbf{acc}_v \gets \textbf{acc}_v + \frac{1}{\rho_j} \frac{(\textbf{v}_i - \textbf{v}_j)(\textbf{x}_i - \textbf{x}_j)}{(\textbf{x}_i - \textbf{x}_j)(\textbf{x}_i - \textbf{x}_j) + 0.01h^2} \cdot \nabla W_{ij}$
-        \EndIf
-    \EndFor
-    \State $\textbf{acc}_v \gets 2\nu m_f \cdot \textbf{acc}_v$
-    \State
-    \State $\textbf{a}_i^n \gets \textbf{acc}_g + \textbf{acc}_v$
-\EndFor
-\end{algorithmic}
-\end{algorithm}
 
-\begin{algorithm}
-\caption{Berechnung der Druckbeschleunigungen}
-\label{alg:druckbeschleunigung}
-\begin{algorithmic}
-    \ForAll{particle i}
-    \If{particle i belongs to the boundary}
-        \State $\textbf{a}_i^p \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
-        \State continue
-    \EndIf
-    \State $\textbf{acc}_p \gets \begin{pmatrix}0 & 0 \end{pmatrix}^\intercal$
-    \State
-    \State \text{// Druckbeschleunigung an Partikel i}
-    \ForAll{neighbor j of particle i}
-        \If{particle j belongs to the boundary}
-            \State $\textbf{acc}_p \gets \textbf{acc}_p - \left(\frac{p_i}{\rho_i^2} + \frac{p_i}{\left(\rho_f^0\right)^2}\right) \cdot \nabla W_{ij}$ 
-        \Else
-            \State $\textbf{acc}_p \gets \textbf{acc}_p - \left(\frac{p_i}{\rho_i^2} + \frac{p_j}{\rho_j^2}\right) \cdot \nabla W_{ij}$
-        \EndIf
-    \EndFor
-    \State $\textbf{acc}_p \gets \textbf{acc}_p \cdot m_f$
-    \State
-    \State $\textbf{a}_i^p \gets \textbf{acc}_p$
-\EndFor
-\end{algorithmic}
-\end{algorithm}
 
-\begin{algorithm}
-\caption{Berechnung des Drucks der Partikel}
-\label{alg:druck}
-\begin{algorithmic}[1]
-    \ForAll{fluid particle f}
-        \State $A_{ff} \gets -\Delta t^2 \frac{m_f^2}{\rho_f^2} \cdot \left(\sum_{f_f}\nabla W_{ff_f} \nabla W_{ff_f} + \sum_{f_b}\nabla W_{ff_b} \nabla W_{ff_b}\right)$
-        \State $s_f \gets \rho_f^0 - \rho_f - m_f \Delta t \left(\sum_{f_f}(\textbf{v}_f^* - \textbf{v}_{f_f}^*) \nabla W_{ff_f} + \sum_{f_b}\textbf{v}_f^* \nabla W_{ff_b}\right)$
-        \State $p_f \gets 0$
-    \EndFor
-     \State $e \gets \infty$
-     \While{$e \geq 0.001$}
-        \State $e \gets 0$
-        \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:druckbeschleunigung}
-        \ForAll{fluid particle f}
-            \State $(\textbf{A}\textbf{p})_f \gets m_f \Delta t^2\left(\sum_{f_f}(\textbf{a}_f^p - \textbf{a}_{f_f}^p) \nabla W_{ff_f} + \sum_{f_b}\textbf{a}_f^p \nabla W_{ff_b}\right)$
-            \If{$f$ has no neighbors}
-                \State $(\textbf{A}\textbf{p})_f \gets 0$
-            \EndIf
-            \State $p_f \gets \max(p_f + \omega \frac{s_f - (\textbf{A}\textbf{p})_f}{\textbf{A}_{ff}}, 0)$
-            \State $e \gets e + \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$
-        \EndFor
-        \State $e \gets \frac{e}{n}$
-    \EndWhile
-\end{algorithmic}
-\end{algorithm}
+
+
+
+
 
 \end{document}

@@ -21,16 +21,16 @@
 \contentsline {section}{\numberline {5.4}Nachbarschaftssuche}{19}%
 \contentsline {subsection}{\numberline {5.4.1}Uniformes Gitter}{20}%
 \contentsline {subsection}{\numberline {5.4.2}Uniformes Gitter Aufbau}{20}%
-\contentsline {subsection}{\numberline {5.4.3}Bestimmung der Nachbarn mithilfe des uniformen Gitters}{21}%
-\contentsline {section}{\numberline {5.5}Simulationsschritt}{21}%
-\contentsline {subsection}{\numberline {5.5.1}Berechnung der Dichte}{21}%
-\contentsline {subsection}{\numberline {5.5.2}Berechnung des Drucks}{21}%
-\contentsline {subsection}{\numberline {5.5.3}Berechnung der Druckbeschleunigung}{21}%
-\contentsline {subsection}{\numberline {5.5.4}Berechnung der restlichen Beschleunigungen}{21}%
-\contentsline {section}{\numberline {5.6}Visualisierung}{21}%
-\contentsline {chapter}{\numberline {6}Analyse}{22}%
-\contentsline {section}{\numberline {6.1}Szenarien}{22}%
-\contentsline {section}{\numberline {6.2}Rechen- und Speicheraufwand}{22}%
-\contentsline {section}{\numberline {6.3}Einfluss des Zeitschritts}{22}%
-\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{23}%
-\contentsline {chapter}{\numberline {8}Literaturverzeichnis}{24}%
+\contentsline {subsection}{\numberline {5.4.3}Bestimmung der Nachbarn mithilfe des Uniformen Gitters}{21}%
+\contentsline {section}{\numberline {5.5}Berechnung der Dichte}{21}%
+\contentsline {section}{\numberline {5.6}Berechnung des Drucks}{21}%
+\contentsline {section}{\numberline {5.7}Berechnung der Druckbeschleunigung}{23}%
+\contentsline {section}{\numberline {5.8}Berechnung der restlichen Beschleunigungen}{23}%
+\contentsline {section}{\numberline {5.9}Simulationsschritt}{24}%
+\contentsline {section}{\numberline {5.10}Visualisierung}{25}%
+\contentsline {chapter}{\numberline {6}Analyse}{26}%
+\contentsline {section}{\numberline {6.1}Szenarien}{26}%
+\contentsline {section}{\numberline {6.2}Rechen- und Speicheraufwand}{26}%
+\contentsline {section}{\numberline {6.3}Einfluss des Zeitschritts}{26}%
+\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{27}%
+\contentsline {chapter}{\numberline {8}Literaturverzeichnis}{28}%
