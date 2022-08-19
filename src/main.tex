@@ -625,6 +625,16 @@ Algorithmus \ref{alg:uniform_grid_neighborhood_search} zeigt, wie die Ermittlung
 
 
 \section{Berechnung der Dichte}
+Zur Implementierung der Dichteberechnung wird die normale SPH Approximation der Dichte benutzt:
+\begin{equation}
+    \rho_f = \sum_{f_i} m_{fi} W_{f f_i}
+\end{equation}
+In der Implementierung ist die Masse aller Partikel identisch, daher kann die Masse der Nachbarpartikel $m_{fi}$ durch $m_f$ ersetzt werden
+und stattdessen die Dichte wie folgt berechnet werden:
+\begin{equation}
+    \rho_f = m_f \sum_{f_i} W_{f f_i}
+\end{equation}
+
 \begin{algorithm}
     \caption{Dichteberechnung}
     \label{alg:density}
@@ -636,15 +646,24 @@ Algorithmus \ref{alg:uniform_grid_neighborhood_search} zeigt, wie die Ermittlung
 \end{algorithm}
 
 \section{Berechnung des Drucks}
-\begin{algorithm}
-    \caption{Berechnung des Drucks der Partikel mit einer Zustandsgleichung}
-    \label{alg:pressure_state_equation}
-    \begin{algorithmic}[1]
-        \ForAll{fluid particle f}
-            \State $p_f \gets \max\left(k \left(\frac{\rho_f}{\rho^0} - 1\right), 0\right)$
-        \EndFor
-    \end{algorithmic}
-\end{algorithm}
+Beim Start der Simulation kann ausgewählt werden, ob der Druck durch eine Zustandsgleichung oder durch IISPH berechnet wird.
+Daher gibt es für die Druckberechnung zwei verschiedene Implementierungen.
+
+Für die Druckberechnung durh eine Zustandsgleichung wird folgende Zustandsgleichung verwendet:
+\begin{equation}
+    p_f = \max\left(k \left(\frac{\rho_f}{\rho^0} - 1\right), 0\right)
+\end{equation}
+Die Implementierung durch einen Algorithmus ist trivial.
+
+%\begin{algorithm}
+%    \caption{Berechnung des Drucks der Partikel mit einer Zustandsgleichung}
+%    \label{alg:pressure_state_equation}
+%    \begin{algorithmic}[1]
+%        \ForAll{fluid particle f}
+%            \State $p_f \gets \max\left(k \left(\frac{\rho_f}{\rho^0} - 1\right), 0\right)$
+%        \EndFor
+%    \end{algorithmic}
+%\end{algorithm}
 
 \begin{algorithm}
     \caption{Berechnung des Drucks der Partikel mit IISPH}
