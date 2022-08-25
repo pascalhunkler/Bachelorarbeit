@@ -456,6 +456,14 @@ Jetzt können die Koeffizienten $a_{ff}$ einfach berechnet werden durch
 \begin{equation}
     a_{ff} = \sum_{f_f} m_{f_f} \left(\textbf{d}_{ff} - \textbf{d}_{f_f f}\right)  \nabla W_{ff_f}
 \end{equation}
+\begin{align}
+    a_{ff} &= \sum_{f_f} m_{f_f} \left(\textbf{d}_{ff} - \textbf{d}_{f_f f}\right)  \nabla W_{ff_f}\\
+    a_{ff} &= \sum_{f_f} m_f \left(\textbf{d}_{ff} - \textbf{d}_{f_f f}\right)  \nabla W_{ff_f}\\
+    a_{ff} &= \sum_{f_f} m_f 
+        \left(\left(-\Delta t^2 \sum_{f_f} \frac{m_f}{\rho_f^2} \nabla W_{ff_f}\right) - \Delta t^2 \frac{m_f}{\rho_f^2} \nabla W_{ff_f}\right) 
+        \nabla W_{ff_f}\\
+        &= - \Delta t^2 \frac{m_f^2}{\rho_{f_f}^2} \sum_{f_f} \left(\left(\sum_{f_f} \nabla W_{ff_f}\right) + \nabla W_{ff_f}\right) \nabla W_{ff_f}
+\end{align}
 Der iterative Schritt in \eqref{equation:iterative_pressure_update} kann nun berechnet werden durch
 \begin{align}
     p_f^{l+1} &= (1 - \omega) p_f^l + \omega \frac{1}{a_{ff}} \Biggl(\rho^0 - \rho_f^* - \\
