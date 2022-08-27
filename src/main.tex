@@ -763,6 +763,13 @@ Algorithmus \ref{alg:pressure_iisph} zeigt die Implementierung der Druckberechnu
 
 
 \section{Berechnung der Druckbeschleunigung}
+Zur Berechnung der Druckbeschleunigung wird die alternative Form der SPH-Approximation verwendet, die den Impuls und Drehimpuls der Flüssigkeit erhält:
+\begin{equation}
+    \textbf{a}_f^p = -\frac{1}{\rho_f} \nabla p_f = -\sum_{f_f} m_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
+\end{equation}
+
+Die Implementierung dazu findet sich in Algorithmus \ref{alg:pressure_acceleration}.
+
 \begin{algorithm}
     \caption{Berechnung der Druckbeschleunigungen}
     \label{alg:pressure_acceleration}
@@ -787,10 +794,31 @@ Algorithmus \ref{alg:pressure_iisph} zeigt die Implementierung der Druckberechnu
         \State $\textbf{a}_i^p \gets \textbf{acc}_p$
     \EndFor
     \end{algorithmic}
-    \end{algorithm}
+\end{algorithm}
 
 
 \section{Berechnung der restlichen Beschleunigungen}
+Neben den Druckbeschleunigungen müssen auch andere Beschleunigungen berechnet werden.
+In der Implementierung wird die Viskositätsbeschleunigung berechnet und die Gravitationsbeschleunigung, welche kontant ist.
+Die Viskositätsbeschleunigung $\nu \nabla^2 \textbf{v}_f$ wird ebenfalls nicht durch die normale SPH-Approximation berechnet,
+sondern durch folgende alternative SPH-Approximation:
+\begin{equation}
+    \nu \nabla^2 \textbf{v}_f = 2(d + 2) \nu \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
+    0.01h^2} \nabla W_{ff_f}
+\end{equation}
+Da der Parameter $\nu$ frei gewählt ist, kann der Vorfaktor $2(d+2)$ weggelassen werden.
+Ebenfalls sind in der Implementierung die Massen der Partikel identisch.
+Zusätzlich muss noch die Grenzbehandlung mit einbezogen werden.
+Daher wird in Algorithmus \ref{alg:other_accelerations} die Viskositätsbeschleunigung
+durch folgende Gleichung berechnet:
+\begin{align}
+    \nu \nabla^2 \textbf{v}_f = \nu m_f \biggl(&\sum_{f_f} \frac{1}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
+    0.01h^2} \nabla W_{ff_f}\\
+    &+ \sum_{f_b} \frac{1}{\rho_f} \frac{\textbf{v}_f \cdot \textbf{x}_{ff_b}}{\|\textbf{x}_{ff_b}\| + 
+    0.01h^2} \nabla W_{ff_b}
+    \biggr)
+\end{align}
+
 \begin{algorithm}
     \caption{Berechnung der restlichen Beschleunigungen}
     \label{alg:other_accelerations}
@@ -820,9 +848,31 @@ Algorithmus \ref{alg:pressure_iisph} zeigt die Implementierung der Druckberechnu
 
 
 \section{Simulationsschritt}
+Der Simulationsschritt ist der Kern der Simulation.
+In jedem Simulationsschritt werden die Beschleunigungen berechnet, die auf die Partikel wirken,
+und anschließend anhand diesen Beschleunigungen die Geschwindigkeiten und Positionen der Partikel aktualisiert.
+
+Zu Beginn des Simulationsschrittes findet die Nachbarschaftssuche statt, damit die SPH-Approximationen berechnet werden können.
+Die Nachbarschaftssuche geschieht mithilfe des Uniformen Gitters, welches zuvor beschrieben wurde.
+
+Nachdem die Nachbarn bestimmt sind, wird mithilfe von Algorithmus \ref{alg:density} die Dichte an jedem Flüssigkeitspartikel berechnet.
+
+Dann werden die restlichen Beschleunigungen mit Algorithmus \ref{alg:other_accelerations} berechnet, die nicht durch den Druck ausgelöst sind.
+
+Anhand diesen Beschleunigungen wird eine Zwischen-Geschwindigkeit $\textbf{v}_f^*$ an jedem Flüssigkeitspartikel $f$ berechnet.
+
+Nun wird der Druck berechnet. Je nachdem, welche Druckberechnung gewünscht ist,
+wird der Druck durch eine Zustandsgleichung oder durch IISPH mit Algorithmus \ref{alg:pressure_iisph} berechnet.
+
+Anschließend werden die Druckbeschleunigungen berechnet mit Algorithmus \ref{alg:pressure_acceleration}.
+
+Zum Schluss werden anhand des Euler-Cromer Verfahrens die Geschwindigkeiten $\textbf{v}_f$ und Positionen $\textbf{x}_f$ der Flüssigkeitspartikel aktualisiert.
+
+Der Simulationsschritt ist in Algorithmus \ref{alg:simulation_step} dargestellt.
+
 \begin{algorithm}
     \caption{Simulationsschritt}
-    \label{alg:simulationsschritt}
+    \label{alg:simulation_step}
     \begin{algorithmic}[1]
         \State Determine neighbors of each particle
         \State Compute density $\rho_f$ of each fluid particle using algorithm \ref{alg:density}
@@ -830,7 +880,7 @@ Algorithmus \ref{alg:pressure_iisph} zeigt die Implementierung der Druckberechnu
         \ForAll{fluid particle f}
             \State $\textbf{v}_f^* \gets \textbf{v}_f + \Delta t \textbf{a}_f^n$
         \EndFor
-        \State Compute pressure $p_f$ of each fluid particle using algorithm \ref{alg:pressure_iisph}
+        \State Compute pressure $p_f$ of each fluid particle using algorithm \ref{alg:pressure_iisph} or state equation
         \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:pressure_acceleration}
         \ForAll{fluid particle f}
             \State $\textbf{v}_f \gets \textbf{v}_f^* + \Delta t \textbf{a}_f^p$
