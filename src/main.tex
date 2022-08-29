@@ -464,9 +464,26 @@ Der iterative Schritt in \eqref{equation:iterative_pressure_update} kann nun ber
     \textbf{d}_{f_f f_f} p_{f_f} - \sum_{f_{f_f} \neq f} \textbf{d}_{f_f f_{f_f}} p_{f_{f_f}} \biggr) \nabla W_{ff_f}\Biggr)
 \end{align}
 
+
 \chapter{Implementierung}
+Dieses Kapitel beschäftigt sich damit, wie die Konzepte aus den vorherigen Kapiteln implementiert wurden.
+
+
 \section{Programmierumgebung}
-\section{Architektur der Software}
+Die Software zur Flüssigkeitssimulation wurde überwiegend in der Programmiersprache C++ geschrieben.
+Daneben sind die Shader für die Visualisierung in OpenGL Shading Language geschrieben.
+Als Entwicklungsumgebung wurde Microsoft Visual Studio Community 2022 verwendet.
+Verwendete Bibliotheken sind GLFW und GLAD für die Visualisierung mit OpenGL,
+GoogleTest für UnitTests
+und OpenGL Mathematics (GLM) für mathematische Strukturen und Berechnungen.
+
+
+\section{Grenzbehandlung}
+
+
+%\section{Architektur der Software}
+
+
 \section{Kernelfunktion, Kernelgradient}
 In der Implementierung wird der Cubic Spline Kernel verwendet.
 Da die Simulation zweidimensional ist, hat die Kernelfunktion damit folgende Form:
