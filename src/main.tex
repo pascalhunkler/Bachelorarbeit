@@ -479,8 +479,19 @@ und OpenGL Mathematics (GLM) für mathematische Strukturen und Berechnungen.
 
 
 \section{Grenzbehandlung}
+Neben den Flüssigkeitspartikeln gibt es in der Implementierung auch Grenzpartikel.
+In der Notation werden die Grenzpartiel mit dem Index $b$ und somit auch die Nachbarn eines Flüssigkeitspartikels $f$,
+welche zur Grenze gehören, mit dem Index $f_b$ identifiziert.
+Für die Grenzbehandlung wird der Ansatz aus \cite{koschier_smoothed_2020} verwendet, wo es mehrere Schichten von Grenzpartikel mit identischer Größe und Masse gibt.
 
+Die Grenzpartikel sind fest an einem Ort und verhindern, dass die Flüssigkeit auseinanderfließt.
+Die Grenze besteht aus drei Schichten von Grenzpartikel.
+Die mehreren Schichten sorgen dafür, dass wenn ein Partikel nahe an der Grenze ist, noch stets genügend Nachbarn hat.
 
+Für die Grenzpartikel werden Größen wie die Dichte $\rho_b$ und der Druck $p_b$ nicht berechnet.
+Da diese jedoch für SPH-Berechnungen benötigt werden, müssen dennoch für diese Größen Werte gewählt werden.
+Für die Dichte $\rho_b$ wird die Ruhedichte $\rho^0$ gewählt.
+Wird der Druck $p_{f_b}$ in einer SPH-Berechnung benötigt, wird stattdessen der Wert des Flüssigkeitspartikels gespiegelt und damit der Wert $p_f$ verwendet.
 %\section{Architektur der Software}
 
 
@@ -908,14 +919,17 @@ Der Simulationsschritt ist in Algorithmus \ref{alg:simulation_step} dargestellt.
         \State 
     \end{algorithmic}
     \end{algorithm}
+
+
 \section{Visualisierung}
+
+
 \chapter{Analyse}
 \section{Szenarien}
 \section{Rechen- und Speicheraufwand}
 \section{Einfluss des Zeitschritts}
 \section{}
 \chapter{Fazit und Ausblick}
-\chapter{Literaturverzeichnis}
 \bibliographystyle{alpha}
 \bibliography{literaturverzeichnis}
 
