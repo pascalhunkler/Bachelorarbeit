@@ -8,6 +8,7 @@
 \usepackage{textgreek}
 \usepackage{scrhack}
 
+\graphicspath{{./Abbildungen/}}
 \title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH- Flüssigkeitssimulationen}
 \author{Pascal Hunkler}
 \date{May 2022}
@@ -925,10 +926,37 @@ Der Simulationsschritt ist in Algorithmus \ref{alg:simulation_step} dargestellt.
 
 
 \chapter{Analyse}
+
+
 \section{Szenarien}
+\begin{figure}[htb]
+    \caption{Brechender Damm}
+    \includegraphics[width=\textwidth]{Dammbruch.png}
+\end{figure}
+
+\begin{figure}[htb]
+    \caption{Damm mit Leck}
+    \includegraphics[width=\textwidth]{Dammleck.png}
+\end{figure}
+
+\begin{figure}[htb]
+    \caption{Von einer Plattform herunterfallende Flüssigkeit}
+    \includegraphics[width=\textwidth]{Fallend.png}
+\end{figure}
+
+\begin{figure}[htb]
+    \caption{Von einer schiefen Ebene herunterfließende Flüssigkeit}
+    \includegraphics[width=\textwidth]{Herunterfließend.png}
+\end{figure}
+
+\begin{figure}[htb]
+    \caption{Ruhende Flüssigkeit}
+    \includegraphics[width=\textwidth]{Ruhend.png}
+\end{figure}
+
+
 \section{Rechen- und Speicheraufwand}
 \section{Einfluss des Zeitschritts}
-\section{}
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}
 \bibliography{literaturverzeichnis}
