@@ -923,6 +923,56 @@ Der Simulationsschritt ist in Algorithmus \ref{alg:simulation_step} dargestellt.
 
 
 \section{Visualisierung}
+Visualisiert wird die Simulation durch die Programmierschnittstelle \textit{OpenGL} in einem Fenster der Größe 1200x750.
+
+Jedes Partikel wird durch einen Kreis dargestellt.
+Beim Starten der Simulation kann die Partikelgröße $h$ gewählt werden.
+Die Partikelgröße entspricht gleichzeitig dem Durchmesser des zugehörigen Kreises in Pixel.
+Wird also beispielsweise eine Partikelgröße $h = 10$ gewählt, so ist in der Visualisierung jeder Kreis auch vom Durchmesser 10 Pixel.
+
+Die globalen Koordinaten $\textbf{x}_f$ eines Partikels $f$,
+die in der Simulation verwendet werden,
+sind zu dessen Fensterkoordinaten $\textbf{x}'_f$ gespiegelt an einer Parallelen der x-Achse,
+die sich in der Mitte des Fensters mit y-Koordinaten $y = 375$ befindet.
+
+Seien $\textbf{x}'_f$ also die Fensterkoordinaten des Partikels $f$ mit globalen Koordinaten $\textbf{x}_f = \begin{pmatrix} x & y \end{pmatrix}^\intercal$.
+Dann gilt
+\begin{equation}
+    \textbf{x}'_f = \begin{pmatrix}
+        x & 750 - y
+    \end{pmatrix}^\intercal
+\end{equation}
+
+Die Grenzpartikel werden alle in grauer Farbe dargestellt.
+Die Farbe eines Flüssigkeitspartikels $f$ hängt von dem Betrag dessen Geschwindigkeit $\| \textbf{v}_f \|$ ab.
+Dabei erscheinen ruhende Partikel komplett in blau, schnellere Partikel in grün und schließlich ab $\| \textbf{v}_f \| > 100$ komplett in rot.
+Die Übergänge zwischen den Farben sind fließend.
+
+Sei $\textbf{c}_f$ der Wert der Farbe des Partikels $f$ im RGB-Farbraum.
+Dann wird $\textbf{c}_f$ wie folgt berechnet:
+\begin{align}
+    \textbf{c}_f = \begin{cases}
+        \begin{pmatrix}
+            0\\
+            \sin^2(\frac{\pi \|\textbf{v}_f\|}{100})\\
+            \cos^2(\frac{\pi \|\textbf{v}_f\|}{100})
+        \end{pmatrix}
+        & \text{falls } \|\textbf{v}_f\| < 50\\[25pt]
+        \begin{pmatrix}
+            \cos^2(\frac{\pi \|\textbf{v}_f\|}{100})\\
+            \sin^2(\frac{\pi \|\textbf{v}_f\|}{100})\\
+            0
+        \end{pmatrix}
+        & \text{falls } 50 \leq \|\textbf{v}_f\| < 100\\[25pt]
+        \begin{pmatrix}
+            1\\
+            0\\
+            0
+        \end{pmatrix}
+        & \text{sonst}
+    \end{cases}
+\end{align}
+
 
 
 \chapter{Analyse}
@@ -960,14 +1010,6 @@ Der Simulationsschritt ist in Algorithmus \ref{alg:simulation_step} dargestellt.
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}
 \bibliography{literaturverzeichnis}
-
-
-
-
-
-
-
-
 
 
 \end{document}
