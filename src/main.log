@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.6.20)  6 SEP 2022 02:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.6.20)  6 SEP 2022 03:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -710,52 +710,52 @@ chapter 6.
 <./Abbildungen/Dammbruch.png, id=113, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Dammbruch.png Graphic file (type png)
 <use ./Abbildungen/Dammbruch.png>
-Package pdftex.def Info: ./Abbildungen/Dammbruch.png  used on input line 984.
+Package pdftex.def Info: ./Abbildungen/Dammbruch.png  used on input line 992.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 <./Abbildungen/Dammleck.png, id=114, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Dammleck.png Graphic file (type png)
 <use ./Abbildungen/Dammleck.png>
-Package pdftex.def Info: ./Abbildungen/Dammleck.png  used on input line 989.
+Package pdftex.def Info: ./Abbildungen/Dammleck.png  used on input line 1001.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 <./Abbildungen/Fallend.png, id=115, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Fallend.png Graphic file (type png)
 <use ./Abbildungen/Fallend.png>
-Package pdftex.def Info: ./Abbildungen/Fallend.png  used on input line 994.
+Package pdftex.def Info: ./Abbildungen/Fallend.png  used on input line 1010.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 <./Abbildungen/Herunterfließend.png, id=116, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Herunterfließend.png Graphic file (type png)
 <use ./Abbildungen/Herunterfließend.png>
-Package pdftex.def Info: ./Abbildungen/Herunterfließend.png  used on input line 999.
+Package pdftex.def Info: ./Abbildungen/Herunterfließend.png  used on input line 1018.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 <./Abbildungen/Ruhend.png, id=117, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Ruhend.png Graphic file (type png)
 <use ./Abbildungen/Ruhend.png>
-Package pdftex.def Info: ./Abbildungen/Ruhend.png  used on input line 1004.
+Package pdftex.def Info: ./Abbildungen/Ruhend.png  used on input line 1028.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 [30
 
- <./Abbildungen/Dammbruch.png>] [31 <./Abbildungen/Dammleck.png> <./Abbildungen/Fallend.png>] [32 <./Abbildungen/Herunterfließend.png> <./Abbildungen/Ruhend.png>] [33
+] [31 <./Abbildungen/Dammbruch.png> <./Abbildungen/Dammleck.png>] [32 <./Abbildungen/Fallend.png> <./Abbildungen/Herunterfließend.png>] [33 <./Abbildungen/Ruhend.png>] [34
 
 ]
 chapter 7.
-(/home/pascal/Bachelorarbeit/src/main.bbl [34
+(/home/pascal/Bachelorarbeit/src/main.bbl [35
 
-]) [35
+]) [36
 
 ] (/home/pascal/Bachelorarbeit/src/main.aux) ) 
 Here is how much of TeX's memory you used:
- 8088 strings out of 483057
- 145160 string characters out of 5962301
- 490161 words of memory out of 5000000
- 23022 multiletter control sequences out of 15000+600000
+ 8093 strings out of 483057
+ 145262 string characters out of 5962301
+ 490216 words of memory out of 5000000
+ 23027 multiletter control sequences out of 15000+600000
  546322 words of font info for 71 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  47i,23n,72p,10158b,310s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cbfonts/grmn1095.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on /home/pascal/Bachelorarbeit/src/main.pdf (35 pages, 532682 bytes).
+Output written on /home/pascal/Bachelorarbeit/src/main.pdf (36 pages, 534587 bytes).
 PDF statistics:
- 203 PDF objects out of 1000 (max. 8388607)
- 135 compressed objects within 2 object streams
+ 206 PDF objects out of 1000 (max. 8388607)
+ 137 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

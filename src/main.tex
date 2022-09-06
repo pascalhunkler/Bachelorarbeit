@@ -979,29 +979,55 @@ Dann wird $\textbf{c}_f$ wie folgt berechnet:
 
 
 \section{Szenarien}
+In der Simulationssoftware können fünf verschiedene Szenarien simuliert werden.
+Die verschiedenen Szenarien können beim Start der Software gewählt werden.
+Die Szenarien unterscheiden sich im Wesentlichen in den Anfangspositionen der Partikel.
+In diesem Abschnitt werden diese Szenarien vorgestellt.
+
+Das erste Szenario ist eine klassische Dammbruchsimulation, die in vierlei Anwendungen von Flüssigkeitssimulationen vorkommt.
+Der Aufbau ist einfach und die Eigenschaften der Flüssigkeit kann gut beobachtet werden, so dass sich dieses Szenario gut zum Testen einer Simulation eignet.
+Sie stellt eine Situation dar, in der ein Damm, der die Flüssigkeit aufhält, plötzlich verschwunden ist.
+Der Aufbau des Dammbruchszenarios ist in Abbildung \ref{image:breaking_dam} dargestellt.
 \begin{figure}[htb]
-    \caption{Brechender Damm}
     \includegraphics[width=\textwidth]{Dammbruch.png}
+    \caption{Brechender Damm}
+    \label{image:breaking_dam}
 \end{figure}
 
+Das zweite Szenario ist sehr ähnlich zum Dammbruchszenario. Hier ist der Damm noch vorhanden. Dieser besitzt jedoch ein Loch, wodurch die Flüssigkeit durchfließt.
+In diesem Szenario kann beobachtet werden, wie die Flüssigkeit durch das Loch durchströmt und sich die Pegelstände vor und hinter dem Damm angleichen.
+Der Aufbau dieses Szenarios ist in Abbildung \ref{image:leaking_dam} dargestellt.
 \begin{figure}[htb]
-    \caption{Damm mit Leck}
     \includegraphics[width=\textwidth]{Dammleck.png}
+    \caption{Damm mit Leck}
+    \label{image:leaking_dam}
 \end{figure}
 
+Das dritte Szenario zeigt zu Beginn die Flüssigkeit auf einer Erhöhung.
+Hier kann beobachtet werden, wie die Flüssigkeit auf beiden Seiten herunterfällt und sich zwei voneinander getrennte Flüssigkeiten bilden.
+Der Aufbau dieses Szenarios ist in Abbildung \ref{image:falling_fluid} dargestellt.
 \begin{figure}[htb]
-    \caption{Von einer Plattform herunterfallende Flüssigkeit}
     \includegraphics[width=\textwidth]{Fallend.png}
+    \caption{Von einer Plattform herunterfallende Flüssigkeit}
+    \label{image:falling_fluid}
 \end{figure}
 
+Im vierten Szenario kann beobachtet werden, wie die Flüssigkeit von einer schiefen Ebene in Richtung einer horizontale Ebene herunterfließt.
+Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:flowing_fluid}.
 \begin{figure}[htb]
-    \caption{Von einer schiefen Ebene herunterfließende Flüssigkeit}
     \includegraphics[width=\textwidth]{Herunterfließend.png}
+    \caption{Von einer schiefen Ebene herunterfließende Flüssigkeit}
+    \label{image:flowing_fluid}
 \end{figure}
 
+Das fünfte Szenario zeigt eine ruhende Flüssigkeit.
+Beobachtet werden kann hier wie sich die Partikel anordnen.
+Dieses Szenario eignet sich auch gut, um den Verlauf der Durchschnittsdichte der Flüssigkeitspartikel zu beobachten.
+Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:resting_fluid}.
 \begin{figure}[htb]
-    \caption{Ruhende Flüssigkeit}
     \includegraphics[width=\textwidth]{Ruhend.png}
+    \caption{Ruhende Flüssigkeit}
+    \label{image:resting_fluid}
 \end{figure}
 
 
