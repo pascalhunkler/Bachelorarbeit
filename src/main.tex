@@ -1032,7 +1032,28 @@ Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:resting_flui
 
 
 \section{Rechen- und Speicheraufwand}
+Die Daten stammen aus Simulationen mit fünf verschiedenen Parametern für
+die Partikelgröße $h$, Zeitschritt $\Delta t$ und für SSPH die Steifigkeitskonstante $k$.
+Ermittelt wurde die benötigte Zeit für 1000 Simulationsschritte. Daraus wurde die durchschnittliche Zeit zwischen zwei Simulationsschritten berechnet.
+\begin{center}
+    \begin{tabular}{ l | c c c c }
+      & SSPH & IISPH & Verhältnis IISPH zu SSPH\\
+      \hline
+      $h = 10, \Delta t = 0.02, k = 100000$ & 60 ms & 161 ms & 2.683\\  
+      $h = 15, \Delta t = 0.05, k = 50000$ & 36 ms & 88 ms & 2.444\\
+      $h = 15, \Delta t = 0.05, k = 100000$ & 35 ms & 94 ms & 2.686\\
+      $h = 10, \Delta t = 0.01, k = 1000000$ & 66 ms & 156 ms & 2.363\\
+      $h = 20, \Delta t = 0.1, k = 100000$ & 21 ms & 49 ms & 2.333\\
+    \end{tabular}
+\end{center}
+Aus diesen Daten lässt sich schließen, dass die Berechnungszeit für IISPH grob um den Faktor 2.5 länger ist als die Berechnungszeit für SSPH.
+Es muss jedoch auch berücksichtigt werden, dass in den Daten die Berechnungszeit für die Visualisierung mit eingeflossen ist.
+Daher muss man von einem leicht stärkeren Faktor ausgehen.
+
+
 \section{Einfluss des Zeitschritts}
+
+\section{Entwicklung der Durchschnittsdichte}
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}
 \bibliography{literaturverzeichnis}

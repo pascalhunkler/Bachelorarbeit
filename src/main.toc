@@ -32,4 +32,5 @@
 \contentsline {section}{\numberline {6.1}Szenarien}{30}%
 \contentsline {section}{\numberline {6.2}Rechen- und Speicheraufwand}{34}%
 \contentsline {section}{\numberline {6.3}Einfluss des Zeitschritts}{34}%
+\contentsline {section}{\numberline {6.4}Entwicklung der Durchschnittsdichte}{34}%
 \contentsline {chapter}{\numberline {7}Fazit und Ausblick}{35}%
