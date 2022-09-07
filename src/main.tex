@@ -1032,9 +1032,12 @@ Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:resting_flui
 
 
 \section{Rechen- und Speicheraufwand}
-Die Daten stammen aus Simulationen mit fünf verschiedenen Parametern für
+Die Daten stammen aus zehn Simulationen, davon jeweils fünf mit SSPH und IISPH.
+Es wurden fünf verschiedene Parameter verwendet für
 die Partikelgröße $h$, Zeitschritt $\Delta t$ und für SSPH die Steifigkeitskonstante $k$.
-Ermittelt wurde die benötigte Zeit für 1000 Simulationsschritte. Daraus wurde die durchschnittliche Zeit zwischen zwei Simulationsschritten berechnet.
+Ermittelt wurde die benötigte Zeit für 1000 Simulationsschritte, inklusiv der Zeit, die für die Visualisierung benötigt wird.
+Daraus wurde die durchschnittliche Zeit zwischen zwei Simulationsschritten berechnet.
+Die Simulationen wurden auf dem Prozessor \textit{Intel® Core™ i5-6600k} berechnet, welcher 4 Kerne besitzt und auf eine Taktfrequenz von 4 Ghz übertaktet ist.
 \begin{center}
     \begin{tabular}{ l | c c c c }
       & SSPH & IISPH & Verhältnis IISPH zu SSPH\\
@@ -1046,9 +1049,14 @@ Ermittelt wurde die benötigte Zeit für 1000 Simulationsschritte. Daraus wurde 
       $h = 20, \Delta t = 0.1, k = 100000$ & 21 ms & 49 ms & 2.333\\
     \end{tabular}
 \end{center}
-Aus diesen Daten lässt sich schließen, dass die Berechnungszeit für IISPH grob um den Faktor 2.5 länger ist als die Berechnungszeit für SSPH.
+Aus diesen Daten lässt sich schließen, dass die Berechnungszeit für IISPH um den Faktor 2.5 herum länger ist als die Berechnungszeit für SSPH.
+Ein Einfluss der Parameter auf diesen Faktor ist nicht zu erkennen.
 Es muss jedoch auch berücksichtigt werden, dass in den Daten die Berechnungszeit für die Visualisierung mit eingeflossen ist.
-Daher muss man von einem leicht stärkeren Faktor ausgehen.
+Daher muss von einem leicht größeren Faktor ausgegangen werden.
+
+Um zu ermitteln, wie stark der Einfluss der Berechnungszeit für die Visualisierung ist,
+wurde ebenfalls, abhängig von der Partikelgröße $h$, welche auch die Partikelanzahl bestimmt, die durchschnittliche Zeit gemessen,
+die für einen Simulationsschritt und für die Visualisierung benötigt wird.
 
 
 \section{Einfluss des Zeitschritts}

@@ -166,9 +166,11 @@ INPUT ./Abbildungen/Herunterfließend.png
 INPUT /home/pascal/Bachelorarbeit/src/./Abbildungen/Ruhend.png
 INPUT ./Abbildungen/Ruhend.png
 INPUT ./Abbildungen/Ruhend.png
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcti1095.tfm
 INPUT /home/pascal/Bachelorarbeit/src/main.bbl
 INPUT /home/pascal/Bachelorarbeit/src/main.bbl
 INPUT /home/pascal/Bachelorarbeit/src/main.aux
+INPUT /home/pascal/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/tcti1095.600pk
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
