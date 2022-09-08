@@ -1031,37 +1031,78 @@ Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:resting_flui
 \end{figure}
 
 
-\section{Rechen- und Speicheraufwand}
-Die Daten stammen aus zehn Simulationen, davon jeweils fünf mit SSPH und IISPH.
-Es wurden fünf verschiedene Parameter verwendet für
-die Partikelgröße $h$, Zeitschritt $\Delta t$ und für SSPH die Steifigkeitskonstante $k$.
-Ermittelt wurde die benötigte Zeit für 1000 Simulationsschritte, inklusiv der Zeit, die für die Visualisierung benötigt wird.
-Daraus wurde die durchschnittliche Zeit zwischen zwei Simulationsschritten berechnet.
+\section{Rechenaufwand}
+Die Daten stammen aus acht Simulationen, davon sechs mit IISPH und zwei mit SSPH.
+Die Partikelgröße $h$ beträgt dabei jeweils 10 und die Viskosität $\nu$ ist jeweils auf 200 festgelegt.
+Der Zeitschritt $\Delta t$ und die Steifigkeitskonstante $k$ in SSPH variieren nach Simulation.
+
+Ermittelt wurde die benötigte Zeit für 100 Simulationsschritte.
+Daraus wurde die durchschnittliche Zeit $\overline{t}_{step}$ für einen Simulationsschritt berechnet.
+Setzt man diesen Wert in Verhältnis zum Zeitschritt $\Delta t$, so erhält man einen Anhaltspunkt, wie schnell sich äquivalente Sequenzen der Simulation berechnen lassen.
+Sollte die Simulation möglichst schnell berechnet werden, so ist ein möglichst geringer Wert für das Verhältnis $\overline{t}_{step} / \Delta t$ wünschenswert.
+
 Die Simulationen wurden auf dem Prozessor \textit{Intel® Core™ i5-6600k} berechnet, welcher 4 Kerne besitzt und auf eine Taktfrequenz von 4 Ghz übertaktet ist.
+
 \begin{center}
-    \begin{tabular}{ l | c c c c }
-      & SSPH & IISPH & Verhältnis IISPH zu SSPH\\
-      \hline
-      $h = 10, \Delta t = 0.02, k = 100000$ & 60 ms & 161 ms & 2.683\\  
-      $h = 15, \Delta t = 0.05, k = 50000$ & 36 ms & 88 ms & 2.444\\
-      $h = 15, \Delta t = 0.05, k = 100000$ & 35 ms & 94 ms & 2.686\\
-      $h = 10, \Delta t = 0.01, k = 1000000$ & 66 ms & 156 ms & 2.363\\
-      $h = 20, \Delta t = 0.1, k = 100000$ & 21 ms & 49 ms & 2.333\\
+    \begin{tabular}{ r r r | c c }
+        & & & $\overline{t}_{step}$ & $\overline{t}_{step} / \Delta t$\\
+        SSPH & $\Delta t = 0.01$ & $k = 10^6$ & 53 ms & 5300\\
+        IISPH & $\Delta t = 0.01$ & & 128 ms & 12800\\
+        IISPH & $\Delta t = 0.02$ & & 127 ms & 6350\\
+        IISPH & $\Delta t = 0.03$ & & 145 ms & 4833\\
+        IISPH & $\Delta t = 0.05$ & & 164 ms & 3280\\
+        IISPH & $\Delta t = 0.08$ & & 191 ms & 2388\\
+        IISPH & $\Delta t = 0.1$ & & 210 ms & 2100\\
+        SSPH & $\Delta t = 0.1$ & $k = 10^5$ & 55 ms & 550
     \end{tabular}
 \end{center}
-Aus diesen Daten lässt sich schließen, dass die Berechnungszeit für IISPH um den Faktor 2.5 herum länger ist als die Berechnungszeit für SSPH.
-Ein Einfluss der Parameter auf diesen Faktor ist nicht zu erkennen.
-Es muss jedoch auch berücksichtigt werden, dass in den Daten die Berechnungszeit für die Visualisierung mit eingeflossen ist.
-Daher muss von einem leicht größeren Faktor ausgegangen werden.
 
-Um zu ermitteln, wie stark der Einfluss der Berechnungszeit für die Visualisierung ist,
-wurde ebenfalls, abhängig von der Partikelgröße $h$, welche auch die Partikelanzahl bestimmt, die durchschnittliche Zeit gemessen,
-die für einen Simulationsschritt und für die Visualisierung benötigt wird.
+Aus diesen Daten lässt sich erkennen,
+dass in IISPH für einen größeren Zeitschritt $\Delta t$ die durchschnittliche Berechnungszeit $\overline{t}_{step}$ pro Simulationsschritt zunimmt.
+Jedoch sinkt das Verhältnis $\overline{t}_{step} / \Delta t$ gleichzeitig, weswegen die Berechnung durch größere Zeitschritte insgesamt effizienter ist.
 
+In SSPH ist $\overline{t}_{step}$ relativ konstant, weil bei der Druckberechnung kein Gleichungssystem iterativ gelöst werden muss,
+wo durch größere Zeitschritte auch größere Fehler entstehen, was die Druckberechnung verlängert.
+In SSPH kann jedoch für die Steifigkeitskonstante $k = 10^6$ nur maximal ein Zeitschritt von $\Delta t = 0.01$ gewählt werden,
+da die Simulation für größere Zeitschritte sonst instabil wird.
+Um in SSPH größere Zeitschritte wählen zu können, muss eine geringere Steifigkeitskonstante gewählt werden, was jedoch zu einer weniger realistischen Simulation führt.
+Um den maximalen Zeitschritt $\Delta t = 0.1$ aus IISPH zu erreichen, muss eine Steifigkeitskonstante von etwa $k = 10^5$ gewählt werden.
+Hier kann man jedoch nicht mehr von einer realistischen Simulation sprechen.
 
 \section{Einfluss des Zeitschritts}
 
+
 \section{Entwicklung der Durchschnittsdichte}
+$h = 10, \nu = 200$, $\Delta t = 0.1$\\
+$h = 10, \nu = 200$, $\Delta t = 0.1, k = 10^4$\\
+$h = 10, \nu = 200$, $\Delta t = 0.05, k = 10^5$\\
+$h = 10, \nu = 200$, $\Delta t = 0.01, k = 10^6$
+
+\begin{figure}[htb]
+    \includegraphics[width=\textwidth]{average_density_iisph.png}
+    \caption{IISPH Durchschnittsdichte}
+    \label{image:average_density_iisph}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[width=\textwidth]{average_density_ssph_low_stiffness.png}
+    \caption{SSPH Durchschnittsdichte mit niedriger Steifigkeitskonstante}
+    \label{image:average_density_ssph_low_stiffness}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[width=\textwidth]{average_density_ssph_mid_stiffness.png}
+    \caption{SSPH Durchschnittsdichte mit mittlerer Steifigkeitskonstante}
+    \label{image:average_density_ssph_mid_stiffness}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[width=\textwidth]{average_density_ssph_high_stiffness.png}
+    \caption{SSPH Durchschnittsdichte mit hoher Steifigkeitskonstante}
+    \label{image:average_density_ssph_high_stiffness}
+\end{figure}
+
+
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}
 \bibliography{literaturverzeichnis}
