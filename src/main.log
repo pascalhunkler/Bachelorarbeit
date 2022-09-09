@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.6.20)  8 SEP 2022 03:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.6.20)  9 SEP 2022 03:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -710,73 +710,98 @@ chapter 6.
 <./Abbildungen/Dammbruch.png, id=113, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Dammbruch.png Graphic file (type png)
 <use ./Abbildungen/Dammbruch.png>
-Package pdftex.def Info: ./Abbildungen/Dammbruch.png  used on input line 992.
+Package pdftex.def Info: ./Abbildungen/Dammbruch.png  used on input line 996.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 <./Abbildungen/Dammleck.png, id=114, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Dammleck.png Graphic file (type png)
 <use ./Abbildungen/Dammleck.png>
-Package pdftex.def Info: ./Abbildungen/Dammleck.png  used on input line 1001.
+Package pdftex.def Info: ./Abbildungen/Dammleck.png  used on input line 1005.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 <./Abbildungen/Fallend.png, id=115, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Fallend.png Graphic file (type png)
 <use ./Abbildungen/Fallend.png>
-Package pdftex.def Info: ./Abbildungen/Fallend.png  used on input line 1010.
+Package pdftex.def Info: ./Abbildungen/Fallend.png  used on input line 1014.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 <./Abbildungen/Herunterfließend.png, id=116, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Herunterfließend.png Graphic file (type png)
 <use ./Abbildungen/Herunterfließend.png>
-Package pdftex.def Info: ./Abbildungen/Herunterfließend.png  used on input line 1018.
+Package pdftex.def Info: ./Abbildungen/Herunterfließend.png  used on input line 1022.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 <./Abbildungen/Ruhend.png, id=117, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Ruhend.png Graphic file (type png)
 <use ./Abbildungen/Ruhend.png>
-Package pdftex.def Info: ./Abbildungen/Ruhend.png  used on input line 1028.
+Package pdftex.def Info: ./Abbildungen/Ruhend.png  used on input line 1032.
 (pdftex.def)             Requested size: 418.25555pt x 261.38266pt.
 [30
 
-] [31 <./Abbildungen/Dammbruch.png> <./Abbildungen/Dammleck.png>] [32 <./Abbildungen/Fallend.png> <./Abbildungen/Herunterfließend.png>] [33 <./Abbildungen/Ruhend.png>] [34
+] [31 <./Abbildungen/Dammbruch.png> <./Abbildungen/Dammleck.png>] [32 <./Abbildungen/Fallend.png> <./Abbildungen/Herunterfließend.png>] [33 <./Abbildungen/Ruhend.png>]
+<./Abbildungen/particle_size_timestep_iisph.png, id=136, 462.528pt x 346.896pt>
+File: ./Abbildungen/particle_size_timestep_iisph.png Graphic file (type png)
+<use ./Abbildungen/particle_size_timestep_iisph.png>
+Package pdftex.def Info: ./Abbildungen/particle_size_timestep_iisph.png  used on input line 1042.
+(pdftex.def)             Requested size: 334.60571pt x 250.96648pt.
+<./Abbildungen/particle_size_timestep_ssph.png, id=138, 462.528pt x 346.896pt>
+File: ./Abbildungen/particle_size_timestep_ssph.png Graphic file (type png)
+<use ./Abbildungen/particle_size_timestep_ssph.png>
+Package pdftex.def Info: ./Abbildungen/particle_size_timestep_ssph.png  used on input line 1048.
+(pdftex.def)             Requested size: 334.60571pt x 250.96648pt.
+<./Abbildungen/stiffness_timestep_ssph.png, id=139, 462.528pt x 346.896pt>
+File: ./Abbildungen/stiffness_timestep_ssph.png Graphic file (type png)
+<use ./Abbildungen/stiffness_timestep_ssph.png>
+Package pdftex.def Info: ./Abbildungen/stiffness_timestep_ssph.png  used on input line 1059.
+(pdftex.def)             Requested size: 334.60571pt x 250.96648pt.
+ [34
 
-]
-<./Abbildungen/average_density_iisph.png, id=140, 462.528pt x 346.896pt>
+ <./Abbildungen/particle_size_timestep_iisph.png>] [35 <./Abbildungen/particle_size_timestep_ssph.png> <./Abbildungen/stiffness_timestep_ssph.png>]
+<./Abbildungen/average_density_iisph.png, id=149, 462.528pt x 346.896pt>
 File: ./Abbildungen/average_density_iisph.png Graphic file (type png)
 <use ./Abbildungen/average_density_iisph.png>
-Package pdftex.def Info: ./Abbildungen/average_density_iisph.png  used on input line 1082.
-(pdftex.def)             Requested size: 418.25555pt x 313.70677pt.
-<./Abbildungen/average_density_ssph_low_stiffness.png, id=142, 462.528pt x 346.896pt>
+Package pdftex.def Info: ./Abbildungen/average_density_iisph.png  used on input line 1097.
+(pdftex.def)             Requested size: 334.60571pt x 250.96648pt.
+<./Abbildungen/average_density_ssph_low_stiffness.png, id=150, 462.528pt x 346.896pt>
 File: ./Abbildungen/average_density_ssph_low_stiffness.png Graphic file (type png)
 <use ./Abbildungen/average_density_ssph_low_stiffness.png>
-Package pdftex.def Info: ./Abbildungen/average_density_ssph_low_stiffness.png  used on input line 1088.
-(pdftex.def)             Requested size: 418.25555pt x 313.70677pt.
-<./Abbildungen/average_density_ssph_mid_stiffness.png, id=143, 462.528pt x 346.896pt>
+Package pdftex.def Info: ./Abbildungen/average_density_ssph_low_stiffness.png  used on input line 1106.
+(pdftex.def)             Requested size: 334.60571pt x 250.96648pt.
+<./Abbildungen/average_density_ssph_mid_stiffness.png, id=151, 462.528pt x 346.896pt>
 File: ./Abbildungen/average_density_ssph_mid_stiffness.png Graphic file (type png)
 <use ./Abbildungen/average_density_ssph_mid_stiffness.png>
-Package pdftex.def Info: ./Abbildungen/average_density_ssph_mid_stiffness.png  used on input line 1094.
-(pdftex.def)             Requested size: 418.25555pt x 313.70677pt.
-<./Abbildungen/average_density_ssph_high_stiffness.png, id=144, 462.528pt x 346.896pt>
+Package pdftex.def Info: ./Abbildungen/average_density_ssph_mid_stiffness.png  used on input line 1112.
+(pdftex.def)             Requested size: 334.60571pt x 250.96648pt.
+<./Abbildungen/average_density_ssph_high_stiffness.png, id=152, 462.528pt x 346.896pt>
 File: ./Abbildungen/average_density_ssph_high_stiffness.png Graphic file (type png)
 <use ./Abbildungen/average_density_ssph_high_stiffness.png>
-Package pdftex.def Info: ./Abbildungen/average_density_ssph_high_stiffness.png  used on input line 1100.
-(pdftex.def)             Requested size: 418.25555pt x 313.70677pt.
- [35 <./Abbildungen/average_density_iisph.png>] [36 <./Abbildungen/average_density_ssph_low_stiffness.png>] [37 <./Abbildungen/average_density_ssph_mid_stiffness.png>] [38 <./Abbildungen/average_density_ssph_high_stiffness.png>]
-chapter 7.
-(/home/pascal/Bachelorarbeit/src/main.bbl [39
+Package pdftex.def Info: ./Abbildungen/average_density_ssph_high_stiffness.png  used on input line 1118.
+(pdftex.def)             Requested size: 334.60571pt x 250.96648pt.
+ [36
 
-]) [40
+] [37 <./Abbildungen/average_density_iisph.png> <./Abbildungen/average_density_ssph_low_stiffness.png>] [38 <./Abbildungen/average_density_ssph_mid_stiffness.png> <./Abbildungen/average_density_ssph_high_stiffness.png>]
+Overfull \hbox (3.07648pt too wide) in paragraph at lines 1133--1137
+\OT1/cmr/m/n/10.95 Wichtig zu ber[]uck-sich-ti-gen ist eben-falls, den Re-chen-auf-wand der un-ter-schied-li-chen Druck-
+ []
+
+[39
+
+]
+chapter 7.
+(/home/pascal/Bachelorarbeit/src/main.bbl [40
+
+]) [41
 
 ] (/home/pascal/Bachelorarbeit/src/main.aux) ) 
 Here is how much of TeX's memory you used:
- 8125 strings out of 483057
- 146619 string characters out of 5962301
- 490260 words of memory out of 5000000
- 23054 multiletter control sequences out of 15000+600000
+ 8146 strings out of 483057
+ 147486 string characters out of 5962301
+ 490296 words of memory out of 5000000
+ 23072 multiletter control sequences out of 15000+600000
  546703 words of font info for 72 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  47i,23n,72p,10158b,310s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/pascal/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/tcti1095.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cbfonts/grmn1095.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on /home/pascal/Bachelorarbeit/src/main.pdf (40 pages, 689865 bytes).
+Output written on /home/pascal/Bachelorarbeit/src/main.pdf (41 pages, 744015 bytes).
 PDF statistics:
- 236 PDF objects out of 1000 (max. 8388607)
- 153 compressed objects within 2 object streams
+ 245 PDF objects out of 1000 (max. 8388607)
+ 155 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 46 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 61 words of extra memory for PDF output out of 10000 (max. 10000000)
 

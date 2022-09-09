@@ -945,7 +945,11 @@ Dann gilt
 
 Die Grenzpartikel werden alle in grauer Farbe dargestellt.
 Die Farbe eines Flüssigkeitspartikels $f$ hängt von dem Betrag dessen Geschwindigkeit $\| \textbf{v}_f \|$ ab.
-Dabei erscheinen ruhende Partikel komplett in blau, schnellere Partikel in grün und schließlich ab $\| \textbf{v}_f \| > 100$ komplett in rot.
+Dabei erscheinen ruhende Partikel komplett in blau, schnellere Partikel in grün und schließlich ab $\| \textbf{v}_f \| > \frac{h}{\Delta t}$ komplett in rot.
+Das heißt, aus der Visualisierung lässt sich erkennen, ob die CFL-Bedingung \begin{equation}
+    \Delta t \leq \lambda \frac{\hbar}{\|\textbf{v}^{max}\| }
+\end{equation}
+für $\lambda = 1$ erfüllt wird.
 Die Übergänge zwischen den Farben sind fließend.
 
 Sei $\textbf{c}_f$ der Wert der Farbe des Partikels $f$ im RGB-Farbraum.
@@ -954,16 +958,16 @@ Dann wird $\textbf{c}_f$ wie folgt berechnet:
     \textbf{c}_f = \begin{cases}
         \begin{pmatrix}
             0\\
-            \sin^2(\frac{\pi \|\textbf{v}_f\|}{100})\\
-            \cos^2(\frac{\pi \|\textbf{v}_f\|}{100})
+            \sin^2(\frac{\pi \|\textbf{v}_f\|}{\frac{h}{\Delta t}})\\
+            \cos^2(\frac{\pi \|\textbf{v}_f\|}{\frac{h}{\Delta t}})
         \end{pmatrix}
-        & \text{falls } \|\textbf{v}_f\| < 50\\[25pt]
+        & \text{falls } \|\textbf{v}_f\| < \frac{h}{2\Delta t}\\[25pt]
         \begin{pmatrix}
-            \cos^2(\frac{\pi \|\textbf{v}_f\|}{100})\\
-            \sin^2(\frac{\pi \|\textbf{v}_f\|}{100})\\
+            \cos^2(\frac{\pi \|\textbf{v}_f\|}{\frac{h}{\Delta t}})\\
+            \sin^2(\frac{\pi \|\textbf{v}_f\|}{\frac{h}{\Delta t}})\\
             0
         \end{pmatrix}
-        & \text{falls } 50 \leq \|\textbf{v}_f\| < 100\\[25pt]
+        & \text{falls } \frac{h}{2\Delta t} \leq \|\textbf{v}_f\| < \frac{h}{\Delta t}\\[25pt]
         \begin{pmatrix}
             1\\
             0\\
@@ -1031,8 +1035,103 @@ Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:resting_flui
 \end{figure}
 
 
+\section{Einfluss des Zeitschritts}
+$\nu = 200$
+SSPH: $k = 10^5$
+\begin{figure}[htb]
+    \includegraphics[width=0.8\textwidth]{particle_size_timestep_iisph.png}
+    \caption{IISPH maximaler Zeitschritt nach Partikelgröße}
+    \label{image:particle_size_timestep_iisph}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[width=0.8\textwidth]{particle_size_timestep_ssph.png}
+    \caption{SSPH maximaler Zeitschritt nach Partikelgröße}
+    \label{image:particle_size_timestep_ssph}
+\end{figure}
+
+
+$h = 10$
+$\nu = 200$
+IISPH: $\Delta t \leq 0.075$
+
+\begin{figure}[htb]
+    \includegraphics[width=0.8\textwidth]{stiffness_timestep_ssph.png}
+    \caption{SSPH maximaler Zeitschritt nach Steifigkeitskonstante}
+    \label{image:stiffness_timestep_ssph}
+\end{figure}
+
+%$h = 6, \nu = 200$, $\Delta t = 0.04$\\
+%$h = 8, \nu = 200$, $\Delta t = 0.06$\\
+%$h = 10, \nu = 200$, $\Delta t = 0.075$\\
+%$h = 12, \nu = 200$, $\Delta t = 0.1$\\
+%$h = 15, \nu = 200$, $\Delta t = 0.135$\\
+%$h = 20, \nu = 200$, $\Delta t = 0.13$\\
+%$h = 25, \nu = 200$, $\Delta t = 0.27$\\
+%$h = 30, \nu = 200$, $\Delta t = 0.3$\\
+
+\section{Entwicklung der Durchschnittsdichte}
+Interessant ist es auch, sich die Entwicklung der Durchschnittsdichte der Flüssigkeitspartikel unterschiedlicher Simulationen anzuschauen.
+Wünschenswert sind geringe Oszillationen der Durchschnittsdichte und ein Wert nahe $\rho^0$.
+
+Dazu wurden Daten aus drei SSPH-Simulationen und einer IISPH-Simulation des Szenarios, in der die Flüssigkeit ruht, gesammelt.
+Dieses Szenario wurde gewählt, weil sich hier die Partikel lediglich neu anordnen und keine großen Dichteschwankungen durch die Bewegung der Flüssigkeit zu erwarten sind.
+Die Simulationen wurden durchgeführt an Partikel mit Größe $h=10$ und Viskosität $\nu = 200$.
+Für die IISPH-Simulation wurde ein Zeitschritt $\Delta t = 0.1$ gewählt.
+Damit wurden 1000 Simulationsschritte ausgewertet.
+
+In den SSPH-Simulationen wurden drei verschiedene Steifigkeitskonstanten gewählt.
+Einmal ein niedriger Wert $k = 10^4$, ein mittlerer Wert $k = 10^5$ und ein hoher Wert $k = 10^6$.
+Da die beiden höheren Werte für die Steifigkeitskonstante keinen Zeitschritt $\Delta t = 0.1$ erlauben, wurden hier niedrigere Zeitschritte von $\Delta t = 0.05$
+und $\Delta t = 0.01$ gewählt.
+Um jedoch die Entwicklung der Durchschnittsdichte mit der IISPH-Simulation zu vergleichen und die gleiche Zeitspanne zu beobachten,
+wurde hier eine größere Anzahl an Iterationen von 2000 Iterationen bzw. 10000 Iterationen festgelegt.
+
+Das Diagramm in Abbildung \ref{image:average_density_iisph} zeigt die Entwicklung der Durchschnitte in der IISPH-Simulation nach Iteration.
+%$h = 10, \nu = 200$, $\Delta t = 0.1$\\
+%$h = 10, \nu = 200$, $\Delta t = 0.1, k = 10^4$\\
+%$h = 10, \nu = 200$, $\Delta t = 0.05, k = 10^5$\\
+%$h = 10, \nu = 200$, $\Delta t = 0.01, k = 10^6$
+
+\begin{figure}[htb]
+    \includegraphics[width=0.8\textwidth]{average_density_iisph.png}
+    \caption{IISPH Durchschnittsdichte}
+    \label{image:average_density_iisph}
+\end{figure}
+
+Die Diagramme aus den Abbildungen \ref{image:average_density_ssph_low_stiffness}, \ref{image:average_density_ssph_mid_stiffness}, \ref{image:average_density_ssph_high_stiffness}
+zeigen die Entwicklung der Durchschnitte in den SSPH-Simulationen nach Iteration.
+
+\begin{figure}[htb]
+    \includegraphics[width=0.8\textwidth]{average_density_ssph_low_stiffness.png}
+    \caption{SSPH Durchschnittsdichte mit niedriger Steifigkeitskonstante}
+    \label{image:average_density_ssph_low_stiffness}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[width=0.8\textwidth]{average_density_ssph_mid_stiffness.png}
+    \caption{SSPH Durchschnittsdichte mit mittlerer Steifigkeitskonstante}
+    \label{image:average_density_ssph_mid_stiffness}
+\end{figure}
+
+\begin{figure}[htb]
+    \includegraphics[width=0.8\textwidth]{average_density_ssph_high_stiffness.png}
+    \caption{SSPH Durchschnittsdichte mit hoher Steifigkeitskonstante}
+    \label{image:average_density_ssph_high_stiffness}
+\end{figure}
+
+In den Diagrammen ist zu erkennen, dass sich bei SSPH mit zunehmender Steifigkeitskonstante die Oszillationen abschwächen.
+Mit einer Steifigkeitskonstante von $k = 10^4$ dominieren die Oszillationen die Entwicklung der Durchschnittsdichte,
+während bei einer Steifigkeitskonstante von $k = 10^6$ die Durchschnittsdichte deutlich weniger oszilliert.
+In allen Simulationen ist zu sehen, dass mit der Zeit die Amplituden der Oszillationen geringer werden.
+In IISPH sind die Oszillationen kaum zu erkennen.
+Dadurch, dass für die gleiche Zeitspanne zehn mal weniger Iterationen berechnet werden müssen und zudem die Oszillationen sehr schwach sind,
+ist IISPH hier im Vorteil.
+
+
 \section{Rechenaufwand}
-Die Daten stammen aus acht Simulationen, davon sechs mit IISPH und zwei mit SSPH.
+Wichtig zu berücksichtigen ist ebenfalls, den Rechenaufwand der unterschiedlichen Druckberechnungsmethoden anzuschauen.
+Dazu wurden Daten aus acht Dammbruchsimulationen gesammelt, davon sechs mit IISPH und zwei mit SSPH.
 Die Partikelgröße $h$ beträgt dabei jeweils 10 und die Viskosität $\nu$ ist jeweils auf 200 festgelegt.
 Der Zeitschritt $\Delta t$ und die Steifigkeitskonstante $k$ in SSPH variieren nach Simulation.
 
@@ -1047,13 +1146,14 @@ Die Simulationen wurden auf dem Prozessor \textit{Intel® Core™ i5-6600k} bere
     \begin{tabular}{ r r r | c c }
         & & & $\overline{t}_{step}$ & $\overline{t}_{step} / \Delta t$\\
         SSPH & $\Delta t = 0.01$ & $k = 10^6$ & 53 ms & 5300\\
+        SSPH & $\Delta t = 0.05$ & $k = 10^5$ & 53 ms & 1060\\
+        %SSPH & $\Delta t = 0.1$ & $k = 10^4$ & 55 ms & 550\\
         IISPH & $\Delta t = 0.01$ & & 128 ms & 12800\\
         IISPH & $\Delta t = 0.02$ & & 127 ms & 6350\\
         IISPH & $\Delta t = 0.03$ & & 145 ms & 4833\\
         IISPH & $\Delta t = 0.05$ & & 164 ms & 3280\\
         IISPH & $\Delta t = 0.08$ & & 191 ms & 2388\\
         IISPH & $\Delta t = 0.1$ & & 210 ms & 2100\\
-        SSPH & $\Delta t = 0.1$ & $k = 10^5$ & 55 ms & 550
     \end{tabular}
 \end{center}
 
@@ -1065,43 +1165,7 @@ In SSPH ist $\overline{t}_{step}$ relativ konstant, weil bei der Druckberechnung
 wo durch größere Zeitschritte auch größere Fehler entstehen, was die Druckberechnung verlängert.
 In SSPH kann jedoch für die Steifigkeitskonstante $k = 10^6$ nur maximal ein Zeitschritt von $\Delta t = 0.01$ gewählt werden,
 da die Simulation für größere Zeitschritte sonst instabil wird.
-Um in SSPH größere Zeitschritte wählen zu können, muss eine geringere Steifigkeitskonstante gewählt werden, was jedoch zu einer weniger realistischen Simulation führt.
-Um den maximalen Zeitschritt $\Delta t = 0.1$ aus IISPH zu erreichen, muss eine Steifigkeitskonstante von etwa $k = 10^5$ gewählt werden.
-Hier kann man jedoch nicht mehr von einer realistischen Simulation sprechen.
-
-\section{Einfluss des Zeitschritts}
-
-
-\section{Entwicklung der Durchschnittsdichte}
-$h = 10, \nu = 200$, $\Delta t = 0.1$\\
-$h = 10, \nu = 200$, $\Delta t = 0.1, k = 10^4$\\
-$h = 10, \nu = 200$, $\Delta t = 0.05, k = 10^5$\\
-$h = 10, \nu = 200$, $\Delta t = 0.01, k = 10^6$
-
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{average_density_iisph.png}
-    \caption{IISPH Durchschnittsdichte}
-    \label{image:average_density_iisph}
-\end{figure}
-
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{average_density_ssph_low_stiffness.png}
-    \caption{SSPH Durchschnittsdichte mit niedriger Steifigkeitskonstante}
-    \label{image:average_density_ssph_low_stiffness}
-\end{figure}
-
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{average_density_ssph_mid_stiffness.png}
-    \caption{SSPH Durchschnittsdichte mit mittlerer Steifigkeitskonstante}
-    \label{image:average_density_ssph_mid_stiffness}
-\end{figure}
-
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{average_density_ssph_high_stiffness.png}
-    \caption{SSPH Durchschnittsdichte mit hoher Steifigkeitskonstante}
-    \label{image:average_density_ssph_high_stiffness}
-\end{figure}
-
+Um in SSPH größere Zeitschritte wählen zu können,  muss eine geringere Steifigkeitskonstante gewählt werden, was jedoch zu einer weniger realistischen Simulation führt.
 
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}

@@ -13,7 +13,11 @@ if __name__ == "__main__":
 
     for in_file in in_files:
         df = pd.read_csv(in_file, sep="\t")
-        plt.plot(df["Iteration"], df["Durchschnittsdichte"])
-    plt.xlabel("Iteration")
-    plt.ylabel("Durchschnittsdichte")
+        x = df.columns[0]
+        y = df.columns[1]
+        plt.plot(df[x], df[y])
+        plt.xscale("log")
+        plt.scatter(df[x], df[y])
+        plt.xlabel(x)
+        plt.ylabel(y)
     plt.savefig(out_file)
