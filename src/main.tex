@@ -1036,10 +1036,25 @@ Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:resting_flui
 
 
 \section{Einfluss des Zeitschritts}
-$\nu = 200$
-SSPH: $k = 10^5$
-IISPH maximaler Zeitschritt nach Partikelgröße
-SSPH maximaler Zeitschritt nach Partikelgröße
+Die Wahl des Zeitschritts $\Delta t$ spielt eine große Rolle bei der Berechnung von Simulationen.
+Ist der Zeitschritt zu klein gewählt, so dauert die Berechnung der Simulation sehr lange,
+ist der Zeitschritt jedoch zu groß gewählt, wird die Simulation instabil und auch die CFL-Bedingung wird nicht mehr erfüllt.
+Daher sollte ein Zeitschritt gewählt werden, der möglichst groß ist und gleichzeitig noch zu stabilen Simulationen führt.
+Dieser Abschnitt befasst sich damit,
+wie Simulationsparameter wie die Partikelgröße $h$, die Viskosität $\nu$ und in SSPH-Simulationen die Steifigkeitskonstante $k$
+den maximal möglichen Zeitschritt beeinflussen, der gewählt werden kann.
+
+Um auszuwerten, wie die Partikelgröße den größtmöglichen Zeitschritt $\Delta t$ beeinflusst,
+wurden sowohl für SSPH als auch IISPH Daten aus jeweils acht unterschiedlichen Dammbruchsimulationen, die sich in der Partikelgröße $h$ unterscheiden, gesammelt.
+Die Viskosität beträgt dabei immer $\nu = 200$ und für SSPH wurde die Steifigkeitskonstante auf $k = 10^5$ festgelegt.
+Es wurde jeweils abhängig von der Partikelgröße $h$ der größtmögliche Zeitschritt $h$ gesucht, bei dem die CFL-Bedingung
+\begin{equation}
+    \Delta t \leq \lambda \frac{\hbar}{\|\textbf{v}^{max}\| }
+\end{equation}
+für $\lambda = 1$ stets erfüllt wird.
+In Abbildung \ref{image:particle_size_timestep_iisph} sind die Daten aus den IISPH-Simulationen abgebildet
+und in Abbildung \ref{image:particle_size_timestep_ssph} die Daten aus den SSPH-Simulationen.
+
 \begin{figure}[htb]
     \includegraphics[width=0.8\textwidth]{particle_size_timestep_iisph.png}
     \caption{IISPH maximaler Zeitschritt nach Partikelgröße}
@@ -1052,26 +1067,30 @@ SSPH maximaler Zeitschritt nach Partikelgröße
     \label{image:particle_size_timestep_ssph}
 \end{figure}
 
+Aus den Diagrammen ist zu erkennen,
+dass sowohl für IISPH als auch für SSPH scheinbar ein linearer Zusammenhang zwischen der Partikelgröße $h$ und des größtmöglichen Zeitschritts $\Delta t$ besteht,
+wobei in IISPH ein Ausreißer für $h = 20$ existiert.
+Erkennbar ist auch, dass IISPH größere Zeitschritte erlaubt und der Graph für IISPH eine größere Steigung besitzt als der Graph für SSPH.
 
-$h = 10$
-$\nu = 200$
-IISPH: $\Delta t \leq 0.075$
+Es wurde ebenfalls gemessen, wie in SSPH die Steifigkeitskonstante $k$ den größtmöglichen Zeitschritt $\Delta t$ beeinflusst.
+Hier wurden acht Dammbruchsimulationen durchgeführt, jeweils mit Partikelgröße $h = 10$ und Viskosität $\nu = 200$,
+die sich in der gewählten Steifigkeitskonstante $k$ unterscheiden.
+Zudem wurde eine vergleichbare Simulation mit IISPH durchgeführt, wo es keine Steifigkeitskonstante gibt. 
+Hier ergab sich ein maximaler Zeitschritt von 0.075.
+In Abbildung \ref{image:stiffness_timestep_ssph} ist für SSPH der Zusammenhang zwischen der Steifigkeitskonstante und des maximalen Zeitschritts abgebildet.
+Die Achse für die Steifigkeitskonstante ist hier logarithmisch skaliert.
 
-SSPH maximaler Zeitschritt nach Steifigkeitskonstante
 \begin{figure}[htb]
     \includegraphics[width=0.8\textwidth]{stiffness_timestep_ssph.png}
     \caption{SSPH maximaler Zeitschritt nach Steifigkeitskonstante}
     \label{image:stiffness_timestep_ssph}
 \end{figure}
 
-%$h = 6, \nu = 200$, $\Delta t = 0.04$\\
-%$h = 8, \nu = 200$, $\Delta t = 0.06$\\
-%$h = 10, \nu = 200$, $\Delta t = 0.075$\\
-%$h = 12, \nu = 200$, $\Delta t = 0.1$\\
-%$h = 15, \nu = 200$, $\Delta t = 0.135$\\
-%$h = 20, \nu = 200$, $\Delta t = 0.13$\\
-%$h = 25, \nu = 200$, $\Delta t = 0.27$\\
-%$h = 30, \nu = 200$, $\Delta t = 0.3$\\
+Es zeigt sich hier, dass der größtmögliche Zeitschritt $\Delta t$ mit größerer Steifigkeitskonstante $k$ abnimmt.
+Es scheint mindestens einen exponentiellen Zusammenhang zwischen der Steifigkeitskonstante und des größtmöglichen Zeitschritts zu geben,
+da der Graph sich trotz logarithmischer Skala abflacht.
+Um einen vergleichbar hohen Zeitschritt wie in IISPH zu erreichen, muss daher eine Steifigkeitskonstante von etwa $k = 10^4$ gewählt werden.
+Jedoch führt dies zu recht unrealistischen Simulationen, worauf im nächsten Abschnitt näher eingegangen wird.
 
 \section{Entwicklung der Durchschnittsdichte}
 Interessant ist es auch, sich die Entwicklung der Durchschnittsdichte der Flüssigkeitspartikel unterschiedlicher Simulationen anzuschauen.

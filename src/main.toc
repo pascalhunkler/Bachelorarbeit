@@ -31,6 +31,6 @@
 \contentsline {chapter}{\numberline {6}Analyse}{30}%
 \contentsline {section}{\numberline {6.1}Szenarien}{30}%
 \contentsline {section}{\numberline {6.2}Einfluss des Zeitschritts}{34}%
-\contentsline {section}{\numberline {6.3}Entwicklung der Durchschnittsdichte}{36}%
-\contentsline {section}{\numberline {6.4}Rechenaufwand}{39}%
-\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{40}%
+\contentsline {section}{\numberline {6.3}Entwicklung der Durchschnittsdichte}{37}%
+\contentsline {section}{\numberline {6.4}Rechenaufwand}{40}%
+\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{41}%
