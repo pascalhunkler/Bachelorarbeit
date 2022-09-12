@@ -16,7 +16,7 @@ if __name__ == "__main__":
         x = df.columns[0]
         y = df.columns[1]
         plt.plot(df[x], df[y])
-        plt.xscale("log")
+        #plt.xscale("log")
         plt.scatter(df[x], df[y])
         plt.xlabel(x)
         plt.ylabel(y)
