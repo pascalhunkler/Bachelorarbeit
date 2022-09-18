@@ -7,6 +7,9 @@
 \usepackage[section]{placeins}
 \usepackage{textgreek}
 \usepackage{scrhack}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{booktabs}
 
 \graphicspath{{./Abbildungen/}}
 \title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH- Flüssigkeitssimulationen}
@@ -1217,6 +1220,47 @@ wo durch größere Zeitschritte auch größere Fehler entstehen, was die Druckbe
 In SSPH kann jedoch für die Steifigkeitskonstante $k = 10^6$ nur maximal ein Zeitschritt von $\Delta t = 0.01$ gewählt werden,
 da die Simulation für größere Zeitschritte sonst instabil wird.
 Um in SSPH größere Zeitschritte wählen zu können,  muss eine geringere Steifigkeitskonstante gewählt werden, was jedoch zu einer weniger realistischen Simulation führt.
+
+Flüssigkeitstiefe 20, Partikelgröße 10, Simulationszeit 10s und Dichtefehler 0.01\%:
+\begin{center}
+    \begin{tabular}{c c c c c}
+        IISPH & $\Delta t$ & Durchschnittliche Iterationen & $k$ & Berechnungszeit\\
+        IISPH & $\Delta t = 0.02$ & 2.29 && 112s\\
+        IISPH & $\Delta t = 0.03$ & 4.93 && 89s\\
+        IISPH & $\Delta t = 0.04$ & 8.53 && 91s\\
+        IISPH & $\Delta t = 0.05$ & 12.78 && 89s\\
+        IISPH & $\Delta t = 0.06$ & 17.64 && 88s\\
+        IISPH & $\Delta t = 0.08$ & 28.08 && 87s\\
+        IISPH & $\Delta t = 0.1$ & 38.73 && 90s\\
+        IISPH & $\Delta t = 0.12$ & 49.64 && 90s\\
+        IISPH & $\Delta t = 0.15$ & 64.03 && 88s\\
+        IISPH & $\Delta t = 0.2$ & 73.55 && 73s\\
+        SSPH & $\Delta t = 0.25$ && $5 \cdot 10^5$ & 61s\\ 
+    \end{tabular}
+\end{center}
+
+Flüssigkeitstiefe 30, Partikelgröße 8, Simulationszeit 50s, 1221 Partikel und Dichtefehler 0.1\%:
+\begin{center}
+    \begin{tabular}{S S S S}
+        \toprule
+        {\multirow{2}{*}{$\Delta t$}}
+            & {\multirow{2}{*}{durchschn. Iter.}}
+                & \multicolumn{2}{c}{Berechnungszeit (s)}\\
+                && {Druck} & {Simulationsschr.}\\
+        \midrule
+        0.01 & 2.00 & 53.66 & 147.47\\
+        0.02 & 4.31 & 45.57 & 92.21\\
+        0.03 & 9.44 & 58.31 & 89.84\\
+        0.04 & 16.18 & 74.65 & 98.05\\
+        0.05 & 24.22 & 82.41 & 100.98\\
+        0.06 & 33.31 & 93.62 & 109.21\\
+        0.08 & 53.04 & 109.66 & 121.44\\
+        \bottomrule
+    \end{tabular}
+\end{center}
+SSPH: $k = 7 \cdot 10^5$, $\Delta t = 0.01$, Druckberechnungszeit von 0.241s und Berechnungszeit für Simulationsschritt von 98.09s.
+
+
 
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}
