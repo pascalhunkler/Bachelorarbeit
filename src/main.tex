@@ -27,6 +27,8 @@
 
 \chapter{Abstract}
 \chapter{Einleitung}
+Im Rahmen dieser Arbeit wird der Frage nachgegangen, welche Druckmethode sich in welchem Simulationsszenario eher empfehlen lässt.
+
 \chapter{Grundlagen}
 \section{Navier-Stokes-Gleichung und Flüssigkeitssimulationen}
 Dieser Abschnitt behandelt die Navier-Stokes-Gleichung, welche die Grundlage dafür bildet, Flüssigkeitssimulationen zu realisieren.
@@ -1260,7 +1262,44 @@ Flüssigkeitstiefe 30, Partikelgröße 8, Simulationszeit 50s, 1221 Partikel und
 \end{center}
 SSPH: $k = 7 \cdot 10^5$, $\Delta t = 0.01$, Druckberechnungszeit von 0.241s und Berechnungszeit für Simulationsschritt von 98.09s.
 
+Um die beiden Druckberechnungsmethoden in einem komplexeren Szenario zu vergleichen,
+wurden Simulationen im zweiten Szenario \textit{Damm mit Leck} durchgeführt.
+Dieses Szenario wurde gewählt, weil im Gegensatz zur normalen Dammbruchsimulation länger beobachtet werden kann,
+wie sich die Simulation unter der ursrünglichen Flüssigkeitstiefe verhält.
+Um die Simulation komplexer zu gestalten, wurde die Flüssigkeitstiefe auf 200 Partikel erhöht.
+Die Partikelgröße beträgt nun $h = 4$.
+Um die Berechnungszeit zu begrenzen, wurde die Fensterbreite von 400 Pixel auf 100 Pixel verringert.
+Es ergibt sich eine Partikelanzahl von 7199 Partikeln.
+In den verschiedenen Simulationen wurde eine Zeit von 20 Sekunden simuliert.
+Abhängig des gewählten Zeitschritts $\Delta t$ ergibt sich eine unterschiedliche Anzahl von Simulationsschritten.
 
+Für die SSPH-Simulation wurde eine Steifigkeitskonstante $k = 3 \cdot 10^6$ festgelegt, um den durchschnittlichen Dichtefehler unter $0.01\%$ zu halten.
+Daraus ergab sich ein maximaler Zeitschritt $\Delta t = 0.004$, in der die Simulation noch stabil läuft.
+Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung und 649.78 Sekunden CPU-Zeit für den Simulationsschritt benötigt.
+
+\begin{center}
+    \begin{tabular}{S S S S S}
+        \toprule
+        {\multirow{2}{*}{$\Delta t$}}
+            & {\multirow{2}{*}{durchschn. Iter.}}
+                & \multicolumn{2}{c}{Berechnungszeit (s)}\\
+                && {Druck} & {Simulationsschr.} & {Anteil Druckber. (\%)}\\
+        \midrule
+        0.004 & 3 & 441.63 & 1084.85 & 40.7\\
+        0.005 & 4.58 & 485.05 & 1006.82 & 48.2\\
+        0.006 & 6.77 & 562.94 & 994.13 & 56.6\\
+        0.008 & 11.71 & 696.8 & 1024.1 & 68\\
+        0.01 & 18.28 & 843.21 & 1103.01 & 76.4\\
+        0.015 & 39.94 & 1198.83 & 1372.52 & 87.3\\
+        0.02 & 70.11 & 1581.9 & 1711.04 & 92.5\\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+Hier zeigt sich, dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.06$ herum liegt.
+Daraus ergibt sich insgesamt eine Druckberechnungszeit von etwa 563 Sekunden und eine Berechnungszeit für den Simulationsschritt von etwa 994 Sekunden.
+Im Vergleich zur SSPH-Simulation mit ähnlichem durchschnittlichen Dichtefehler ist die Berechnungszeit um den Faktor 1.53 länger.
+Daher erreicht die SSPH-Simulation hier eine bessere Performanz.
 
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}
