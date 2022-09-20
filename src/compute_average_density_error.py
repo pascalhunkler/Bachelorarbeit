@@ -10,5 +10,6 @@ if __name__ == "__main__":
     mean = average_density.mean()
     mad = average_density.mad()
     print("Mittelwert: " + str(mean))
+    print("Durchschnittliche Abweichung: " + str(mad))
     #average_density = np.array(df["Durchschnittsdichte"])
     #average_density.

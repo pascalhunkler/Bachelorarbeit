@@ -24,13 +24,13 @@
 \contentsline {subsection}{\numberline {5.4.3}Bestimmung der Nachbarn mithilfe des Uniformen Gitters}{21}%
 \contentsline {section}{\numberline {5.5}Berechnung der Dichte}{22}%
 \contentsline {section}{\numberline {5.6}Berechnung des Drucks}{22}%
-\contentsline {section}{\numberline {5.7}Berechnung der Druckbeschleunigung}{26}%
+\contentsline {section}{\numberline {5.7}Berechnung der Druckbeschleunigung}{25}%
 \contentsline {section}{\numberline {5.8}Berechnung der restlichen Beschleunigungen}{26}%
 \contentsline {section}{\numberline {5.9}Simulationsschritt}{27}%
-\contentsline {section}{\numberline {5.10}Visualisierung}{29}%
+\contentsline {section}{\numberline {5.10}Visualisierung}{28}%
 \contentsline {chapter}{\numberline {6}Analyse}{30}%
 \contentsline {section}{\numberline {6.1}Szenarien}{30}%
-\contentsline {section}{\numberline {6.2}Einfluss des Zeitschritts}{34}%
-\contentsline {section}{\numberline {6.3}Entwicklung der Durchschnittsdichte}{37}%
-\contentsline {section}{\numberline {6.4}Rechenaufwand}{41}%
-\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{44}%
+\contentsline {section}{\numberline {6.2}Einfluss des Zeitschritts}{32}%
+\contentsline {section}{\numberline {6.3}Entwicklung der Durchschnittsdichte}{35}%
+\contentsline {section}{\numberline {6.4}Rechenaufwand}{38}%
+\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{41}%

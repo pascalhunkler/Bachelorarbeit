@@ -4,6 +4,7 @@
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{algorithm, algpseudocode}
 \usepackage{graphicx}
+\usepackage{caption}
 \usepackage[section]{placeins}
 \usepackage{textgreek}
 \usepackage{scrhack}
@@ -743,7 +744,8 @@ Die Komponenten des Lösungsvektors werden also durch folgende Gleichung impleme
     s_f = \rho_f^0 - \rho_f - m_f \Delta t \left(\sum_{f_f}(\textbf{v}_f^* - \textbf{v}_{f_f}^*) \nabla W_{ff_f} + \sum_{f_b}\textbf{v}_f^* \nabla W_{ff_b}\right)
 \end{equation}
 
-Ebenfalls wird der Druck $\textbf{p}^0$ auf $\textbf{0}$ initialisiert.
+Ebenfalls wird der Druck $\textbf{p}^0$ auf $0.5 \textbf{p}_f(t-\Delta t)$ initialisiert.
+Dieser Ausgangswert für den Druck soll nach Ihmsen et al. \cite{ihmsen_implicit_2014} optimal sein.
 
 Nun kann iterativ der Druck berechnet werden.
 Der Index $l$ bezeichnet die Anzahl der Iterationen.
@@ -761,11 +763,15 @@ Jetzt kann schließlich der Druck aktualisiert werden durch:
     p_f^{l+1} = \max(p_f^l + \omega \frac{s_f - (\textbf{A}\textbf{p})_f}{\textbf{A}_{ff}}, 0)
 \end{equation}
 Der Relaxierungsfaktor $\omega$ ist in der Implementierung auf den Wert 0.5 festgelegt,
-da dieser Wert nahezu optimale Ergebnisse liefern soll. \cite{ihmsen_implicit_2014}
+da dieser Wert nach Ihmsen et al. \cite{ihmsen_implicit_2014} nahezu optimale Ergebnisse liefern soll.
+Der Druck wird auf einen positiven Wert gehalten, da die Partikel sich sonst gegenseitig anziehen würden,
+was zu unerwünschten Effekten führt, wie in \cite{ihmsen_implicit_2014} beschrieben ist.
 
-Es wird ebenfalls der durchschnittliche Dichtefehler $\frac{1}{n_f} \sum_{f} \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$ berechnet.
+Es wird ebenfalls der durchschnittliche Dichtefehler $\frac{1}{n} \sum_{f} \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$ berechnet.
+In diese Summe werden nur die Partikel einbezogen, für die der die einen positiven Druck besitzen
 Ist dieser Fehler unter dem Wert von 0.001, so wird der letzte berechnete Wert des Druckes genommen, andernfalls wird weiter iteriert und ein neuer Druck berechnet.
-Ihmsen et al. \cite{ihmsen_implicit_2014} empfiehlt, als Konvergenzkriterium für den durchschnittlichen Dichtefehler Werte von 0.001 oder geringer zu verwenden.
+Ihmsen et al. \cite{ihmsen_implicit_2014} empfiehlt, als Konvergenzkriterium für den durchschnittlichen Dichtefehler Werte von 0.1 \% oder geringer zu verwenden.
+Zudem sollten mindestens zwei Iterationen durchlaufen werden.
 
 Algorithmus \ref{alg:pressure_iisph} zeigt die Implementierung der Druckberechnung mit IISPH.
 
@@ -774,23 +780,30 @@ Algorithmus \ref{alg:pressure_iisph} zeigt die Implementierung der Druckberechnu
     \label{alg:pressure_iisph}
     \begin{algorithmic}[1]
         \ForAll{fluid particle f}
-            \State $A_{ff} \gets -\Delta t^2 \frac{m_f^2}{\rho_f^2} \cdot \left(\sum_{f_f}\nabla W_{ff_f} \nabla W_{ff_f} + \sum_{f_b}\nabla W_{ff_b} \nabla W_{ff_b}\right)$
+            \State $A_{ff} \gets - \Delta t^2 \frac{m_f^2}{\rho_f^2} \left(\sum_{f_j} \left(\Bigl(\sum_{f_j} \nabla W_{ff_j}\Bigr) + \nabla W_{ff_j}\right) \nabla W_{ff_j}\right)$
             \State $s_f \gets \rho_f^0 - \rho_f - m_f \Delta t \left(\sum_{f_f}(\textbf{v}_f^* - \textbf{v}_{f_f}^*) \nabla W_{ff_f} + \sum_{f_b}\textbf{v}_f^* \nabla W_{ff_b}\right)$
-            \State $p_f \gets 0$
+            \State $p_f \gets \frac{p_f}{2}$
         \EndFor
          \State $e \gets \infty$
-         \While{$e \geq 0.001$}
+         \State $iterations \gets 0$
+         \While{$e \geq 0.001 \textbf{ or } iterations < 2$}
             \State $e \gets 0$
+            \State $n \gets 0$
             \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:pressure_acceleration}
             \ForAll{fluid particle f}
                 \State $(\textbf{A}\textbf{p})_f \gets m_f \Delta t^2\left(\sum_{f_f}(\textbf{a}_f^p - \textbf{a}_{f_f}^p) \nabla W_{ff_f} + \sum_{f_b}\textbf{a}_f^p \nabla W_{ff_b}\right)$
-                \If{$f$ has no neighbors}
-                    \State $(\textbf{A}\textbf{p})_f \gets 0$
+                \If{$(\textbf{A}\textbf{p})_f \neq 0$}
+                    \State $p_f \gets p_f + \omega \frac{s_f - (\textbf{A}\textbf{p})_f}{\textbf{A}_{ff}}$
+                    \If{$p_f < 0$}
+                        \State $p_f \gets 0$
+                    \Else
+                        \State $e \gets e + \left\vert\frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0} \right\vert$
+                        \State $n \gets n + 1$
+                    \EndIf
                 \EndIf
-                \State $p_f \gets \max(p_f + \omega \frac{s_f - (\textbf{A}\textbf{p})_f}{\textbf{A}_{ff}}, 0)$
-                \State $e \gets e + \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$
             \EndFor
-            \State $e \gets \frac{e}{n_{f}}$
+            \State $e \gets \frac{e}{n}$
+            \State $iterations \gets iterations + 1$
         \EndWhile
     \end{algorithmic}
     \end{algorithm}
@@ -833,7 +846,7 @@ Die Implementierung dazu findet sich in Algorithmus \ref{alg:pressure_accelerati
 
 \section{Berechnung der restlichen Beschleunigungen}
 Neben den Druckbeschleunigungen müssen auch andere Beschleunigungen berechnet werden.
-In der Implementierung wird die Viskositätsbeschleunigung berechnet und die Gravitationsbeschleunigung, welche kontant ist.
+In der Implementierung wird die Viskositätsbeschleunigung berechnet und die Gravitationsbeschleunigung, welche konstant ist.
 Die Viskositätsbeschleunigung $\nu \nabla^2 \textbf{v}_f$ wird ebenfalls nicht durch die normale SPH-Approximation berechnet,
 sondern durch folgende alternative SPH-Approximation:
 \begin{equation}
@@ -928,7 +941,7 @@ Der Simulationsschritt ist in Algorithmus \ref{alg:simulation_step} dargestellt.
 
 
 \section{Visualisierung}
-Visualisiert wird die Simulation durch die Programmierschnittstelle \textit{OpenGL} in einem Fenster der Größe 1200x750.
+Visualisiert wird die Simulation durch die Programmierschnittstelle \textit{OpenGL}.
 
 Jedes Partikel wird durch einen Kreis dargestellt.
 Beim Starten der Simulation kann die Partikelgröße $h$ gewählt werden.
@@ -938,13 +951,13 @@ Wird also beispielsweise eine Partikelgröße $h = 10$ gewählt, so ist in der V
 Die globalen Koordinaten $\textbf{x}_f$ eines Partikels $f$,
 die in der Simulation verwendet werden,
 sind zu dessen Fensterkoordinaten $\textbf{x}'_f$ gespiegelt an einer Parallelen der x-Achse,
-die sich in der Mitte des Fensters mit y-Koordinaten $y = 375$ befindet.
+die sich in der Mitte des Fensters mit y-Koordinaten $y = \text{height} / 2$ befindet.
 
 Seien $\textbf{x}'_f$ also die Fensterkoordinaten des Partikels $f$ mit globalen Koordinaten $\textbf{x}_f = \begin{pmatrix} x & y \end{pmatrix}^\intercal$.
 Dann gilt
 \begin{equation}
     \textbf{x}'_f = \begin{pmatrix}
-        x & 750 - y
+        x & \text{height} - y
     \end{pmatrix}^\intercal
 \end{equation}
 
@@ -955,6 +968,7 @@ Das heißt, aus der Visualisierung lässt sich erkennen, ob die CFL-Bedingung \b
     \Delta t \leq \lambda \frac{\hbar}{\|\textbf{v}^{max}\| }
 \end{equation}
 für $\lambda = 1$ erfüllt wird.
+Diese Bedingung sollte auf jeden Fall erfüllt werden, daher sollten im Laufe der Simulation die Partikel auf keinen Fall komplett in roter Farbe erscheinen.
 Die Übergänge zwischen den Farben sind fließend.
 
 Sei $\textbf{c}_f$ der Wert der Farbe des Partikels $f$ im RGB-Farbraum.
@@ -993,51 +1007,54 @@ Die verschiedenen Szenarien können beim Start der Software gewählt werden.
 Die Szenarien unterscheiden sich im Wesentlichen in den Anfangspositionen der Partikel.
 In diesem Abschnitt werden diese Szenarien vorgestellt.
 
+\begin{figure}[htb]
+    \begin{minipage}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{Dammbruch.png}
+        \caption{Brechender Damm}
+        \label{image:breaking_dam}
+    \end{minipage}
+    \begin{minipage}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{Dammleck.png}
+        \caption{Damm mit Leck}
+        \label{image:leaking_dam}
+    \end{minipage}
+    \begin{minipage}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{Fallend.png}
+        \caption{Von einer Plattform herunterfallende Flüssigkeit}
+        \label{image:falling_fluid}
+    \end{minipage}
+    \begin{minipage}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{Herunterfließend.png}
+        \caption{Von einer schiefen Ebene herunterfließende Flüssigkeit}
+        \label{image:flowing_fluid}
+    \end{minipage}
+    \begin{minipage}[t]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{Ruhend.png}
+        \caption{Ruhende Flüssigkeit}
+        \label{image:resting_fluid}
+    \end{minipage}
+\end{figure}
+
 Das erste Szenario ist eine klassische Dammbruchsimulation, die in vierlei Anwendungen von Flüssigkeitssimulationen vorkommt.
 Der Aufbau ist einfach und die Eigenschaften der Flüssigkeit kann gut beobachtet werden, so dass sich dieses Szenario gut zum Testen einer Simulation eignet.
 Sie stellt eine Situation dar, in der ein Damm, der die Flüssigkeit aufhält, plötzlich verschwunden ist.
 Der Aufbau des Dammbruchszenarios ist in Abbildung \ref{image:breaking_dam} dargestellt.
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{Dammbruch.png}
-    \caption{Brechender Damm}
-    \label{image:breaking_dam}
-\end{figure}
 
 Das zweite Szenario ist sehr ähnlich zum Dammbruchszenario. Hier ist der Damm noch vorhanden. Dieser besitzt jedoch ein Loch, wodurch die Flüssigkeit durchfließt.
 In diesem Szenario kann beobachtet werden, wie die Flüssigkeit durch das Loch durchströmt und sich die Pegelstände vor und hinter dem Damm angleichen.
 Der Aufbau dieses Szenarios ist in Abbildung \ref{image:leaking_dam} dargestellt.
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{Dammleck.png}
-    \caption{Damm mit Leck}
-    \label{image:leaking_dam}
-\end{figure}
 
 Das dritte Szenario zeigt zu Beginn die Flüssigkeit auf einer Erhöhung.
 Hier kann beobachtet werden, wie die Flüssigkeit auf beiden Seiten herunterfällt und sich zwei voneinander getrennte Flüssigkeiten bilden.
 Der Aufbau dieses Szenarios ist in Abbildung \ref{image:falling_fluid} dargestellt.
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{Fallend.png}
-    \caption{Von einer Plattform herunterfallende Flüssigkeit}
-    \label{image:falling_fluid}
-\end{figure}
 
 Im vierten Szenario kann beobachtet werden, wie die Flüssigkeit von einer schiefen Ebene in Richtung einer horizontale Ebene herunterfließt.
 Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:flowing_fluid}.
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{Herunterfließend.png}
-    \caption{Von einer schiefen Ebene herunterfließende Flüssigkeit}
-    \label{image:flowing_fluid}
-\end{figure}
 
 Das fünfte Szenario zeigt eine ruhende Flüssigkeit.
 Beobachtet werden kann hier wie sich die Partikel anordnen.
 Dieses Szenario eignet sich auch gut, um den Verlauf der Durchschnittsdichte der Flüssigkeitspartikel zu beobachten.
 Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:resting_fluid}.
-\begin{figure}[htb]
-    \includegraphics[width=\textwidth]{Ruhend.png}
-    \caption{Ruhende Flüssigkeit}
-    \label{image:resting_fluid}
-\end{figure}
 
 
 \section{Einfluss des Zeitschritts}
@@ -1186,92 +1203,101 @@ ist IISPH hier im Vorteil.
 
 
 \section{Rechenaufwand}
-Wichtig zu beachten ist ebenfalls der Rechenaufwand der unterschiedlichen Druckberechnungsmethoden.
-Um den Rechenaufwand zu überprüfen, wurden Daten aus acht Dammbruchsimulationen gesammelt, davon sechs mit IISPH und zwei mit SSPH.
-Die Partikelgröße $h$ beträgt dabei jeweils 10 und die Viskosität $\nu$ ist jeweils auf 200 festgelegt.
-Der Zeitschritt $\Delta t$ und die Steifigkeitskonstante $k$ in SSPH variieren nach Simulation.
+\begin{figure}[htb]
+    \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=0.7\linewidth]{Dammbruch_Experiment1.png}
+        \caption{Dammbruch mit 1251 Partikel}
+        \label{image:breaking_dam_experiment1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=0.3\linewidth]{Dammleck_Experiment2.png}
+        \caption{Dammleck mit 7199 Partikel}
+        \label{image:leaky_dam_experiment2}
+    \end{minipage}
+\end{figure}
 
-Ermittelt wurde die benötigte Zeit für 100 Simulationsschritte.
-Daraus wurde die durchschnittliche Zeit $\overline{t}_{step}$ für einen Simulationsschritt berechnet.
-Setzt man diesen Wert in Verhältnis zum Zeitschritt $\Delta t$, so erhält man einen Anhaltspunkt, wie schnell sich äquivalente Sequenzen der Simulation berechnen lassen.
-Sollte die Simulation möglichst schnell berechnet werden, so ist ein möglichst geringer Wert für das Verhältnis $\overline{t}_{step} / \Delta t$ wünschenswert.
+Um die Performanz zwischen SSPH und IISPH zu vergleichen, wurden Daten aus verschiedenen Dammbruchsimulationen gesammelt.
+Eine Szene davon ist in Abbildung \ref{image:breaking_dam_experiment1} dargestellt.
+Die Flüssigkeitstiefe zu Beginn beträgt 30 Partikel, die Partikelgröße ist auf 8 festgelegt, insgesamt gibt es 1251 Partikel.
+Die Viskosität beträgt 200.
+Es wurde jeweils eine Zeitspanne von 50 Sekunden simuliert. 
+Abhängig des Zeitschritts $\Delta t$ ergab sich damit eine unterschiedliche Anzahl an berechneten Simulationsschritten.
 
-Die Simulationen wurden auf dem Prozessor \textit{Intel® Core™ i5-6600k} berechnet, welcher 4 Kerne besitzt und auf eine Taktfrequenz von 4 Ghz übertaktet ist.
+Für die IISPH-Simulationen wurde ebenfalls die durchschnittliche Anzahl an Iterationen erfasst,
+die während der Druckberechnung benötigt werden, um einen Dichtefehler unter 0.01\% zu ereichen.
+Dazu wurde die Zeit gemessen, die für die Druckberechnung und für den Simulationsschritt jeweils benötigt wurde.
+Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment1} dargestellt.
 
-\begin{center}
-    \begin{tabular}{ r r r | c c }
-        & & & $\overline{t}_{step}$ & $\overline{t}_{step} / \Delta t$\\
-        SSPH & $\Delta t = 0.01$ & $k = 10^6$ & 53 ms & 5300\\
-        SSPH & $\Delta t = 0.05$ & $k = 10^5$ & 53 ms & 1060\\
-        %SSPH & $\Delta t = 0.1$ & $k = 10^4$ & 55 ms & 550\\
-        IISPH & $\Delta t = 0.01$ & & 128 ms & 12800\\
-        IISPH & $\Delta t = 0.02$ & & 127 ms & 6350\\
-        IISPH & $\Delta t = 0.03$ & & 145 ms & 4833\\
-        IISPH & $\Delta t = 0.05$ & & 164 ms & 3280\\
-        IISPH & $\Delta t = 0.08$ & & 191 ms & 2388\\
-        IISPH & $\Delta t = 0.1$ & & 210 ms & 2100\\
-    \end{tabular}
-\end{center}
+\begin{table}[htb]
+    \begin{center}
+        \begin{tabular}{S S S S S}
+            \toprule
+            {\multirow{2}{*}{$\Delta t$}}
+                & {\multirow{2}{*}{durchschn. Iter.}}
+                    & \multicolumn{2}{c}{Berechnungszeit (s)}\\
+                    && {Druck} & {Simulationsschr.} & {Anteil Druckber. (\%)}\\
+            \midrule
+            %0.01 & 2.00 & 48.35 & 141.98 & 34.1\\
+            0.01 & 2.00 & 48.24 & 143.49 & 33.6\\
+            0.02 & 2.38 & 27.37 & 73.91 & 37\\
+            %0.02 & 4.31 & 43.25 & 91.29 & 47.4\\
+            0.03 & 4.87 & 32.28 & 65.07 & 49.6\\
+            %0.03 & 9.44 & 55.76 & 86.65 & 64.4\\
+            0.04 & 8.45 & 38.55 & 62.38 & 61.8\\
+            %0.04 & 16.18 & 69.79 & 93.06 & 75\\
+            0.05 & 12.87 & 44.48 & 63.41 & 70.1\\
+            %0.05 & 24.22 & 81.3 & 100.01 & 81.3\\
+            0.06 & 18.04 & 50.92 & 66.5 & 76.6\\
+            %0.06 & 33.31 & 91.87 & 107.59 & 85.4\\
+            0.08 & 30.01 & 62.52 & 74.21 & 84.2\\
+            %0.08 & 53.04 & 107.96 & 119.55 & 90.3\\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    \caption{Performanz von IISPH im Dammbruchszenario mit 1251 Partikel}
+    \label{table:iisph_performance_experiment1}
+\end{table}
 
-Aus diesen Daten lässt sich erkennen,
-dass in IISPH für einen größeren Zeitschritt $\Delta t$ die durchschnittliche Berechnungszeit $\overline{t}_{step}$ pro Simulationsschritt zunimmt.
-Jedoch sinkt das Verhältnis $\overline{t}_{step} / \Delta t$ gleichzeitig, weswegen die Berechnung durch größere Zeitschritte insgesamt effizienter ist.
+Aus diesen Daten ist zu erkennen, dass mit größeren Zeitschritten auch die Anzahl an Iterationen für die Druckberechnung zunimmt.
+Der Anteil der Zeit, der für die Druckberechnung aufgewandt wird, an der Zeit für den Simulationsschritt, nimmt damit ebenfalls zu.
+Insgesamt erreicht die IISPH-Simulation mit Zeitschritt $\Delta t = 0.04$ die beste Performanz,
+da die absolute Berechnungszeit für den Simulationsschritt hier mit 62.38 Sekunden am geringsten ist.
 
-In SSPH ist $\overline{t}_{step}$ relativ konstant, weil bei der Druckberechnung kein Gleichungssystem iterativ gelöst werden muss,
-wo durch größere Zeitschritte auch größere Fehler entstehen, was die Druckberechnung verlängert.
-In SSPH kann jedoch für die Steifigkeitskonstante $k = 10^6$ nur maximal ein Zeitschritt von $\Delta t = 0.01$ gewählt werden,
-da die Simulation für größere Zeitschritte sonst instabil wird.
-Um in SSPH größere Zeitschritte wählen zu können,  muss eine geringere Steifigkeitskonstante gewählt werden, was jedoch zu einer weniger realistischen Simulation führt.
+Um die Performanz von IISPH mit SSPH vergleichen zu können, wurde auch eine vergleichbare SSPH-Simulation durchgeführt.
+Es wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^5$ gewählt, um den durchschnittlichen Dichtefehler unter 0.01\% zu halten.
 
-Flüssigkeitstiefe 20, Partikelgröße 10, Simulationszeit 10s und Dichtefehler 0.01\%:
-\begin{center}
-    \begin{tabular}{c c c c c}
-        IISPH & $\Delta t$ & Durchschnittliche Iterationen & $k$ & Berechnungszeit\\
-        IISPH & $\Delta t = 0.02$ & 2.29 && 112s\\
-        IISPH & $\Delta t = 0.03$ & 4.93 && 89s\\
-        IISPH & $\Delta t = 0.04$ & 8.53 && 91s\\
-        IISPH & $\Delta t = 0.05$ & 12.78 && 89s\\
-        IISPH & $\Delta t = 0.06$ & 17.64 && 88s\\
-        IISPH & $\Delta t = 0.08$ & 28.08 && 87s\\
-        IISPH & $\Delta t = 0.1$ & 38.73 && 90s\\
-        IISPH & $\Delta t = 0.12$ & 49.64 && 90s\\
-        IISPH & $\Delta t = 0.15$ & 64.03 && 88s\\
-        IISPH & $\Delta t = 0.2$ & 73.55 && 73s\\
-        SSPH & $\Delta t = 0.25$ && $5 \cdot 10^5$ & 61s\\ 
-    \end{tabular}
-\end{center}
+Die Wahl des Zeitschritts gestaltete sich schwierig, da es keine eindeutige Grenze zwischen stabilen und instabilen Simulationen gibt.
+Für Zeitschritte $\Delta t \geq 0.019$ ist deutlich zu sehen, dass die Simulation instabil ist.
+Ebenfalls kann auch noch für Zeitschritte von etwa $0.011 \leq t < 0.019$ beobachtet werden, dass einzelne Partikel sich nicht sinnvoll verhalten,
+auch wenn die Durchschnittsdichte unter 0.01\% liegt.
+Daher wurde der Zeitschritt $\Delta t = 0.01$ als obere Grenze festgelegt, in der die Simulation noch stabil ist.
+Es ergab sich daraus insgesamt eine Berechnungszeit von 98.09 Sekunden für den Simulationsschritt.
+Die Druckberechnungszeit ist mit 0.241 Sekunden vernachlässigbar.
 
-Flüssigkeitstiefe 30, Partikelgröße 8, Simulationszeit 50s, 1221 Partikel und Dichtefehler 0.1\%:
-\begin{center}
-    \begin{tabular}{S S S S}
-        \toprule
-        {\multirow{2}{*}{$\Delta t$}}
-            & {\multirow{2}{*}{durchschn. Iter.}}
-                & \multicolumn{2}{c}{Berechnungszeit (s)}\\
-                && {Druck} & {Simulationsschr.}\\
-        \midrule
-        0.01 & 2.00 & 53.66 & 147.47\\
-        0.02 & 4.31 & 45.57 & 92.21\\
-        0.03 & 9.44 & 58.31 & 89.84\\
-        0.04 & 16.18 & 74.65 & 98.05\\
-        0.05 & 24.22 & 82.41 & 100.98\\
-        0.06 & 33.31 & 93.62 & 109.21\\
-        0.08 & 53.04 & 109.66 & 121.44\\
-        \bottomrule
-    \end{tabular}
-\end{center}
-SSPH: $k = 7 \cdot 10^5$, $\Delta t = 0.01$, Druckberechnungszeit von 0.241s und Berechnungszeit für Simulationsschritt von 98.09s.
+Vergleicht man die Zeit von 98.09 Sekunden für die SSPH-Simulation mit der Berechnungszeit der performantesten IISPH-Simulation mit 62.38 Sekunden,
+so ist zu erkennnen, dass sich die Simulation mit IISPH insgesamt deutlich schneller berechnen lässt.
+Ein weiterer Vorteil von IISPH gegenüber SSPH ist,
+dass für einen vorgegebenen maximalen Dichtefehler von 0.01 \% lediglich der Zeitschritt $\Delta t$ gewählt werden muss.
+Für eine recht hohe Spanne von $\Delta t = 0.03$ bis $\Delta t = 0.06$ ist die Performanz recht ähnlich.
+Bei SSPH muss zunächst anhand von vorherigen Simulationen der durchschnittliche Dichtefehler ermittelt werden,
+und abhängig davon wird die Steifigkeitskonstante $k$ gewählt.
+Anschließend muss der Zeitschritt $\Delta t$ gewählt werden, der wie oben beschrieben, auch nicht so einfach zu bestimmen ist, wie im Falle von IISPH.
+Daher erzielt IISPH in diesem Szenario eindeutig bessere Ergebnisse.
+
 
 Um die beiden Druckberechnungsmethoden in einem komplexeren Szenario zu vergleichen,
-wurden Simulationen im zweiten Szenario \textit{Damm mit Leck} durchgeführt.
+wurden ebenfalls Simulationen im zweiten Szenario \textit{Damm mit Leck} durchgeführt.
+Eine Szene davon ist in Abbildung \ref{image:leaky_dam_experiment2} dargestellt.
 Dieses Szenario wurde gewählt, weil im Gegensatz zur normalen Dammbruchsimulation länger beobachtet werden kann,
 wie sich die Simulation unter der ursrünglichen Flüssigkeitstiefe verhält.
 Um die Simulation komplexer zu gestalten, wurde die Flüssigkeitstiefe auf 200 Partikel erhöht.
 Die Partikelgröße beträgt nun $h = 4$.
-Um die Berechnungszeit zu begrenzen, wurde die Fensterbreite von 400 Pixel auf 100 Pixel verringert.
+Um die Berechnungszeit zu begrenzen, wurde die Fensterbreite von 400 Pixel auf 200 Pixel verringert.
 Es ergibt sich eine Partikelanzahl von 7199 Partikeln.
-In den verschiedenen Simulationen wurde eine Zeit von 20 Sekunden simuliert.
-Abhängig des gewählten Zeitschritts $\Delta t$ ergibt sich eine unterschiedliche Anzahl von Simulationsschritten.
+In den verschiedenen Simulationen wurde hier eine Zeit von 20 Sekunden simuliert.
 
 Für die SSPH-Simulation wurde eine Steifigkeitskonstante $k = 3 \cdot 10^6$ festgelegt, um den durchschnittlichen Dichtefehler unter $0.01\%$ zu halten.
 Daraus ergab sich ein maximaler Zeitschritt $\Delta t = 0.004$, in der die Simulation noch stabil läuft.
@@ -1285,21 +1311,32 @@ Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung un
                 & \multicolumn{2}{c}{Berechnungszeit (s)}\\
                 && {Druck} & {Simulationsschr.} & {Anteil Druckber. (\%)}\\
         \midrule
-        0.004 & 3 & 441.63 & 1084.85 & 40.7\\
-        0.005 & 4.58 & 485.05 & 1006.82 & 48.2\\
-        0.006 & 6.77 & 562.94 & 994.13 & 56.6\\
-        0.008 & 11.71 & 696.8 & 1024.1 & 68\\
-        0.01 & 18.28 & 843.21 & 1103.01 & 76.4\\
-        0.015 & 39.94 & 1198.83 & 1372.52 & 87.3\\
-        0.02 & 70.11 & 1581.9 & 1711.04 & 92.5\\
+        0.004 & 2 & 326.94 & 988.52 & 33.1\\
+        %0.004 & 3 & 441.63 & 1084.85 & 40.7\\
+        0.005 & 2.76 & 324.73 & 843.64 & 38.5\\
+        %0.005 & 4.58 & 485.05 & 1006.82 & 48.2\\
+        0.006 & 3.97 & 352.95 & 777.8 & 45.4\\
+        %0.006 & 6.77 & 562.94 & 994.13 & 56.6\\
+        0.008 & 6.87 & 423.05 & 749.99 & 56.4\\
+        %0.008 & 11.71 & 696.8 & 1024.1 & 68\\
+        0.01 & 10.24 & 484.2 & 738.65 & 65.6\\
+        %0.01 & 18.28 & 843.21 & 1103.01 & 76.4\\
+        0.012 & 14.61 & 560.69 & 777.3 & 72.13\\
+        0.015 & 22.53 & 685.44 & 857.31 & 80\\
+        %0.015 & 39.94 & 1198.83 & 1372.52 & 87.3\\
+        0.02 & 38.82 & 858.17 & 987.67 & 86.9\\
+        %0.02 & 70.11 & 1581.9 & 1711.04 & 92.5\\
         \bottomrule
     \end{tabular}
 \end{center}
 
-Hier zeigt sich, dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.06$ herum liegt.
-Daraus ergibt sich insgesamt eine Druckberechnungszeit von etwa 563 Sekunden und eine Berechnungszeit für den Simulationsschritt von etwa 994 Sekunden.
-Im Vergleich zur SSPH-Simulation mit ähnlichem durchschnittlichen Dichtefehler ist die Berechnungszeit um den Faktor 1.53 länger.
-Daher erreicht die SSPH-Simulation hier eine bessere Performanz.
+Hier zeigt sich, dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.1$ herum liegt mit einer Berechnungszeit der Simulationsschritte von 738.65 Sekunden.
+Aber auch Zeitschritte zwischen $\Delta t = 0.006$ und $\Delta t = 0.012$ liefern ähnlich gute Ergebnisse.
+Im Vergleich zur SSPH-Simulation mit Steifigkeitskonstante $k = 3 \cdot 10^6$ und Zeitschritt $\Delta t = 0.004$ ist die Berechnungszeit jedoch etwa um den Faktor 1.14 länger.
+Daher erreicht die SSPH-Simulation hier eine besseres Ergebnis.
+Jedoch muss auch in diesem Fall für die SSPH-Simulation zuerst die gewünschte Steifigkeitskonstante ermittelt werden,
+die den gewünschten Dichtefehler unterschreitet und zusätzlich ist die Wahl des richtigen Zeitschritts schwieriger,
+weil dieser möglichst groß sein muss für eine schnelle Berechnungszeit und gleichzeitig klein genug sein muss, damit die Simulation stabil bleibt.
 
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}
