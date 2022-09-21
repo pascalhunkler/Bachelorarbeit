@@ -13,7 +13,7 @@
 \usepackage{booktabs}
 
 \graphicspath{{./Abbildungen/}}
-\title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH- Flüssigkeitssimulationen}
+\title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH-Flüssigkeitssimulationen}
 \author{Pascal Hunkler}
 \date{May 2022}
 
@@ -28,7 +28,55 @@
 
 \chapter{Abstract}
 \chapter{Einleitung}
-Im Rahmen dieser Arbeit wird der Frage nachgegangen, welche Druckmethode sich in welchem Simulationsszenario eher empfehlen lässt.
+Die Darstellung von möglichst realistischen virtuellen Welten spielt heutzutage eine immer größere Rolle.
+Sie werden in vielerlei Anwendungsbereichen benötigt,
+wie zum Beispiel für visuelle Effekte in Game Engines für Videospiele, in der Filmindustrie oder auch in Virtual Reality Anwendungen.
+Auch in der Entwicklung von Produkten, wie zum Beispiel Autos, kann im Rahmen von Tests auf eine virtuelle Umgebung zurückgegriffen werden,
+anstatt die Tests kostenintensiv in einer realen Umgebung durchzuführen.
+
+Um diese virtuellen Welten möglichst detailgetreu umzusetzen, muss auch das Verhalten von Flüssigkeiten möglichst realistisch simuliert werden.
+Hier hat im Laufe der Zeit die Methode \textit{Smoothed Particle Hydrodynamics (SPH)} zur Berechnung von Flüssigkeitssimulationen an Bedeutung gewonnen.
+In SPH-basierten Ansätzen wird die Flüssigkeit in viele verschiedene so genannte Partikel aufgeteilt.
+Dazu müssen Beschleunigungen zwischen diesen Partikeln berechnet werden, um die Positionen der Partikel zu verändern.
+
+Teil davon ist auch die Berechnung des Drucks.
+Im Laufe der Zeit wurden verschiedene Methoden entwickelt, um den Druck zu berechnen.
+Dazu gibt es mehrere mögliche Ansätze.
+Zum einen lässt sich der Druck mithilfe einer Zustandsgleichung berechnen, in der der Druck eines Partikels nur von der lokalen Umgebung des Partikels abhängt.
+Zum anderen kann der Druck global berechnet werden, in dem beispielsweise ein Gleichungssystem iterativ gelöst wird.
+Motivation dazu ist, dass damit erreicht werden soll, dass die Flüssigkeit in einem inkompressiblen Zustand bleibt,
+während lokale Methoden nicht direkt die Inkompressibilität zum Ziel haben.
+Beispiele für globale Druckberechnungsmethoden sind \textit{Incompressible SPH (ISPH)} \cite{shao_incompressible_2003}, 
+oder aber auch \textit{Implicit Incompressible SPH (IISPH)} \cite{ihmsen_implicit_2014},
+welches nach \cite{ihmsen_implicit_2014} eine deutlich besser Performanz und Genauigkeit als ISPH aufweist, und auch heute noch eine Rolle spielt. 
+
+Im Rahmen dieser Arbeit wird der Frage nachgegangen, welcher Ansatz zur Druckberechnung sich in welchem Fall eher empfehlen lässt.
+Dazu wurde eine Software entwickelt, in welcher verschiedene Szenarien simuliert werden können.
+Die Druckberechnung kann lokal durch eine Zustandsgleichung erfolgen oder aber auch global mit der IISPH-Methode.
+
+Zu Beginn dieser Arbeit wird auf verschiedene Konzepte eingegangen.
+Dazu wird die Navier-Stokes-Gleichung vorgestellt, welche die grundlegende Gleichung darstellt,
+die im Rahmen verschiedener Ansätze approximativ gelöst werden muss, um Flüssigkeitssimulationen zu realisieren.
+Es wird auf das SPH-Konzept eingegangen, durch welches in partikelbasierten Ansätzen verschiedene Größen an den Partikeln diskretisiert werden können.
+Zudem wird gezeigt, wie sich durch SPH eine einfache, grundlegende Flüssigkeitssimulation umsetzen lassen könnte.
+
+Im Anschluss werden die beiden Druckmethoden vorgestellt, die im Rahmen dieser Arbeit auch implementiert werden.
+Zum einen die Druckberechnung durch eine einfache Zustandsgleichung
+und zum anderen die Druckberechnung mit der IISPH-Methode nach Ihmsen et al. \cite{ihmsen_implicit_2014}.
+Hier wird ein lineares Gleichungssystem aufgestellt, welches zur Druckberechnung gelöst werden muss.
+Dazu wird gezeigt, wie dieses Gleichungssystem iterativ mit dem relaxierten Jacobi-Verfahren gelöst werden kann.
+
+Danach wird gezeigt, wie die Konzepte aus den vorigen beiden Kapiteln in der entwickelten Software, welche in der Programmiersprache C++ programmiert wurde,
+implementiert wurden. Dazu werden die Konzepte an die Bedingungen, die in der Implementierung vorherrschen, angepasst.
+Neben den Flüssigkeitspartikeln gibt es nämlich auch Grenzpartikel, um die Flüssigkeit zu begrenzen und zu verhindern, dass diese einfach auseinanderfließt.
+Zudem können einzelne Konponenten der den Konzepten zugrunde liegenden Gleichungen vereinfacht werden.
+Es werden außerdem die Algorithmen in Pseudocode gezeigt, die in der tatsächlichen Implementierung verwendet wurden.
+
+Um schließlich die Frage zu beantworten, welche der beiden Druckmethoden sich in welchem Fall eher eignen, werden verschiedene Szenarien simuliert und ausgewertet.
+Hier wird aufgezeigt, welchen Einfluss verschiedene Simulationsparameter auf die Genauigkeit und auch auf die Performanz der Druckberechnung haben.
+
+Zum Schluss wird ein Fazit aus diesen Ergebnissen und Erfahrungen gezogen und ein Ausblick auf zukünftige Entwicklungen gegeben.
+
 
 \chapter{Grundlagen}
 \section{Navier-Stokes-Gleichung und Flüssigkeitssimulationen}
@@ -1331,7 +1379,7 @@ Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung un
 \end{center}
 
 Hier zeigt sich, dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.1$ herum liegt mit einer Berechnungszeit der Simulationsschritte von 738.65 Sekunden.
-Aber auch Zeitschritte zwischen $\Delta t = 0.006$ und $\Delta t = 0.012$ liefern ähnlich gute Ergebnisse.
+Aber auch Zeitschritte von $0.006 \leq \Delta t \leq 0.012$ liefern ähnlich gute Ergebnisse.
 Im Vergleich zur SSPH-Simulation mit Steifigkeitskonstante $k = 3 \cdot 10^6$ und Zeitschritt $\Delta t = 0.004$ ist die Berechnungszeit jedoch etwa um den Faktor 1.14 länger.
 Daher erreicht die SSPH-Simulation hier eine besseres Ergebnis.
 Jedoch muss auch in diesem Fall für die SSPH-Simulation zuerst die gewünschte Steifigkeitskonstante ermittelt werden,
