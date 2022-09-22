@@ -1,4 +1,16 @@
-\documentclass{scrreprt}
+\documentclass[11pt,
+a4paper,
+parskip=half, % This is some extra vertical space between paragraphs, the suggestion is 2cm which is really ugly, so we use what koma script gives us
+% you can also set it to full for even more space. But there is a bad tex style decision: parskip also changes the spacing between listitems such as
+% enumerate and itemize. For this purpose we include the enumitem package and set itemsep=.5em, of course you can change this
+BCOR=10mm, % BCOR is binding correction
+english,
+% if you'd rather have a one sided thesis, add `oneside' to the documentclass
+% oneside,
+% ngerman is needed for hyphenation if the thesis contains parts written in German, switch order with english if you write mainly in English.
+% Remember to change order in the babel package (below) as well.
+% Last language is the preferred one.
+ngerman]{scrreprt}
 \usepackage[utf8]{inputenc}
 \usepackage{ngerman}
 \usepackage{amsmath, amsfonts, amssymb}
@@ -11,22 +23,104 @@
 \usepackage{multirow}
 \usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{titling}
 
 \graphicspath{{./Abbildungen/}}
 \title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH-Flüssigkeitssimulationen}
 \author{Pascal Hunkler}
-\date{May 2022}
+\newcommand{\firstexaminer}{Prof.~Dr.-Ing.~Matthias Teschner}
+\newcommand{\advisers}{Prof.~Dr.-Ing.~Matthias Teschner}
+\date{\today}
 
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+    \begin{center}
+    
+    \newcommand{\HorizontalLine}{\rule{\linewidth}{0.3mm}}
+    
+    {\Large Bachelorarbeit}\\[1.3cm]
+    
+    
+    % _____________________________________________________________________________
+    \HorizontalLine \\[0.4cm]
+    % Write yourtitle in a fancy way like this if you want to customize it, otherwise simply let tex do it for you
+    % \begin{spacing}{3}
+    %     {\huge \bfseries Der Lange, Lange } \\
+    %     {\huge \bfseries Lange Lange} \\
+    %     {\huge \bfseries Titel}\\
+    % \end{spacing}
+    { \huge \bfseries \thetitle }
+    \HorizontalLine \\[1.5cm]
+    % _____________________________________________________________________________
+    
+    
+    {\Huge \theauthor} \\[2cm]
+    
+    
+    \begin{tabular}[hc]{>{\huge}l >{\huge}l}
+      Gutachter: & \firstexaminer \\[0.3cm]
+      %Betreuer: & \advisers \\[1.2cm]
+    \end{tabular}
+    \vfill  % move the following text to the bottom
+    
+    \Large {
+        Albert-Ludwigs-Universität Freiburg\\
+        Technische Fakultät\\
+        Institut für Informatik\\
+        Professur für Graphische Datenverarbeitung\\[1cm]
+    
+        27. September 2022
+        \\
+    }
+    \end{center}
+    \end{titlepage}
+    
+    \thispagestyle{empty}
+    % title page back
+    \ \vfill \ \\  % at least one space required before vfill
+    \
+    \textbf{Bearbeitungszeit}            \smallskip{} \\
+    27.\,06.\,2022 -- 27.\,09.\,2022   \bigskip{} \\
+    \
+    \textbf{Gutachter}                  \smallskip{} \\
+    \firstexaminer                      \bigskip{} \\
+    \
+    % If there is a second examiner include it
+    \ifdef{\secondexaminer}
+        {
+        % Include
+        \textbf{Zweitgutachter}        \smallskip{} \\
+        \secondexaminer                \bigskip{} \\
+        \
+        }
+        {
+        % No second examiner, ignore
+        }
+    %\textbf{Betreuer}                  \smallskip{} \\
+    %\advisers
 
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{1em}
+%\maketitle
+
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{1em}
+
+\chapter*{Erklärung}
+
+Hiermit erkläre ich, dass ich diese Abschlussarbeit selbständig verfasst habe, keine anderen
+als die angegebenen Quellen/Hilfsmittel verwendet habe und alle Stellen, die wörtlich oder
+sinngemäß aus veröffentlichten Schriften entnommen wurden, als solche kenntlich gemacht
+habe. Darüber hinaus erkläre ich, dass diese Abschlussarbeit nicht, auch nicht
+auszugsweise, bereits für eine andere Prüfung angefertigt wurde.
+\\[3\normalbaselineskip]
+\begin{tabular}{p{0.5\textwidth} l}
+  \rule{0.3\textwidth}{0.4pt}   &   \rule{0.4\textwidth}{0.4pt} \\
+  Ort, Datum                  &   Unterschrift
+\end{tabular}
 
 \tableofcontents
 
-\chapter{Abstract}
+%\chapter{Abstract}
 \chapter{Einleitung}
 Die Darstellung von möglichst realistischen virtuellen Welten spielt heutzutage eine immer größere Rolle.
 Sie werden in vielerlei Anwendungsbereichen benötigt,
@@ -1323,7 +1417,7 @@ Ebenfalls kann auch noch für Zeitschritte von etwa $0.011 \leq t < 0.019$ beoba
 auch wenn die Durchschnittsdichte unter 0.01\% liegt.
 Daher wurde der Zeitschritt $\Delta t = 0.01$ als obere Grenze festgelegt, in der die Simulation noch stabil ist.
 Es ergab sich daraus insgesamt eine Berechnungszeit von 98.09 Sekunden für den Simulationsschritt.
-Die Druckberechnungszeit ist mit 0.241 Sekunden vernachlässigbar.
+Die Druckberechnungszeit ist hier mit 0.241 Sekunden vernachlässigbar.
 
 Vergleicht man die Zeit von 98.09 Sekunden für die SSPH-Simulation mit der Berechnungszeit der performantesten IISPH-Simulation mit 62.38 Sekunden,
 so ist zu erkennnen, dass sich die Simulation mit IISPH insgesamt deutlich schneller berechnen lässt.
@@ -1381,7 +1475,7 @@ Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung un
 Hier zeigt sich, dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.1$ herum liegt mit einer Berechnungszeit der Simulationsschritte von 738.65 Sekunden.
 Aber auch Zeitschritte von $0.006 \leq \Delta t \leq 0.012$ liefern ähnlich gute Ergebnisse.
 Im Vergleich zur SSPH-Simulation mit Steifigkeitskonstante $k = 3 \cdot 10^6$ und Zeitschritt $\Delta t = 0.004$ ist die Berechnungszeit jedoch etwa um den Faktor 1.14 länger.
-Daher erreicht die SSPH-Simulation hier eine besseres Ergebnis.
+Daher erreicht die SSPH-Simulation hier ein besseres Ergebnis.
 Jedoch muss auch in diesem Fall für die SSPH-Simulation zuerst die gewünschte Steifigkeitskonstante ermittelt werden,
 die den gewünschten Dichtefehler unterschreitet und zusätzlich ist die Wahl des richtigen Zeitschritts schwieriger,
 weil dieser möglichst groß sein muss für eine schnelle Berechnungszeit und gleichzeitig klein genug sein muss, damit die Simulation stabil bleibt.

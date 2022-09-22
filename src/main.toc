@@ -1,36 +1,35 @@
-\contentsline {chapter}{\numberline {1}Abstract}{4}%
-\contentsline {chapter}{\numberline {2}Einleitung}{5}%
-\contentsline {chapter}{\numberline {3}Grundlagen}{7}%
-\contentsline {section}{\numberline {3.1}Navier-Stokes-Gleichung und Flüssigkeitssimulationen}{7}%
-\contentsline {subsection}{\numberline {3.1.1}Partikelbasierte Simulation}{7}%
-\contentsline {subsection}{\numberline {3.1.2}Gitterbasierte Simulation}{8}%
-\contentsline {section}{\numberline {3.2}SPH}{8}%
-\contentsline {subsection}{\numberline {3.2.1}Diskretisierung mit SPH}{8}%
-\contentsline {subsection}{\numberline {3.2.2}SPH in partikelbasierten Simulationen}{10}%
-\contentsline {section}{\numberline {3.3}Zeitintegration}{12}%
-\contentsline {section}{\numberline {3.4}Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}{13}%
-\contentsline {chapter}{\numberline {4}Druckberechnung}{14}%
-\contentsline {section}{\numberline {4.1}Druckberechnung mit einer Zustandsgleichung}{14}%
-\contentsline {section}{\numberline {4.2}Druckberechnung mit IISPH}{15}%
-\contentsline {subsection}{\numberline {4.2.1}Herleitung des Gleichungssystems}{15}%
-\contentsline {subsection}{\numberline {4.2.2}Lösung des Gleichungssystems}{16}%
-\contentsline {chapter}{\numberline {5}Implementierung}{19}%
-\contentsline {section}{\numberline {5.1}Programmierumgebung}{19}%
-\contentsline {section}{\numberline {5.2}Grenzbehandlung}{19}%
-\contentsline {section}{\numberline {5.3}Kernelfunktion, Kernelgradient}{20}%
-\contentsline {section}{\numberline {5.4}Nachbarschaftssuche}{21}%
-\contentsline {subsection}{\numberline {5.4.1}Uniformes Gitter}{21}%
-\contentsline {subsection}{\numberline {5.4.2}Uniformes Gitter Aufbau}{22}%
-\contentsline {subsection}{\numberline {5.4.3}Bestimmung der Nachbarn mithilfe des Uniformen Gitters}{22}%
-\contentsline {section}{\numberline {5.5}Berechnung der Dichte}{23}%
-\contentsline {section}{\numberline {5.6}Berechnung des Drucks}{23}%
-\contentsline {section}{\numberline {5.7}Berechnung der Druckbeschleunigung}{26}%
-\contentsline {section}{\numberline {5.8}Berechnung der restlichen Beschleunigungen}{27}%
-\contentsline {section}{\numberline {5.9}Simulationsschritt}{28}%
-\contentsline {section}{\numberline {5.10}Visualisierung}{29}%
-\contentsline {chapter}{\numberline {6}Analyse}{31}%
-\contentsline {section}{\numberline {6.1}Szenarien}{31}%
-\contentsline {section}{\numberline {6.2}Einfluss des Zeitschritts}{33}%
-\contentsline {section}{\numberline {6.3}Entwicklung der Durchschnittsdichte}{36}%
-\contentsline {section}{\numberline {6.4}Rechenaufwand}{39}%
-\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{42}%
+\contentsline {chapter}{\numberline {1}Einleitung}{6}%
+\contentsline {chapter}{\numberline {2}Grundlagen}{8}%
+\contentsline {section}{\numberline {2.1}Navier-Stokes-Gleichung und Flüssigkeitssimulationen}{8}%
+\contentsline {subsection}{\numberline {2.1.1}Partikelbasierte Simulation}{8}%
+\contentsline {subsection}{\numberline {2.1.2}Gitterbasierte Simulation}{9}%
+\contentsline {section}{\numberline {2.2}SPH}{9}%
+\contentsline {subsection}{\numberline {2.2.1}Diskretisierung mit SPH}{9}%
+\contentsline {subsection}{\numberline {2.2.2}SPH in partikelbasierten Simulationen}{11}%
+\contentsline {section}{\numberline {2.3}Zeitintegration}{13}%
+\contentsline {section}{\numberline {2.4}Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}{14}%
+\contentsline {chapter}{\numberline {3}Druckberechnung}{15}%
+\contentsline {section}{\numberline {3.1}Druckberechnung mit einer Zustandsgleichung}{15}%
+\contentsline {section}{\numberline {3.2}Druckberechnung mit IISPH}{16}%
+\contentsline {subsection}{\numberline {3.2.1}Herleitung des Gleichungssystems}{16}%
+\contentsline {subsection}{\numberline {3.2.2}Lösung des Gleichungssystems}{17}%
+\contentsline {chapter}{\numberline {4}Implementierung}{20}%
+\contentsline {section}{\numberline {4.1}Programmierumgebung}{20}%
+\contentsline {section}{\numberline {4.2}Grenzbehandlung}{20}%
+\contentsline {section}{\numberline {4.3}Kernelfunktion, Kernelgradient}{21}%
+\contentsline {section}{\numberline {4.4}Nachbarschaftssuche}{22}%
+\contentsline {subsection}{\numberline {4.4.1}Uniformes Gitter}{22}%
+\contentsline {subsection}{\numberline {4.4.2}Uniformes Gitter Aufbau}{23}%
+\contentsline {subsection}{\numberline {4.4.3}Bestimmung der Nachbarn mithilfe des Uniformen Gitters}{23}%
+\contentsline {section}{\numberline {4.5}Berechnung der Dichte}{24}%
+\contentsline {section}{\numberline {4.6}Berechnung des Drucks}{24}%
+\contentsline {section}{\numberline {4.7}Berechnung der Druckbeschleunigung}{28}%
+\contentsline {section}{\numberline {4.8}Berechnung der restlichen Beschleunigungen}{28}%
+\contentsline {section}{\numberline {4.9}Simulationsschritt}{29}%
+\contentsline {section}{\numberline {4.10}Visualisierung}{30}%
+\contentsline {chapter}{\numberline {5}Analyse}{32}%
+\contentsline {section}{\numberline {5.1}Szenarien}{32}%
+\contentsline {section}{\numberline {5.2}Einfluss des Zeitschritts}{34}%
+\contentsline {section}{\numberline {5.3}Entwicklung der Durchschnittsdichte}{37}%
+\contentsline {section}{\numberline {5.4}Rechenaufwand}{40}%
+\contentsline {chapter}{\numberline {6}Fazit und Ausblick}{43}%
