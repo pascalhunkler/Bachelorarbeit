@@ -1,15 +1,15 @@
 # Fdb version 3
-["bibtex main"] 1663805498 "main.aux" "main.bbl" "main" 1663806278
+["bibtex main"] 1663901861 "main.aux" "main.bbl" "main" 1663902232
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/alpha.bst" 1292289607 23907 a5f93555796fb564b924339521f10a7c ""
   "literaturverzeichnis.bib" 1663718036 18404 51152c341091d46827df4eae76d48227 ""
-  "main.aux" 1663806278 11357 8aa8f069d40f315ba27e61b36dec8cfb "pdflatex"
+  "main.aux" 1663902103 11699 4fb51cbd7e236d653a696b8a27412bcf "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1663806276 "/home/pascal/Bachelorarbeit/src/main.tex" "/home/pascal/Bachelorarbeit/src/main.pdf" "main" 1663806278
+["pdflatex"] 1663902101 "/home/pascal/Bachelorarbeit/src/main.tex" "/home/pascal/Bachelorarbeit/src/main.pdf" "main" 1663902232
   "/etc/texmf/web2c/texmf.cnf" 1655755947 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/pascal/Bachelorarbeit/src/main.aux" 1663806278 11357 8aa8f069d40f315ba27e61b36dec8cfb ""
-  "/home/pascal/Bachelorarbeit/src/main.tex" 1663806275 87024 964d4326b5fcdcd02a949d64fe672021 ""
+  "/home/pascal/Bachelorarbeit/src/main.aux" 1663902103 11699 4fb51cbd7e236d653a696b8a27412bcf ""
+  "/home/pascal/Bachelorarbeit/src/main.tex" 1663902231 88047 156cbbab5ab90677ae9b19a65f664f45 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -142,14 +142,18 @@
   "Abbildungen/particle_size_timestep.png" 1662941571 28824 1d52a3fd6e97c478c3e8ee47af560987 ""
   "Abbildungen/stiffness_timestep.png" 1662942478 25592 3f970511aa27de47a62858096ae5dfe2 ""
   "Abbildungen/viscosity_timestep.png" 1662941326 36142 82a64d457038ff58571f440edef08f94 ""
-  "main.aux" 1663806278 11357 8aa8f069d40f315ba27e61b36dec8cfb "pdflatex"
-  "main.bbl" 1663805498 2619 f6a8410fab159e039f4325d5ce6e3ac5 "bibtex main"
-  "main.tex" 1663806275 87024 964d4326b5fcdcd02a949d64fe672021 ""
-  "main.toc" 1663806278 2570 5e7138d1a53308f49827a430beac3805 "pdflatex"
+  "main.aux" 1663902103 11699 4fb51cbd7e236d653a696b8a27412bcf "pdflatex"
+  "main.bbl" 1663901861 2619 f6a8410fab159e039f4325d5ce6e3ac5 "bibtex main"
+  "main.lof" 1663902103 1640 f2f64fde23ab639fb1bc96a41e8551c6 "pdflatex"
+  "main.lot" 1663902103 375 5c715406753fd1d41aa2b308ddc08711 "pdflatex"
+  "main.tex" 1663902231 88047 156cbbab5ab90677ae9b19a65f664f45 ""
+  "main.toc" 1663902103 2567 9abc3c3bdaec0657db6ccc76927224b8 "pdflatex"
   (generated)
-  "/home/pascal/Bachelorarbeit/src/main.pdf"
-  "main.log"
-  "/home/pascal/Bachelorarbeit/src/main.log"
-  "main.aux"
   "main.pdf"
+  "main.log"
+  "main.aux"
+  "main.lof"
   "main.toc"
+  "/home/pascal/Bachelorarbeit/src/main.pdf"
+  "/home/pascal/Bachelorarbeit/src/main.log"
+  "main.lot"

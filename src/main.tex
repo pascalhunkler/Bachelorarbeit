@@ -33,7 +33,7 @@ ngerman]{scrreprt}
 \date{\today}
 
 \begin{document}
-
+\pagenumbering{roman}
 \begin{titlepage}
     \begin{center}
     
@@ -119,9 +119,11 @@ auszugsweise, bereits für eine andere Prüfung angefertigt wurde.
 \end{tabular}
 
 \tableofcontents
-
+\listoffigures
+\listoftables
 %\chapter{Abstract}
 \chapter{Einleitung}
+\pagenumbering{arabic}
 Die Darstellung von möglichst realistischen virtuellen Welten spielt heutzutage eine immer größere Rolle.
 Sie werden in vielerlei Anwendungsbereichen benötigt,
 wie zum Beispiel für visuelle Effekte in Game Engines für Videospiele, in der Filmindustrie oder auch in Virtual Reality Anwendungen.
@@ -219,7 +221,7 @@ kommt in der Navier-Stokes-Gleichung neben den Beschleunigungen noch der Term $-
 welcher die Bewegung der Flüssigkeit ausgleicht.
 Im Gegensatz zu partikelbasierten Simulationen muss hier jedoch direkt erst einmal keine Nachbarschaftssuche stattfinden,
 da die Punkte nicht frei beweglich sind.
-Generell kann jedoch die Performance und Genauigkeit zwischen partikelbasierten und gitterbasierten nicht allgemein verglichen werden.
+Generell kann jedoch die Performanz und Genauigkeit zwischen partikelbasierten und gitterbasierten Ansätzen nicht allgemein verglichen werden.
 
 
 \section{SPH}
@@ -233,7 +235,7 @@ Es eignet sich daher gut für partikelbasierte Simulationen.
 
 
 \subsection{Diskretisierung mit SPH}
-Die Inhalte dieses Abschnittes basieren hauptsächlich auf den Arbeiten
+Die Inhalte dieses Abschnittes basieren auf den Arbeiten
 von Monaghan \cite{monaghan_smoothed_2005}, von Price \cite{price_smoothed_2012} und von Koshier et al. \cite{koschier_smoothed_2020}.
 Für eine beliebige skalare Variable A gilt die Identität
 \begin{equation}
@@ -475,7 +477,7 @@ Ein Beispiel für eine solche Gleichung ist folgende:
 Der Druck ist immer positiv, da es sonst zu Problemen kommt, wenn $\rho_f < \rho^0$, was vor allem an der Oberfläche der Flüssigkeit auftritt,
 da die Partikel an der Oberfläche weniger Nachbarn haben.
 Die Konstante $k$ ist eine Steifigkeitskonstante.
-In \cite{koschier_smoothed_2020} ist beschrieben, dass die Wahl von $k$ einen Einfluss auf die Dichteabweichung hat.
+In der Arbeit von Koschier et al. \cite{koschier_smoothed_2020} ist beschrieben, dass die Wahl von $k$ einen Einfluss auf die Dichteabweichung hat.
 Größere Werte für $k$ führen zu einer geringeren Dichteabweichung, jedoch muss ein kleinerer Zeitschritt gewählt werden, da die Simulation sonst instabil wird.
 Kleinere Werte für $k$ hingegen führen zu größeren Dichteabweichungen und damit auch zu weniger realistischen Simulationen.
 Anschaulich erklären lässt sich dies anhand eines Beispiels mit einer ruhenden Flüssigkeit, die unter dem Einfluss von Gravitation steht.
@@ -675,7 +677,7 @@ Diese Funktion lässt sich recht einfach mit Algorithmus \ref{alg:kernel_functio
     \end{algorithmic}
 \end{algorithm}
 
-Nun, da die Kernelfunktion in Form des Cubic Spline Kernels implementiert ist, muss noch der Kernelgradient implementiert werden.
+Nun, da die Kernelfunktion in Form des Cubic Spline Kernels implementiert ist, muss noch der dazugehörige Kernelgradient implementiert werden.
 Der Kernelgradient des Cubic Spline Kernels hat folgende Form:
 \begin{equation}
     \nabla W(\textbf{x}_f - \textbf{x}_{f_f}, h) = \frac{5}{14\pi h^2} \cdot \frac{\textbf{x}_f - \textbf{x}_{f_f}}{\|\textbf{x}_f - \textbf{x}_{f_f}\| h} \begin{cases}
@@ -710,7 +712,7 @@ Da für die SPH-Berechnungen die Nachbarn eines Partikels benötigt werden, muss
 Diese muss in jedem Simulationsschritt erfolgen, da sich die Nachbarn eines Partikels in jedem Simulationsschritt ändern können.
 Daher ist es sehr wichtig, dass die Nachbarschaftssuche effizient abläuft und nicht zu viel Zeit dafür aufgewandt wird.
 
-Der naive Ansatz ist es, wenn man für jedes Partikel die Distanz zu den restlichen Partikeln misst und überprüft, ob die Distanz geringer ist als der Kernelsupport.
+Der naive Ansatz ist es, wenn für jedes Partikel die Distanz zu den restlichen Partikeln gemessen wird und überprüft wird, ob die Distanz geringer ist als der Kernelsupport.
 Pro Simulationsschritt gibt es damit einen Zeitaufwand in $O(n^2)$ für $n$ Partikel in der Simulation.
 Dies ist nicht gerade optimal, denn schon bei etwas größeren Simulationen wird sehr viel Zeit für die Nachbarschaftssuche angewandt.
 
@@ -818,7 +820,7 @@ und stattdessen die Dichte wie folgt berechnet werden:
     \label{alg:density}
     \begin{algorithmic}
         \ForAll{fluid particle f}
-            \State $\rho_f \gets m_f \sum_{f_i} W_{fi}$
+            \State $\rho_f \gets m_f \sum_{f_i} W_{f f_i}$
         \EndFor
     \end{algorithmic}
 \end{algorithm}
@@ -910,7 +912,7 @@ Der Druck wird auf einen positiven Wert gehalten, da die Partikel sich sonst geg
 was zu unerwünschten Effekten führt, wie in \cite{ihmsen_implicit_2014} beschrieben ist.
 
 Es wird ebenfalls der durchschnittliche Dichtefehler $\frac{1}{n} \sum_{f} \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$ berechnet.
-In diese Summe werden nur die Partikel einbezogen, für die der die einen positiven Druck besitzen
+In diese Summe werden nur die Partikel einbezogen, die aus der vorigen Berechnung einen positiven Druck besitzen, und nicht den Wert 0 zugewiesen bekommen haben.
 Ist dieser Fehler unter dem Wert von 0.001, so wird der letzte berechnete Wert des Druckes genommen, andernfalls wird weiter iteriert und ein neuer Druck berechnet.
 Ihmsen et al. \cite{ihmsen_implicit_2014} empfiehlt, als Konvergenzkriterium für den durchschnittlichen Dichtefehler Werte von 0.1 \% oder geringer zu verwenden.
 Zudem sollten mindestens zwei Iterationen durchlaufen werden.
@@ -956,7 +958,11 @@ Zur Berechnung der Druckbeschleunigung wird die alternative Form der SPH-Approxi
 \begin{equation}
     \textbf{a}_f^p = -\frac{1}{\rho_f} \nabla p_f = -\sum_{f_f} m_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f}
 \end{equation}
-
+Auch hier ändert sich die Form durch die identische Masse der Partikel und unter Einbeziehung der Grenzpartikel zu:
+\begin{align}
+    \textbf{a}_f^p = -\frac{1}{\rho_f} \nabla p_f = -m_{f} \Biggl(&\sum_{f_f} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f_f}}{\rho_{f_f}^2} \right) \nabla W_{ff_f} +\\
+                                                                  &\sum_{f_b} \left( \frac{p_f}{\rho_f^2} + \frac{p_{f}}{(\rho^0)^2} \right) \Biggr)
+\end{align}
 Die Implementierung dazu findet sich in Algorithmus \ref{alg:pressure_acceleration}.
 
 \begin{algorithm}
@@ -996,10 +1002,8 @@ sondern durch folgende alternative SPH-Approximation:
     0.01h^2} \nabla W_{ff_f}
 \end{equation}
 Da der Parameter $\nu$ frei gewählt ist, kann der Vorfaktor $2(d+2)$ weggelassen werden.
-Ebenfalls sind in der Implementierung die Massen der Partikel identisch.
-Zusätzlich muss noch die Grenzbehandlung mit einbezogen werden.
-Daher wird in Algorithmus \ref{alg:other_accelerations} die Viskositätsbeschleunigung
-durch folgende Gleichung berechnet:
+Unter Berücksichtung der identischen Masse und Einbeziehung der Grenzpartikel wird in Algorithmus \ref{alg:other_accelerations} die Viskositätsbeschleunigung
+dann durch folgende Gleichung berechnet:
 \begin{align}
     \nu \nabla^2 \textbf{v}_f = \nu m_f \biggl(&\sum_{f_f} \frac{1}{\rho_{f_f}} \frac{\textbf{v}_{ff_f} \cdot \textbf{x}_{ff_f}}{\|\textbf{x}_{ff_f}\| + 
     0.01h^2} \nabla W_{ff_f}\\
@@ -1370,7 +1374,7 @@ Abhängig des Zeitschritts $\Delta t$ ergab sich damit eine unterschiedliche Anz
 
 Für die IISPH-Simulationen wurde ebenfalls die durchschnittliche Anzahl an Iterationen erfasst,
 die während der Druckberechnung benötigt werden, um einen Dichtefehler unter 0.01\% zu ereichen.
-Dazu wurde die Zeit gemessen, die für die Druckberechnung und für den Simulationsschritt jeweils benötigt wurde.
+Zudem wurde die Zeit gemessen, die für die Druckberechnung und für den Simulationsschritt jeweils benötigt wurde.
 Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment1} dargestellt.
 
 \begin{table}[htb]
@@ -1420,10 +1424,10 @@ Es ergab sich daraus insgesamt eine Berechnungszeit von 98.09 Sekunden für den 
 Die Druckberechnungszeit ist hier mit 0.241 Sekunden vernachlässigbar.
 
 Vergleicht man die Zeit von 98.09 Sekunden für die SSPH-Simulation mit der Berechnungszeit der performantesten IISPH-Simulation mit 62.38 Sekunden,
-so ist zu erkennnen, dass sich die Simulation mit IISPH insgesamt deutlich schneller berechnen lässt.
+so ist zu erkennnen, dass sich die Simulation mit IISPH insgesamt etwas schneller berechnen lässt.
 Ein weiterer Vorteil von IISPH gegenüber SSPH ist,
 dass für einen vorgegebenen maximalen Dichtefehler von 0.01 \% lediglich der Zeitschritt $\Delta t$ gewählt werden muss.
-Für eine recht hohe Spanne von $\Delta t = 0.03$ bis $\Delta t = 0.06$ ist die Performanz recht ähnlich.
+Für $0.03 \leq \Delta t \leq 0.06$ ist die Performanz recht ähnlich.
 Bei SSPH muss zunächst anhand von vorherigen Simulationen der durchschnittliche Dichtefehler ermittelt werden,
 und abhängig davon wird die Steifigkeitskonstante $k$ gewählt.
 Anschließend muss der Zeitschritt $\Delta t$ gewählt werden, der wie oben beschrieben, auch nicht so einfach zu bestimmen ist, wie im Falle von IISPH.
@@ -1440,42 +1444,49 @@ Die Partikelgröße beträgt nun $h = 4$.
 Um die Berechnungszeit zu begrenzen, wurde die Fensterbreite von 400 Pixel auf 200 Pixel verringert.
 Es ergibt sich eine Partikelanzahl von 7199 Partikeln.
 In den verschiedenen Simulationen wurde hier eine Zeit von 20 Sekunden simuliert.
+Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment2} dargestellt.
 
 Für die SSPH-Simulation wurde eine Steifigkeitskonstante $k = 3 \cdot 10^6$ festgelegt, um den durchschnittlichen Dichtefehler unter $0.01\%$ zu halten.
 Daraus ergab sich ein maximaler Zeitschritt $\Delta t = 0.004$, in der die Simulation noch stabil läuft.
 Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung und 649.78 Sekunden CPU-Zeit für den Simulationsschritt benötigt.
 
-\begin{center}
-    \begin{tabular}{S S S S S}
-        \toprule
-        {\multirow{2}{*}{$\Delta t$}}
-            & {\multirow{2}{*}{durchschn. Iter.}}
-                & \multicolumn{2}{c}{Berechnungszeit (s)}\\
-                && {Druck} & {Simulationsschr.} & {Anteil Druckber. (\%)}\\
-        \midrule
-        0.004 & 2 & 326.94 & 988.52 & 33.1\\
-        %0.004 & 3 & 441.63 & 1084.85 & 40.7\\
-        0.005 & 2.76 & 324.73 & 843.64 & 38.5\\
-        %0.005 & 4.58 & 485.05 & 1006.82 & 48.2\\
-        0.006 & 3.97 & 352.95 & 777.8 & 45.4\\
-        %0.006 & 6.77 & 562.94 & 994.13 & 56.6\\
-        0.008 & 6.87 & 423.05 & 749.99 & 56.4\\
-        %0.008 & 11.71 & 696.8 & 1024.1 & 68\\
-        0.01 & 10.24 & 484.2 & 738.65 & 65.6\\
-        %0.01 & 18.28 & 843.21 & 1103.01 & 76.4\\
-        0.012 & 14.61 & 560.69 & 777.3 & 72.13\\
-        0.015 & 22.53 & 685.44 & 857.31 & 80\\
-        %0.015 & 39.94 & 1198.83 & 1372.52 & 87.3\\
-        0.02 & 38.82 & 858.17 & 987.67 & 86.9\\
-        %0.02 & 70.11 & 1581.9 & 1711.04 & 92.5\\
-        \bottomrule
-    \end{tabular}
-\end{center}
+\begin{table}[htb]
+    \begin{center}
+        \begin{tabular}{S S S S S}
+            \toprule
+            {\multirow{2}{*}{$\Delta t$}}
+                & {\multirow{2}{*}{durchschn. Iter.}}
+                    & \multicolumn{2}{c}{Berechnungszeit (s)}\\
+                    && {Druck} & {Simulationsschr.} & {Anteil Druckber. (\%)}\\
+            \midrule
+            0.004 & 2 & 326.94 & 988.52 & 33.1\\
+            %0.004 & 3 & 441.63 & 1084.85 & 40.7\\
+            0.005 & 2.76 & 324.73 & 843.64 & 38.5\\
+            %0.005 & 4.58 & 485.05 & 1006.82 & 48.2\\
+            0.006 & 3.97 & 352.95 & 777.8 & 45.4\\
+            %0.006 & 6.77 & 562.94 & 994.13 & 56.6\\
+            0.008 & 6.87 & 423.05 & 749.99 & 56.4\\
+            %0.008 & 11.71 & 696.8 & 1024.1 & 68\\
+            0.01 & 10.24 & 484.2 & 738.65 & 65.6\\
+            %0.01 & 18.28 & 843.21 & 1103.01 & 76.4\\
+            0.012 & 14.61 & 560.69 & 777.3 & 72.13\\
+            0.015 & 22.53 & 685.44 & 857.31 & 80\\
+            %0.015 & 39.94 & 1198.83 & 1372.52 & 87.3\\
+            0.02 & 38.82 & 858.17 & 987.67 & 86.9\\
+            %0.02 & 70.11 & 1581.9 & 1711.04 & 92.5\\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    \caption{Performanz von IISPH im Dammleckszenario mit 7199 Partikel}
+    \label{table:iisph_performance_experiment2}
+\end{table}
 
-Hier zeigt sich, dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.1$ herum liegt mit einer Berechnungszeit der Simulationsschritte von 738.65 Sekunden.
+Aus den Daten für die IISPH-Simulationen zeigt sich,
+dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.1$ herum liegt mit einer Berechnungszeit der Simulationsschritte von 738.65 Sekunden.
 Aber auch Zeitschritte von $0.006 \leq \Delta t \leq 0.012$ liefern ähnlich gute Ergebnisse.
 Im Vergleich zur SSPH-Simulation mit Steifigkeitskonstante $k = 3 \cdot 10^6$ und Zeitschritt $\Delta t = 0.004$ ist die Berechnungszeit jedoch etwa um den Faktor 1.14 länger.
 Daher erreicht die SSPH-Simulation hier ein besseres Ergebnis.
+Dies erscheint überraschend, weil dieses Szenario etwas komplexer gestaltet ist als das vorherige.
 Jedoch muss auch in diesem Fall für die SSPH-Simulation zuerst die gewünschte Steifigkeitskonstante ermittelt werden,
 die den gewünschten Dichtefehler unterschreitet und zusätzlich ist die Wahl des richtigen Zeitschritts schwieriger,
 weil dieser möglichst groß sein muss für eine schnelle Berechnungszeit und gleichzeitig klein genug sein muss, damit die Simulation stabil bleibt.
