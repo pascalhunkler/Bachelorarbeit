@@ -29,7 +29,5 @@
 \contentsline {section}{\numberline {4.10}Visualisierung}{26}%
 \contentsline {chapter}{\numberline {5}Analyse}{28}%
 \contentsline {section}{\numberline {5.1}Szenarien}{28}%
-\contentsline {section}{\numberline {5.2}Einfluss des Zeitschritts}{30}%
-\contentsline {section}{\numberline {5.3}Entwicklung der Durchschnittsdichte}{33}%
-\contentsline {section}{\numberline {5.4}Rechenaufwand}{36}%
-\contentsline {chapter}{\numberline {6}Fazit und Ausblick}{39}%
+\contentsline {section}{\numberline {5.2}Ergebnisse}{30}%
+\contentsline {chapter}{\numberline {6}Fazit und Ausblick}{34}%

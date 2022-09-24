@@ -8,13 +8,6 @@
 \contentsline {figure}{\numberline {5.3}{\ignorespaces Von einer Plattform herunterfallende Flüssigkeit\relax }}{29}%
 \contentsline {figure}{\numberline {5.4}{\ignorespaces Von einer schiefen Ebene herunterfließende Flüssigkeit\relax }}{29}%
 \contentsline {figure}{\numberline {5.5}{\ignorespaces Ruhende Flüssigkeit\relax }}{29}%
-\contentsline {figure}{\numberline {5.6}{\ignorespaces maximaler Zeitschritt nach Partikelgröße\relax }}{30}%
-\contentsline {figure}{\numberline {5.7}{\ignorespaces maximaler Zeitschritt nach Steifigkeitskonstante\relax }}{31}%
-\contentsline {figure}{\numberline {5.8}{\ignorespaces maximaler Zeitschritt nach Viskosität\relax }}{32}%
-\contentsline {figure}{\numberline {5.9}{\ignorespaces IISPH Durchschnittsdichte\relax }}{33}%
-\contentsline {figure}{\numberline {5.10}{\ignorespaces SSPH Durchschnittsdichte mit niedriger Steifigkeitskonstante\relax }}{34}%
-\contentsline {figure}{\numberline {5.11}{\ignorespaces SSPH Durchschnittsdichte mit mittlerer Steifigkeitskonstante\relax }}{35}%
-\contentsline {figure}{\numberline {5.12}{\ignorespaces SSPH Durchschnittsdichte mit hoher Steifigkeitskonstante\relax }}{35}%
-\contentsline {figure}{\numberline {5.13}{\ignorespaces Dammbruch mit 1251 Partikel\relax }}{36}%
-\contentsline {figure}{\numberline {5.14}{\ignorespaces Dammleck mit 7199 Partikel\relax }}{36}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Dammbruch mit 1251 Partikel\relax }}{30}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Dammleck mit 7199 Partikel\relax }}{30}%
 \addvspace {10\p@ }

@@ -1203,152 +1203,7 @@ Dieses Szenario eignet sich auch gut, um den Verlauf der Durchschnittsdichte der
 Dargestellt ist der Aufbau dieses Szenarios in Abbildung \ref{image:resting_fluid}.
 
 
-\section{Einfluss des Zeitschritts}
-Die Wahl des Zeitschritts $\Delta t$ spielt eine große Rolle bei der Berechnung von Simulationen.
-Ist der Zeitschritt zu klein gewählt, so dauert die Berechnung der Simulation sehr lange,
-ist der Zeitschritt jedoch zu groß gewählt, wird die Simulation instabil und auch die CFL-Bedingung wird nicht mehr erfüllt.
-Daher sollte ein Zeitschritt gewählt werden, der möglichst groß ist und gleichzeitig noch zu stabilen Simulationen führt.
-Dieser Abschnitt befasst sich damit,
-wie Simulationsparameter wie die Partikelgröße $h$, die Viskosität $\nu$ und in SSPH-Simulationen die Steifigkeitskonstante $k$
-den maximal möglichen Zeitschritt beeinflussen, der gewählt werden kann.
-
-Um auszuwerten, wie die Partikelgröße den größtmöglichen Zeitschritt $\Delta t$ beeinflusst,
-wurden sowohl für SSPH als auch IISPH Daten aus jeweils acht unterschiedlichen Dammbruchsimulationen, die sich in der Partikelgröße $h$ unterscheiden, gesammelt.
-Die Viskosität beträgt dabei immer $\nu = 200$ und für SSPH wurde die Steifigkeitskonstante auf $k = 10^5$ festgelegt.
-Es wurde jeweils abhängig von der Partikelgröße $h$ der größtmögliche Zeitschritt $h$ gesucht, bei dem die CFL-Bedingung
-\begin{equation}
-    \Delta t \leq \lambda \frac{\hbar}{\|\textbf{v}^{max}\| }
-\end{equation}
-für $\lambda = 1$ stets erfüllt wird.
-In Abbildung \ref{image:particle_size_timestep} sind die Daten aus den IISPH- und SSPH-Simulationen abgebildet.
-
-\begin{figure}[htb]
-    \includegraphics[width=0.8\textwidth]{particle_size_timestep.png}
-    \caption{maximaler Zeitschritt nach Partikelgröße}
-    \label{image:particle_size_timestep}
-\end{figure}
-%\begin{figure}[htb]
-%    \includegraphics[width=0.8\textwidth]{particle_size_timestep_iisph.png}
-%    \caption{IISPH maximaler Zeitschritt nach Partikelgröße}
-%    \label{image:particle_size_timestep_iisph}
-%\end{figure}
-%
-%\begin{figure}[htb]
-%    \includegraphics[width=0.8\textwidth]{particle_size_timestep_ssph.png}
-%    \caption{SSPH maximaler Zeitschritt nach Partikelgröße}
-%    \label{image:particle_size_timestep_ssph}
-%\end{figure}
-
-Aus den Diagrammen ist zu erkennen,
-dass sowohl für IISPH als auch für SSPH scheinbar ein linearer Zusammenhang zwischen der Partikelgröße $h$ und des größtmöglichen Zeitschritts $\Delta t$ besteht,
-wobei in IISPH ein Ausreißer für $h = 20$ existiert.
-Erkennbar ist auch, dass IISPH größere Zeitschritte erlaubt und der Graph für IISPH eine größere Steigung besitzt als der Graph für SSPH.
-
-Es wurde ebenfalls gemessen, wie in SSPH die Steifigkeitskonstante $k$ den größtmöglichen Zeitschritt $\Delta t$ beeinflusst.
-Hier wurden acht Dammbruchsimulationen durchgeführt, jeweils mit Partikelgröße $h = 10$ und Viskosität $\nu = 200$,
-die sich in der gewählten Steifigkeitskonstante $k$ unterscheiden.
-Zudem wurde eine vergleichbare Simulation mit IISPH durchgeführt, wo es keine Steifigkeitskonstante gibt. 
-Hier ergab sich ein maximaler Zeitschritt von 0.075.
-In Abbildung \ref{image:stiffness_timestep} ist für SSPH der Zusammenhang zwischen der Steifigkeitskonstante und des maximalen Zeitschritts abgebildet.
-Die Achse für die Steifigkeitskonstante ist hier logarithmisch skaliert.
-Es existiert zudem eine horizontale Linie, die den maximalen Zeitschritt für IISPH darstellt.
-
-\begin{figure}[htb]
-    \includegraphics[width=0.8\textwidth]{stiffness_timestep.png}
-    \caption{maximaler Zeitschritt nach Steifigkeitskonstante}
-    \label{image:stiffness_timestep}
-\end{figure}
-
-Es zeigt sich hier, dass der größtmögliche Zeitschritt $\Delta t$ mit größerer Steifigkeitskonstante $k$ abnimmt.
-Es scheint mindestens einen exponentiellen Zusammenhang zwischen der Steifigkeitskonstante und des größtmöglichen Zeitschritts zu geben,
-da der Graph sich trotz logarithmischer Skala abflacht.
-Um einen vergleichbar hohen Zeitschritt wie in IISPH ($\Delta t \approx 0.075$) zu erreichen, muss daher eine Steifigkeitskonstante von etwa $k = 10^4$ gewählt werden.
-Jedoch führt dies zu recht unrealistischen Simulationen, da die Dichteabweichungen durch geringere Steifigkeitskonstanten größer werden.
-Dies zeigt sich auch im nächsten Abschnitt, wo der Zusammenhang zwischen der Steifigkeitskonstante und der Durchschnittsdichte dargestellt wird.
-
-Ein weiterer Simulationsparameter ist die Viskosität $\nu$.
-Um den Zusammenhang zwischen der Viskosität und des größtmöglichen Zeitschritts $\Delta t$ zu zeigen,
-wurden acht Dammbruchsimulationen mit IISPH und acht Dammbruchsimulationen mit SSPH durchgeführt, die sich in der gewählten Viskosität $\nu$ unterscheiden.
-Interessanterweise hat sich herausgestellt, dass in der SSPH-Simulation für die Viskosität $\nu = 0$ sich die Simulation nicht sinnvoll verhält,
-da sich die Partikel über die gesamte zur Verfügung stehenden Fläche verteilt hatten und sich in unterschiedliche Richtungen bewegten.
-In der IISPH-Simulation mit Viskosität $\nu = 0$ trat dieses Verhalten jedoch nicht auf.
-Daher wurde für diese SSPH-Simulation kein größtmöglicher Zeitschritt $\Delta t$ festgelegt.
-Die Partikelgröße beträgt jeweils $h = 10$ und in SSPH beträgt die Steifigkeitskonstante $k = 10^5$.
-
-Abbildung \ref{image:viscosity_timestep} zeigt den Zusammenhang zwischen der Viskosität und des maximalen Zeitschritts für IISPH und SSPH.
-
-\begin{figure}[htb]
-    \includegraphics[width=0.8\textwidth]{viscosity_timestep.png}
-    \caption{maximaler Zeitschritt nach Viskosität}
-    \label{image:viscosity_timestep}
-\end{figure}
-
-Es ergibt sich für SSPH und IISPH ein ähnliches Bild.
-Zunächst erlaubt eine höhere Viskosität auch größere Zeitschritte, um einer Viskosität von etwa 300-500 herum werden die größtmöglichen maximalen Zeitschritte erreicht,
-dann sinkt der maximale Zeitschritt mit weiter steigender Viskosität.
-Zu erkennen ist auch, dass für sehr niedrige und sehr hohe Viskositäten die Unterschiede zwischen IISPH und SSPH niedriger sind als für mittlere Viskositäten.
-
-
-\section{Entwicklung der Durchschnittsdichte}
-Interessant ist es auch, sich die Entwicklung der Durchschnittsdichte der Flüssigkeitspartikel unterschiedlicher Simulationen anzuschauen.
-Wünschenswert sind geringe Oszillationen der Durchschnittsdichte und ein Wert nahe $\rho^0$.
-
-Dazu wurden Daten aus drei SSPH-Simulationen und einer IISPH-Simulation des Szenarios, in der die Flüssigkeit ruht, gesammelt.
-Dieses Szenario wurde gewählt, weil sich hier die Partikel lediglich neu anordnen und keine großen Dichteschwankungen durch die Bewegung der Flüssigkeit zu erwarten sind.
-Die Simulationen wurden durchgeführt an Partikel mit Größe $h=10$ und Viskosität $\nu = 200$.
-Für die IISPH-Simulation wurde ein Zeitschritt $\Delta t = 0.1$ gewählt.
-Damit wurden 1000 Simulationsschritte ausgewertet.
-
-In den SSPH-Simulationen wurden drei verschiedene Steifigkeitskonstanten gewählt.
-Einmal ein niedriger Wert $k = 10^4$, ein mittlerer Wert $k = 10^5$ und ein hoher Wert $k = 10^6$.
-Da die beiden höheren Werte für die Steifigkeitskonstante keinen Zeitschritt $\Delta t = 0.1$ erlauben, wurden hier niedrigere Zeitschritte von $\Delta t = 0.05$
-und $\Delta t = 0.01$ gewählt.
-Um jedoch die Entwicklung der Durchschnittsdichte mit der IISPH-Simulation zu vergleichen und die gleiche Zeitspanne zu beobachten,
-wurde hier eine größere Anzahl an Iterationen von 2000 Iterationen bzw. 10000 Iterationen festgelegt.
-
-Das Diagramm in Abbildung \ref{image:average_density_iisph} zeigt die Entwicklung der Durchschnitte in der IISPH-Simulation nach Iteration.
-%$h = 10, \nu = 200$, $\Delta t = 0.1$\\
-%$h = 10, \nu = 200$, $\Delta t = 0.1, k = 10^4$\\
-%$h = 10, \nu = 200$, $\Delta t = 0.05, k = 10^5$\\
-%$h = 10, \nu = 200$, $\Delta t = 0.01, k = 10^6$
-
-\begin{figure}[htb]
-    \includegraphics[width=0.8\textwidth]{average_density_iisph.png}
-    \caption{IISPH Durchschnittsdichte}
-    \label{image:average_density_iisph}
-\end{figure}
-
-Die Diagramme aus den Abbildungen \ref{image:average_density_ssph_low_stiffness}, \ref{image:average_density_ssph_mid_stiffness}, \ref{image:average_density_ssph_high_stiffness}
-zeigen die Entwicklung der Durchschnitte in den SSPH-Simulationen nach Iteration.
-
-\begin{figure}[htb]
-    \includegraphics[width=0.8\textwidth]{average_density_ssph_low_stiffness.png}
-    \caption{SSPH Durchschnittsdichte mit niedriger Steifigkeitskonstante}
-    \label{image:average_density_ssph_low_stiffness}
-\end{figure}
-
-\begin{figure}[htb]
-    \includegraphics[width=0.8\textwidth]{average_density_ssph_mid_stiffness.png}
-    \caption{SSPH Durchschnittsdichte mit mittlerer Steifigkeitskonstante}
-    \label{image:average_density_ssph_mid_stiffness}
-\end{figure}
-
-\begin{figure}[htb]
-    \includegraphics[width=0.8\textwidth]{average_density_ssph_high_stiffness.png}
-    \caption{SSPH Durchschnittsdichte mit hoher Steifigkeitskonstante}
-    \label{image:average_density_ssph_high_stiffness}
-\end{figure}
-
-In den Diagrammen ist zu erkennen, dass sich bei SSPH mit zunehmender Steifigkeitskonstante die Oszillationen abschwächen.
-Mit einer Steifigkeitskonstante von $k = 10^4$ dominieren die Oszillationen die Entwicklung der Durchschnittsdichte,
-während bei einer Steifigkeitskonstante von $k = 10^6$ die Durchschnittsdichte deutlich weniger oszilliert.
-In allen Simulationen ist zu sehen, dass mit der Zeit die Amplituden der Oszillationen geringer werden.
-In IISPH sind die Oszillationen kaum zu erkennen.
-Dadurch, dass für die gleiche Zeitspanne zehn mal weniger Iterationen berechnet werden müssen und zudem die Oszillationen sehr schwach sind,
-ist IISPH hier im Vorteil.
-
-
-\section{Rechenaufwand}
+\section{Ergebnisse}
 \begin{figure}[htb]
     \begin{minipage}[t]{0.45\linewidth}
         \centering
@@ -1403,7 +1258,7 @@ Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment1} dargest
             \bottomrule
         \end{tabular}
     \end{center}
-    \caption{Performanz von IISPH im Dammbruchszenario mit 1251 Partikel}
+    \caption{Performanz von IISPH im Dammbruchszenario mit 1251 Partikel und Dichtefehler 0.1 \%}
     \label{table:iisph_performance_experiment1}
 \end{table}
 
@@ -1418,7 +1273,7 @@ Es wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^5$ gewählt, um den durc
 Die Wahl des Zeitschritts gestaltete sich schwierig, da es keine eindeutige Grenze zwischen stabilen und instabilen Simulationen gibt.
 Für Zeitschritte $\Delta t \geq 0.019$ ist deutlich zu sehen, dass die Simulation instabil ist.
 Ebenfalls kann auch noch für Zeitschritte von etwa $0.011 \leq t < 0.019$ beobachtet werden, dass einzelne Partikel sich nicht sinnvoll verhalten,
-auch wenn die Durchschnittsdichte unter 0.01\% liegt.
+auch wenn die Durchschnittsdichte unter $0.01\%$ liegt.
 Daher wurde der Zeitschritt $\Delta t = 0.01$ als obere Grenze festgelegt, in der die Simulation noch stabil ist.
 Es ergab sich daraus insgesamt eine Berechnungszeit von 98.09 Sekunden für den Simulationsschritt.
 Die Druckberechnungszeit ist hier mit 0.241 Sekunden vernachlässigbar.
@@ -1426,12 +1281,60 @@ Die Druckberechnungszeit ist hier mit 0.241 Sekunden vernachlässigbar.
 Vergleicht man die Zeit von 98.09 Sekunden für die SSPH-Simulation mit der Berechnungszeit der performantesten IISPH-Simulation mit 62.38 Sekunden,
 so ist zu erkennnen, dass sich die Simulation mit IISPH insgesamt etwas schneller berechnen lässt.
 Ein weiterer Vorteil von IISPH gegenüber SSPH ist,
-dass für einen vorgegebenen maximalen Dichtefehler von 0.01 \% lediglich der Zeitschritt $\Delta t$ gewählt werden muss.
+dass für einen vorgegebenen maximalen Dichtefehler von $0.01 \%$ lediglich der Zeitschritt $\Delta t$ gewählt werden muss.
 Für $0.03 \leq \Delta t \leq 0.06$ ist die Performanz recht ähnlich.
 Bei SSPH muss zunächst anhand von vorherigen Simulationen der durchschnittliche Dichtefehler ermittelt werden,
 und abhängig davon wird die Steifigkeitskonstante $k$ gewählt.
 Anschließend muss der Zeitschritt $\Delta t$ gewählt werden, der wie oben beschrieben, auch nicht so einfach zu bestimmen ist, wie im Falle von IISPH.
 Daher erzielt IISPH in diesem Szenario eindeutig bessere Ergebnisse.
+
+
+Um zu beobachten, wie sich die Druckberechnungsmethoden mit einem geringeren erlaubten Dichtefehler verhalten,
+wurde das exakt gleiche Simulationsszenario durchgeführt, mit dem Unterschied, dass der erlaubte Dichtefehler nun $0.01 \%$ statt $0.1 \%$ beträgt.
+Die zu IISPH gesammelten Daten sind in Tabelle \ref{table:iisph_performance_experiment2} dargestellt.
+
+\begin{table}[htb]
+    \begin{center}
+        \begin{tabular}{S S S S S}
+            \toprule
+            {\multirow{2}{*}{$\Delta t$}}
+                & {\multirow{2}{*}{durchschn. Iter.}}
+                    & \multicolumn{2}{c}{Berechnungszeit (s)}\\
+                    && {Druck} & {Simulationsschr.} & {Anteil Druckber. (\%)}\\
+            \midrule
+            0.005 & 2.14 & 101.6 & 291.29 & 34.9\\
+            0.0075 & 3.43 & 94.89 & 220.65 & 43\\
+            0.01 & 5.59 & 107.65 & 205.07 & 52.5\\
+            0.015 & 11.87 & 139.21 & 202.44 & 68.8\\
+            0.02 & 20.18 & 171.46 & 218.79 & 78.4\\
+            0.025 & 29.91 & 202 & 240.58 & 84\\
+            0.03 & 40.32 & 224.01 & 255.39 & 87.7\\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    \caption{Performanz von IISPH im Dammbruchszenario mit 1251 Partikel und Dichtefehler 0.01 \%}
+    \label{table:iisph_performance_experiment2}
+\end{table}
+
+Hier ist zu sehen, dass im Vergleich zum höheren erlaubten Dichtefehler für gleiche Zeitschritte $\Delta t$ etwa 8 Mal mehr Iterationen benötigt werden.
+Daher müssen auch niedrigere Zeitschritte gewählt werden.
+Der Zeitschritt $\Delta t = 0.015$ mit einer Berechnungszeit für den Simulationsschritt von 202.44 Sekunden ergibt die beste Performanz.
+Aber auch Zeitschritte $0.0075 \leq \Delta t \leq 0.02$ liefern weniger als $10 \%$ schlechtere Ergebnisse.
+Im Vergleich zu den Simulationen mit höheren erlaubten Dichtefehler sind die optimalen Zeitschritte etwa um den Faktor 3 kleiner
+und dementsprechend sind die Berechnungszeiten für den Simulationsschritt ebenfalls um den Faktor 3 herum länger.
+
+Es wurde ebenfalls eine möglichst vergleichbare SSPH-Simulation durchgeführt.
+Hier wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^6$ gewählt,
+damit die durchschnittliche Dichte unter $0.01 \%$ bleibt.
+Im Vergleich zur Simulation mit erlaubten Dichtefehler von $0.1 \%$ ist $k$ hier um den Faktor 10 größer.
+Die Steifigkeitskonstante und der Dichtefehler scheinen damit sich antiproportional zueinander zu verhalten.
+Aus dieser Steifigkeitskonstante ergab sich damit ein maximaler Zeitschritt von $\Delta t = 0.004$.
+Auch hier war die Wahl dieses maximalen Zeitschritts nicht so einfach.
+Die Berechnungszeit für den Simulationsschritt betrug damit 244.73 Sekunden und 0.699 Sekunden für die Druckberechnung.
+
+Im Vergleich zur besten IISPH-Simulation ist die SSPH-Simulation somit etwas langsamer, wobei der Unterschied hier weniger stark ausfällt.
+Der Vergleich ist jedoch etwas unpräzise, weil die Wahl des Zeitschritts bei SSPH schwierig ist und gleichzeitig einen großen Einfluss auf die Berechnungszeit hat.
+Auch hier ist bei IISPH die Wahl des Zeitschritts einfacher, weil der Einfluss des Zeitschritts auf die Geschwindigkeit der Berechnung weniger stark ausfällt.
 
 
 Um die beiden Druckberechnungsmethoden in einem komplexeren Szenario zu vergleichen,
@@ -1444,7 +1347,7 @@ Die Partikelgröße beträgt nun $h = 4$.
 Um die Berechnungszeit zu begrenzen, wurde die Fensterbreite von 400 Pixel auf 200 Pixel verringert.
 Es ergibt sich eine Partikelanzahl von 7199 Partikeln.
 In den verschiedenen Simulationen wurde hier eine Zeit von 20 Sekunden simuliert.
-Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment2} dargestellt.
+Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment3} dargestellt.
 
 Für die SSPH-Simulation wurde eine Steifigkeitskonstante $k = 3 \cdot 10^6$ festgelegt, um den durchschnittlichen Dichtefehler unter $0.01\%$ zu halten.
 Daraus ergab sich ein maximaler Zeitschritt $\Delta t = 0.004$, in der die Simulation noch stabil läuft.
@@ -1478,7 +1381,7 @@ Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung un
         \end{tabular}
     \end{center}
     \caption{Performanz von IISPH im Dammleckszenario mit 7199 Partikel}
-    \label{table:iisph_performance_experiment2}
+    \label{table:iisph_performance_experiment3}
 \end{table}
 
 Aus den Daten für die IISPH-Simulationen zeigt sich,
