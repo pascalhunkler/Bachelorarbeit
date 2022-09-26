@@ -25,6 +25,7 @@ ngerman]{scrreprt}
 \usepackage{booktabs}
 \usepackage{titling}
 \usepackage{acronym}
+\usepackage{titleref}
 
 \graphicspath{{./Abbildungen/}}
 \title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH-Flüssigkeitssimulationen}
@@ -480,6 +481,7 @@ welches auf Incompressible SPH (ISPH) \cite{shao_incompressible_2003} aufbaut.
 
 
 \section{Druckberechnung mit einer Zustandsgleichung}
+\label{sec:pressure_computation_state_equation}
 Eine Methode, um den Druck zu berechnen, ist das Verwenden einer Zustandsgleichung.
 Hierbei wird der Druck direkt aus der Abweichung der berechneten Dichte $\rho_f$ eines Partikels von der Ruhedichte $\rho^0$ bestimmt.
 Ein Beispiel für eine solche Gleichung ist folgende:
@@ -1281,6 +1283,9 @@ da die absolute Berechnungszeit für den Simulationsschritt hier mit 62.38 Sekun
 
 Um die Performanz von IISPH mit SSPH vergleichen zu können, wurde auch eine vergleichbare SSPH-Simulation durchgeführt.
 Es wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^5$ gewählt, um den durchschnittlichen Dichtefehler zuverlässig im Bereich unter 0.01\% zu halten.
+Wie im Abschnitt \textit{\titleref{sec:pressure_computation_state_equation}} beschrieben,
+besitzt die Steifigkeitskonstante $k$ einen Einfluss auf die Dichteabweichung.
+Größere Werte für $k$ ergeben geringere Dichtefehler und vice versa.
 
 Die Wahl des Zeitschritts gestaltete sich schwierig, da es keine eindeutige Grenze zwischen stabilen und instabilen Simulationen gibt.
 Für Zeitschritte $\Delta t \geq 0.019$ ist deutlich zu sehen, dass die Simulation instabil ist.
@@ -1399,11 +1404,11 @@ Aus den Daten für die IISPH-Simulationen zeigt sich,
 dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.1$ herum liegt mit einer Berechnungszeit der Simulationsschritte von 738.65 Sekunden.
 Aber auch Zeitschritte von $0.006 \leq \Delta t \leq 0.012$ liefern ähnlich gute Ergebnisse.
 
-Für die SSPH-Simulation wurde eine Steifigkeitskonstante $k = 3 \cdot 10^6$ festgelegt, um den durchschnittlichen Dichtefehler unter $0.01\%$ zu halten.
-Daraus ergab sich ein maximaler Zeitschritt $\Delta t = 0.004$, in der die Simulation noch stabil läuft.
+Für die SSPH-Simulation wurde eine Steifigkeitskonstante $k = 3 \cdot 10^6$ festgelegt, um den durchschnittlichen Dichtefehler unter $0.1 \%$ zu halten.
+Daraus ergab sich ein maximaler Zeitschritt $\Delta t = 0.004$, in der die Simulation noch stabil erscheint.
 Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung und 649.78 Sekunden CPU-Zeit für den Simulationsschritt benötigt.
 
-Im Vergleich zur SSPH-Simulation mit Steifigkeitskonstante $k = 3 \cdot 10^6$ und Zeitschritt $\Delta t = 0.004$ ist die Berechnungszeit etwa um den Faktor 1.14 länger.
+Im Vergleich zur SSPH-Simulation mit Steifigkeitskonstante $k = 3 \cdot 10^6$ und Zeitschritt $\Delta t = 0.004$ ist die Berechnungszeit bei IISPH etwa um den Faktor 1.14 länger.
 Daher erreicht die SSPH-Simulation hier ein besseres Ergebnis.
 Jedoch muss auch in diesem Fall für die SSPH-Simulation zuerst die gewünschte Steifigkeitskonstante ermittelt werden,
 die den gewünschten Dichtefehler unterschreitet und zusätzlich ist die Wahl des richtigen Zeitschritts schwieriger,
@@ -1414,8 +1419,46 @@ Nach Koshier et al. \cite{koschier_smoothed_2020} erzielen globale Druckberechnu
 die sich vor allem durch eine höhere Säule an Partikel unter dem Einfluss von Gravitation auszeichnen,
 bessere Ergebnisse als Druckberechnungsmethoden durch Zustandsgleichungen.
 Dieses Verhalten konnte in den beschriebenen Simulationsszenarien nicht beobachtet werden.
+Eine Erklärung dafür könnte sein, dass 
 
 \chapter{Fazit und Ausblick}
+Ziel dieser Bachelorarbeit war es,
+in SPH-Flüssigkeitssimulationen die Druckberechnung durch eine Zustandsgleichung mit der Druckberechnung durch das Lösen eines Gleichungssystems zu vergleichen.
+Zum einen wurde die Druckberechnung mit Zustandsgleichung
+\begin{equation}
+    p_f = \max\left(k \left(\frac{\rho_f}{\rho^0} - 1\right), 0\right)
+\end{equation}
+implementiert.
+Zum anderen wurde IISPH implementiert, in der zur Druckberechnung ein Gleichungssystem iterativ gelöst wird.
+
+Es wurden mit diesen Druckberechnungsmethoden verschiedene Simulationen durchgeführt.
+Dabei stellte sich heraus,
+dass sich die Druckberechnung mit IISPH im Vergleich zur Druckberechnung mit der Zustandsgleichung im gezeigten Dammbruchszenario etwas schneller berechnen lässt.
+Wird der erlaubte Dichtefehler etwas niedriger gesetzt, so zeigt sich ein ähnliches Bild.
+Hier muss bei IISPH ein geringerer Zeitschritt gewählt werden, damit die Druckberechnung nicht zu lange dauert, da die Anzahl an Iterationen bei größeren Zeitschritten zunimmt.
+Ebenso muss bei SSPH eine größere Steifigkeitskonstante $k$ gewählt werden, um den Dichtefehler zu verkleinern.
+Hier muss ebenso ein geringerer Zeitschritt gewählt werden, damit die Simulation bei größeren Werten für $k$ stabil bleibt.
+Im Dammleckszenario mit größerer Flüssigkeitssäule und mehr Partikeln dagegen war die Druckberechnung mit der Zustandsgleichung etwas schneller.
+
+Berücksichtigt werden muss auch, dass bei IISPH für einen gegebenen erlaubten maximalen Dichtefehler lediglich der Zeitschritt gewählt werden muss.
+Dieser Zeitschritt kann großzügig gewählt werden, da für größere Zeitschritte zwar mehr Iterationen berechnet werden,
+jedoch müssen für den gleichen simulierten Zeitraum gleichzeitig weniger Simulationsschritte berechnet werden.
+Daher erlauben unterschiedliche Zeitschritte eine nahezu ähnlich schnelle Berechnung.
+
+Bei SSPH dagegen kann der maximale Dichtefehler nicht direkt vorgegeben werden.
+Der Dichtefehler, der während der Simulation entsteht, ist abhängig von der gewählten Steifigkeitskonstante $k$.
+Diese Konstante muss so gewählt werden, dass im Laufe der Simulation der Dichtefehler unter dem maximal erlaubten Wert bleibt.
+Zudem muss der Zeitschritt so gewählt werden, dass der Zeitschritt für eine schnelle Berechnung möglichst groß gewählt ist.
+Gleichzeitig muss der Zeitschritt aber klein genug sein, damit die Simulation noch stabil ist.
+Daher müssen zur Abstimmung dieser Parameter zu Testzwecken vorher viele verschiedene Simulationen berechnet werden.
+
+Aus diesem Grund kann gesagt werden, dass die Handhabung der Simulationen bei SSPH wesentlich komplizierter ist als bei IISPH.
+Andererseits ist IISPH komplexer und damit auch fehleranfälliger zu implementieren.
+Es ergab sich bei den vorgestellten Szenarien bei ähnlicher Performanz dennoch ein klarer Vorteil für IISPH.
+In Folge dessen kann aus den Ergebnissen dieser Arbeit geschlussfolgert werden,
+dass sich bei der Berechnung von Flüssigkeitssimulationen überwiegend die IISPH-Methode zur Druckberechnung empfiehlt.
+
+
 \bibliographystyle{alpha}
 \bibliography{literaturverzeichnis}
 
