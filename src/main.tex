@@ -24,6 +24,7 @@ ngerman]{scrreprt}
 \usepackage{siunitx}
 \usepackage{booktabs}
 \usepackage{titling}
+\usepackage{acronym}
 
 \graphicspath{{./Abbildungen/}}
 \title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH-Flüssigkeitssimulationen}
@@ -121,6 +122,15 @@ auszugsweise, bereits für eine andere Prüfung angefertigt wurde.
 \tableofcontents
 \listoffigures
 \listoftables
+
+\chapter*{Abkürzungsverzeichnis}
+\begin{acronym}[SPH]
+    \acro{sph}[SPH]{Smoothed Particle Hydrodynamics}
+    \acro{isph}[ISPH]{Incompressible SPH}
+    \acro{iisph}[IISPH]{Implicit Incompressible SPH}
+    \acro{ssph}[SSPH]{Standard SPH}
+\end{acronym}
+
 %\chapter{Abstract}
 \chapter{Einleitung}
 \pagenumbering{arabic}
@@ -135,7 +145,7 @@ Hier hat im Laufe der Zeit die Methode \textit{Smoothed Particle Hydrodynamics (
 In SPH-basierten Ansätzen wird die Flüssigkeit in viele verschiedene so genannte Partikel aufgeteilt.
 Dazu müssen Beschleunigungen zwischen diesen Partikeln berechnet werden, um die Positionen der Partikel zu verändern.
 
-Teil davon ist auch die Berechnung des Drucks.
+Teil davon ist auch die Berechnung des Drucks der verschiedenen Partikel.
 Im Laufe der Zeit wurden verschiedene Methoden entwickelt, um den Druck zu berechnen.
 Dazu gibt es mehrere mögliche Ansätze.
 Zum einen lässt sich der Druck mithilfe einer Zustandsgleichung berechnen, in der der Druck eines Partikels nur von der lokalen Umgebung des Partikels abhängt.
@@ -144,7 +154,7 @@ Motivation dazu ist, dass damit erreicht werden soll, dass die Flüssigkeit in e
 während lokale Methoden nicht direkt die Inkompressibilität zum Ziel haben.
 Beispiele für globale Druckberechnungsmethoden sind \textit{Incompressible SPH (ISPH)} \cite{shao_incompressible_2003}, 
 oder aber auch \textit{Implicit Incompressible SPH (IISPH)} \cite{ihmsen_implicit_2014},
-welches nach \cite{ihmsen_implicit_2014} eine deutlich besser Performanz und Genauigkeit als ISPH aufweist, und auch heute noch eine Rolle spielt. 
+welches nach Ihmsen et al. \cite{ihmsen_implicit_2014} eine deutlich besser Performanz und Genauigkeit als ISPH aufweist, und auch heute noch eine Rolle spielt. 
 
 Im Rahmen dieser Arbeit wird der Frage nachgegangen, welcher Ansatz zur Druckberechnung sich in welchem Fall eher empfehlen lässt.
 Dazu wurde eine Software entwickelt, in welcher verschiedene Szenarien simuliert werden können.
@@ -164,12 +174,14 @@ Dazu wird gezeigt, wie dieses Gleichungssystem iterativ mit dem relaxierten Jaco
 
 Danach wird gezeigt, wie die Konzepte aus den vorigen beiden Kapiteln in der entwickelten Software, welche in der Programmiersprache C++ programmiert wurde,
 implementiert wurden. Dazu werden die Konzepte an die Bedingungen, die in der Implementierung vorherrschen, angepasst.
-Neben den Flüssigkeitspartikeln gibt es nämlich auch Grenzpartikel, um die Flüssigkeit zu begrenzen und zu verhindern, dass diese einfach auseinanderfließt.
+Neben den Flüssigkeitspartikeln müssen in der Implementierung auch Grenzpartikel berücksichtigt werden,
+welche die Flüssigkeit begrenzen und somit verhindern, dass diese einfach auseinanderfließt.
 Zudem können einzelne Konponenten der den Konzepten zugrunde liegenden Gleichungen vereinfacht werden.
 Es werden außerdem die Algorithmen in Pseudocode gezeigt, die in der tatsächlichen Implementierung verwendet wurden.
 
 Um schließlich die Frage zu beantworten, welche der beiden Druckmethoden sich in welchem Fall eher eignen, werden verschiedene Szenarien simuliert und ausgewertet.
-Hier wird aufgezeigt, welchen Einfluss verschiedene Simulationsparameter auf die Genauigkeit und auch auf die Performanz der Druckberechnung haben.
+Für die beiden Druckberechnungsmethoden werden in der Genauigkeit möglichst vergleichbare Simulationen durchgeführt.
+Anhand der daraus gewonnenen Daten wird die Performanz der beiden Methoden miteinander verglichen.
 
 Zum Schluss wird ein Fazit aus diesen Ergebnissen und Erfahrungen gezogen und ein Ausblick auf zukünftige Entwicklungen gegeben.
 
@@ -181,7 +193,7 @@ Sie beschreibt die Änderungsrate der Geschwindigkeit eines kleinen volumetrisch
 Für die Navier-Stokes-Gleichung gibt es verschiedene Formen, die auf den eulerschen Ansatz oder den lagrangeschen Ansatz beruhen.
 Diese Arbeit beschäftigt sich im Wesentlichen auf lagrangesche, partikelbasierte Simulationen,
 der Vollständigkeit wegen wird jedoch auch noch kurz auf eulersche, gitterbasierte Ansätze eingegangen.
-Die Inhalte dieses Abschnitts beziehen sich auf Ihmsen et al. \cite{ihmsen_sph_2014}.
+Die Inhalte dieses Abschnitts basieren auf der Arbeit von Ihmsen et al. \cite{ihmsen_sph_2014}.
 
 
 \subsection{Partikelbasierte Simulation}
@@ -499,7 +511,7 @@ also kann man aus dieser Gleichung schließen, dass sich insgesamt aus einer gro
 
 \section{Druckberechnung mit IISPH}
 Dieser Abschnitt behandelt die Druckberechnung mit der IISPH-Methode.
-Implicit Incompressible SPH (IISPH) wurde erstmals von Ihmsen et al. entwickelt \cite{ihmsen_implicit_2014}, worauf dieser Abschnitt auch basiert.
+Implicit Incompressible SPH (IISPH) wurde erstmals von Ihmsen et al. entwickelt \cite{ihmsen_implicit_2014}, auf deren Arbeit dieser Abschnitt auch basiert.
 Im Gegensatz zu Standard SPH (SSPH), also der Druckberechnung durch eine Zustandsgleichung, wird hier ein lineares Gleichungssystem gelöst,
 um den Druck der Partikel zu berechnen.
 
@@ -568,8 +580,8 @@ Für jedes Partikel haben wir eine Gleichung der Form
 
 \subsection{Lösung des Gleichungssystems}
 Das Gleichungssystem, das gelöst werden muss, um den Druck zu berechnen, kann mit verschiedenen Methoden gelöst werden.
-Empfohlen von Ihmsen et al. \cite{ihmsen_implicit_2014} ist es, das relaxierte Jacobi-Verfahren anzuwenden,
-die Herangehensweise dazu ist in \cite{ihmsen_implicit_2014} ebenfalls beschrieben, worauf dieser Unterabschnitt auch basiert.
+Empfohlen von Ihmsen et al. \cite{ihmsen_implicit_2014} ist es, das relaxierte Jacobi-Verfahren anzuwenden.
+Die Herangehensweise dazu ist in \cite{ihmsen_implicit_2014} ebenfalls beschrieben, worauf dieser Unterabschnitt auch basiert.
 Hierzu werden die Werte für den Druck $p_f$ wie folgt iterativ gelöst:
 \begin{equation}
     \label{equation:iterative_pressure_update}
@@ -1268,10 +1280,11 @@ Insgesamt erreicht die IISPH-Simulation mit Zeitschritt $\Delta t = 0.04$ die be
 da die absolute Berechnungszeit für den Simulationsschritt hier mit 62.38 Sekunden am geringsten ist.
 
 Um die Performanz von IISPH mit SSPH vergleichen zu können, wurde auch eine vergleichbare SSPH-Simulation durchgeführt.
-Es wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^5$ gewählt, um den durchschnittlichen Dichtefehler unter 0.01\% zu halten.
+Es wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^5$ gewählt, um den durchschnittlichen Dichtefehler zuverlässig im Bereich unter 0.01\% zu halten.
 
 Die Wahl des Zeitschritts gestaltete sich schwierig, da es keine eindeutige Grenze zwischen stabilen und instabilen Simulationen gibt.
 Für Zeitschritte $\Delta t \geq 0.019$ ist deutlich zu sehen, dass die Simulation instabil ist.
+In diesem Fall bewegen sich die Partikel mit sehr hoher Geschwindigkeit in alle Richtungen auseinander.
 Ebenfalls kann auch noch für Zeitschritte von etwa $0.011 \leq t < 0.019$ beobachtet werden, dass einzelne Partikel sich nicht sinnvoll verhalten,
 auch wenn die Durchschnittsdichte unter $0.01\%$ liegt.
 Daher wurde der Zeitschritt $\Delta t = 0.01$ als obere Grenze festgelegt, in der die Simulation noch stabil ist.
@@ -1319,7 +1332,7 @@ Die zu IISPH gesammelten Daten sind in Tabelle \ref{table:iisph_performance_expe
 Hier ist zu sehen, dass im Vergleich zum höheren erlaubten Dichtefehler für gleiche Zeitschritte $\Delta t$ etwa 8 Mal mehr Iterationen benötigt werden.
 Daher müssen auch niedrigere Zeitschritte gewählt werden.
 Der Zeitschritt $\Delta t = 0.015$ mit einer Berechnungszeit für den Simulationsschritt von 202.44 Sekunden ergibt die beste Performanz.
-Aber auch Zeitschritte $0.0075 \leq \Delta t \leq 0.02$ liefern weniger als $10 \%$ schlechtere Ergebnisse.
+Aber auch Zeitschritte $0.0075 \leq \Delta t \leq 0.02$ liefern weniger als $10 \%$ langsamere Ergebnisse.
 Im Vergleich zu den Simulationen mit höheren erlaubten Dichtefehler sind die optimalen Zeitschritte etwa um den Faktor 3 kleiner
 und dementsprechend sind die Berechnungszeiten für den Simulationsschritt ebenfalls um den Faktor 3 herum länger.
 
@@ -1333,7 +1346,8 @@ Auch hier war die Wahl dieses maximalen Zeitschritts nicht so einfach.
 Die Berechnungszeit für den Simulationsschritt betrug damit 244.73 Sekunden und 0.699 Sekunden für die Druckberechnung.
 
 Im Vergleich zur besten IISPH-Simulation ist die SSPH-Simulation somit etwas langsamer, wobei der Unterschied hier weniger stark ausfällt.
-Der Vergleich ist jedoch etwas unpräzise, weil die Wahl des Zeitschritts bei SSPH schwierig ist und gleichzeitig einen großen Einfluss auf die Berechnungszeit hat.
+Der Vergleich der Berechnungsgeschwindigkeit ist jedoch etwas unpräzise,
+weil die Wahl des Zeitschritts bei SSPH schwierig ist und gleichzeitig einen großen Einfluss auf die Berechnungszeit hat.
 Auch hier ist bei IISPH die Wahl des Zeitschritts einfacher, weil der Einfluss des Zeitschritts auf die Geschwindigkeit der Berechnung weniger stark ausfällt.
 
 
@@ -1347,11 +1361,8 @@ Die Partikelgröße beträgt nun $h = 4$.
 Um die Berechnungszeit zu begrenzen, wurde die Fensterbreite von 400 Pixel auf 200 Pixel verringert.
 Es ergibt sich eine Partikelanzahl von 7199 Partikeln.
 In den verschiedenen Simulationen wurde hier eine Zeit von 20 Sekunden simuliert.
+Der erlaubte Dichtefehler beträgt $0.1 \%$.
 Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment3} dargestellt.
-
-Für die SSPH-Simulation wurde eine Steifigkeitskonstante $k = 3 \cdot 10^6$ festgelegt, um den durchschnittlichen Dichtefehler unter $0.01\%$ zu halten.
-Daraus ergab sich ein maximaler Zeitschritt $\Delta t = 0.004$, in der die Simulation noch stabil läuft.
-Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung und 649.78 Sekunden CPU-Zeit für den Simulationsschritt benötigt.
 
 \begin{table}[htb]
     \begin{center}
@@ -1387,12 +1398,22 @@ Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung un
 Aus den Daten für die IISPH-Simulationen zeigt sich,
 dass der optimale Zeitschritt für IISPH um den Wert $\Delta t = 0.1$ herum liegt mit einer Berechnungszeit der Simulationsschritte von 738.65 Sekunden.
 Aber auch Zeitschritte von $0.006 \leq \Delta t \leq 0.012$ liefern ähnlich gute Ergebnisse.
-Im Vergleich zur SSPH-Simulation mit Steifigkeitskonstante $k = 3 \cdot 10^6$ und Zeitschritt $\Delta t = 0.004$ ist die Berechnungszeit jedoch etwa um den Faktor 1.14 länger.
+
+Für die SSPH-Simulation wurde eine Steifigkeitskonstante $k = 3 \cdot 10^6$ festgelegt, um den durchschnittlichen Dichtefehler unter $0.01\%$ zu halten.
+Daraus ergab sich ein maximaler Zeitschritt $\Delta t = 0.004$, in der die Simulation noch stabil läuft.
+Es wurden insgesamt vernachlässigbare 1.49 Sekunden für die Druckberechnung und 649.78 Sekunden CPU-Zeit für den Simulationsschritt benötigt.
+
+Im Vergleich zur SSPH-Simulation mit Steifigkeitskonstante $k = 3 \cdot 10^6$ und Zeitschritt $\Delta t = 0.004$ ist die Berechnungszeit etwa um den Faktor 1.14 länger.
 Daher erreicht die SSPH-Simulation hier ein besseres Ergebnis.
-Dies erscheint überraschend, weil dieses Szenario etwas komplexer gestaltet ist als das vorherige.
 Jedoch muss auch in diesem Fall für die SSPH-Simulation zuerst die gewünschte Steifigkeitskonstante ermittelt werden,
 die den gewünschten Dichtefehler unterschreitet und zusätzlich ist die Wahl des richtigen Zeitschritts schwieriger,
 weil dieser möglichst groß sein muss für eine schnelle Berechnungszeit und gleichzeitig klein genug sein muss, damit die Simulation stabil bleibt.
+
+Die schnellere Berechnung für die SSPH-Simulation erscheint überraschend, weil dieses Szenario etwas komplexer gestaltet ist als die vorherigen.
+Nach Koshier et al. \cite{koschier_smoothed_2020} erzielen globale Druckberechnungsmethoden in komplexeren Szenarien,
+die sich vor allem durch eine höhere Säule an Partikel unter dem Einfluss von Gravitation auszeichnen,
+bessere Ergebnisse als Druckberechnungsmethoden durch Zustandsgleichungen.
+Dieses Verhalten konnte in den beschriebenen Simulationsszenarien nicht beobachtet werden.
 
 \chapter{Fazit und Ausblick}
 \bibliographystyle{alpha}
