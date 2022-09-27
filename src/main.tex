@@ -41,7 +41,7 @@ ngerman]{scrreprt}
     
     \newcommand{\HorizontalLine}{\rule{\linewidth}{0.3mm}}
     
-    {\Large Bachelorarbeit}\\[1.3cm]
+    {\Huge Bachelorarbeit}\\[1.3cm]
     
     
     % _____________________________________________________________________________
@@ -57,8 +57,12 @@ ngerman]{scrreprt}
     % _____________________________________________________________________________
     
     
-    {\Huge \theauthor} \\[2cm]
-    
+    {\Huge \theauthor}\\
+    \Large{
+    Matrikelnummer: 4734792\\
+    E-Mail: pascal-hunkler@web.de \\[1cm]
+    }
+    {\Large Bearbeitungszeit: 27.\,06.\,2022 -- 27.\,09.\,2022} \\[1cm]
     
     \begin{tabular}[hc]{>{\huge}l >{\huge}l}
       Gutachter: & \firstexaminer \\[0.3cm]
@@ -80,25 +84,25 @@ ngerman]{scrreprt}
     
     \thispagestyle{empty}
     % title page back
-    \ \vfill \ \\  % at least one space required before vfill
-    \
-    \textbf{Bearbeitungszeit}            \smallskip{} \\
-    27.\,06.\,2022 -- 27.\,09.\,2022   \bigskip{} \\
-    \
-    \textbf{Gutachter}                  \smallskip{} \\
-    \firstexaminer                      \bigskip{} \\
-    \
+    %\ \vfill \ \\  % at least one space required before vfill
+    %\
+    %\textbf{Bearbeitungszeit}            \smallskip{} \\
+    %27.\,06.\,2022 -- 27.\,09.\,2022   \bigskip{} \\
+    %\
+    %\textbf{Gutachter}                  \smallskip{} \\
+    %\firstexaminer                      \bigskip{} \\
+    %\
     % If there is a second examiner include it
-    \ifdef{\secondexaminer}
-        {
+    %\ifdef{\secondexaminer}
+    %    {
         % Include
-        \textbf{Zweitgutachter}        \smallskip{} \\
-        \secondexaminer                \bigskip{} \\
-        \
-        }
-        {
+    %    \textbf{Zweitgutachter}        \smallskip{} \\
+    %    \secondexaminer                \bigskip{} \\
+    %    \
+    %    }
+    %    {
         % No second examiner, ignore
-        }
+    %    }
     %\textbf{Betreuer}                  \smallskip{} \\
     %\advisers
 
@@ -120,7 +124,9 @@ auszugsweise, bereits für eine andere Prüfung angefertigt wurde.
   Ort, Datum                  &   Unterschrift
 \end{tabular}
 
+\renewcommand{\baselinestretch}{0.95}\normalsize
 \tableofcontents
+\renewcommand{\baselinestretch}{1.0}\normalsize
 \listoffigures
 \listoftables
 
@@ -1240,6 +1246,7 @@ Die Flüssigkeitstiefe zu Beginn beträgt 30 Partikel, die Partikelgröße ist a
 Die Viskosität beträgt 200.
 Es wurde jeweils eine Zeitspanne von 50 Sekunden simuliert. 
 Abhängig des Zeitschritts $\Delta t$ ergab sich damit eine unterschiedliche Anzahl an berechneten Simulationsschritten.
+Berechnet wurden die Simulation auf dem \textit{Intel~Core~i5-6600K} Prozessor mit vier Kernen und Taktfrequenz 4.00~GHz.
 
 Für die IISPH-Simulationen wurde ebenfalls die durchschnittliche Anzahl an Iterationen erfasst,
 die während der Druckberechnung benötigt werden, um einen Dichtefehler unter 0.01\% zu ereichen.
@@ -1291,7 +1298,7 @@ Die Wahl des Zeitschritts gestaltete sich schwierig, da es keine eindeutige Gren
 Für Zeitschritte $\Delta t \geq 0.019$ ist deutlich zu sehen, dass die Simulation instabil ist.
 In diesem Fall bewegen sich die Partikel mit sehr hoher Geschwindigkeit in alle Richtungen auseinander.
 Ebenfalls kann auch noch für Zeitschritte von etwa $0.011 \leq t < 0.019$ beobachtet werden, dass einzelne Partikel sich nicht sinnvoll verhalten,
-auch wenn die Durchschnittsdichte unter $0.01\%$ liegt.
+auch wenn die Durchschnittsdichte unter $0.01~\%$ liegt.
 Daher wurde der Zeitschritt $\Delta t = 0.01$ als obere Grenze festgelegt, in der die Simulation noch stabil ist.
 Es ergab sich daraus insgesamt eine Berechnungszeit von 98.09 Sekunden für den Simulationsschritt.
 Die Druckberechnungszeit ist hier mit 0.241 Sekunden vernachlässigbar.
@@ -1308,7 +1315,7 @@ Daher erzielt IISPH in diesem Szenario eindeutig bessere Ergebnisse.
 
 
 Um zu beobachten, wie sich die Druckberechnungsmethoden mit einem geringeren erlaubten Dichtefehler verhalten,
-wurde das exakt gleiche Simulationsszenario durchgeführt, mit dem Unterschied, dass der erlaubte Dichtefehler nun $0.01 \%$ statt $0.1 \%$ beträgt.
+wurde das exakt gleiche Simulationsszenario durchgeführt, mit dem Unterschied, dass der erlaubte Dichtefehler nun $0.01~\%$ statt $0.1~\%$ beträgt.
 Die zu IISPH gesammelten Daten sind in Tabelle \ref{table:iisph_performance_experiment2} dargestellt.
 
 \begin{table}[htb]
@@ -1337,7 +1344,7 @@ Die zu IISPH gesammelten Daten sind in Tabelle \ref{table:iisph_performance_expe
 Hier ist zu sehen, dass im Vergleich zum höheren erlaubten Dichtefehler für gleiche Zeitschritte $\Delta t$ etwa 8 Mal mehr Iterationen benötigt werden.
 Daher müssen auch niedrigere Zeitschritte gewählt werden.
 Der Zeitschritt $\Delta t = 0.015$ mit einer Berechnungszeit für den Simulationsschritt von 202.44 Sekunden ergibt die beste Performanz.
-Aber auch Zeitschritte $0.0075 \leq \Delta t \leq 0.02$ liefern weniger als $10 \%$ langsamere Ergebnisse.
+Aber auch Zeitschritte $0.0075 \leq \Delta t \leq 0.02$ liefern weniger als $10~\%$ langsamere Ergebnisse.
 Im Vergleich zu den Simulationen mit höheren erlaubten Dichtefehler sind die optimalen Zeitschritte etwa um den Faktor 3 kleiner
 und dementsprechend sind die Berechnungszeiten für den Simulationsschritt ebenfalls um den Faktor 3 herum länger.
 
@@ -1366,7 +1373,7 @@ Die Partikelgröße beträgt nun $h = 4$.
 Um die Berechnungszeit zu begrenzen, wurde die Fensterbreite von 400 Pixel auf 200 Pixel verringert.
 Es ergibt sich eine Partikelanzahl von 7199 Partikeln.
 In den verschiedenen Simulationen wurde hier eine Zeit von 20 Sekunden simuliert.
-Der erlaubte Dichtefehler beträgt $0.1 \%$.
+Der erlaubte Dichtefehler beträgt $0.1~\%$.
 Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment3} dargestellt.
 
 \begin{table}[htb]
@@ -1419,7 +1426,7 @@ Nach Koshier et al. \cite{koschier_smoothed_2020} erzielen globale Druckberechnu
 die sich vor allem durch eine höhere Säule an Partikel unter dem Einfluss von Gravitation auszeichnen,
 bessere Ergebnisse als Druckberechnungsmethoden durch Zustandsgleichungen.
 Dieses Verhalten konnte in den beschriebenen Simulationsszenarien nicht beobachtet werden.
-Eine Erklärung dafür könnte sein, dass 
+
 
 \chapter{Fazit und Ausblick}
 Ziel dieser Bachelorarbeit war es,
@@ -1457,6 +1464,14 @@ Andererseits ist IISPH komplexer und damit auch fehleranfälliger zu implementie
 Es ergab sich bei den vorgestellten Szenarien bei ähnlicher Performanz dennoch ein klarer Vorteil für IISPH.
 In Folge dessen kann aus den Ergebnissen dieser Arbeit geschlussfolgert werden,
 dass sich bei der Berechnung von Flüssigkeitssimulationen überwiegend die IISPH-Methode zur Druckberechnung empfiehlt.
+
+Diese Bachelorarbeit beschäftigte sich mit dem Vergleich zweier konkreter Druckberechnungsmethoden.
+Es gibt eine zunehmende Anzahl an weiteren Methoden zur Druckberechnung.
+
+Daneben wurde in dieser Arbeit nicht gezeigt, wie sich die Druckberechnung in sehr großen und komplexen Szenarien verhält.
+
+Aus diesen Gründen können noch weitgreifendere Untersuchungen durchgeführt werden, 
+in der in möglichst vielfältigen Szenarien globale Drucklöser mit lokalen Drucklösern verglichen werden.
 
 
 \bibliographystyle{alpha}
