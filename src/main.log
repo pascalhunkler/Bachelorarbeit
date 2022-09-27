@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.6.20)  27 SEP 2022 04:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.6.20)  27 SEP 2022 05:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -744,29 +744,35 @@ Package: xstring 2019/02/06 v1.83 String manipulations (CT)
 \AC@clearlist=\toks26
 ) (/usr/share/texlive/texmf-dist/tex/latex/titleref/titleref.sty
 Package: titleref 2001/04/05 v3.1  Cross-references with titles.
+) (/usr/share/texlive/texmf-dist/tex/latex/bbm-macros/bbm.sty
+Package: bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
+LaTeX Font Info:    Overwriting math alphabet `\mathbbm' in version `bold'
+(Font)                  U/bbm/m/n --> U/bbm/bx/n on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathbbmss' in version `bold'
+(Font)                  U/bbmss/m/n --> U/bbmss/bx/n on input line 35.
 ) (/home/pascal/Bachelorarbeit/src/main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 37.
-LaTeX Font Info:    Trying to load font information for LGR+cmr on input line 37.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 38.
+LaTeX Font Info:    Trying to load font information for LGR+cmr on input line 38.
  (/usr/share/texlive/texmf-dist/tex/latex/cbfonts-fd/lgrcmr.fd
 File: lgrcmr.fd 2017/07/29 v1.2 Greek European Computer Regular
 )
-LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    ... okay on input line 38.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count296
@@ -795,11 +801,11 @@ Dictionary: translator-basic-dictionary, Language: German
 ) (/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx-abbreviations.cfg
 File: siunitx-abbreviations.cfg 2017/11/26 v2.7k siunitx: Abbreviated units
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 37.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 38.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 37.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 38.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
@@ -836,121 +842,125 @@ chapter 1.
 chapter 2.
 [3
 
-] [4] [5] [6] [7]
-Overfull \hbox (14.41594pt too wide) in paragraph at lines 413--419
+] [4] [5]
+LaTeX Font Info:    Trying to load font information for U+bbm on input line 334.
+ (/usr/share/texlive/texmf-dist/tex/latex/bbm-macros/ubbm.fd
+File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
+) [6] [7]
+Overfull \hbox (14.41594pt too wide) in paragraph at lines 415--421
 \OT1/cmr/m/n/10.95 Diese For-mu-lie-rung erf[]ullt ei-ni-ge w[]unschens-wer-te Ei-gen-schaf-ten: Sie ist galilei-invariant,
  []
 
-[8] [9]
+[8] [9] [10]
 chapter 3.
-[10
+[11
 
-] [11] [12] [13] [14]
+] [12] [13] [14] [15]
 chapter 4.
-[15
+[16
 
-] [16] [17] [18] [19] [20] [21]
-Overfull \hbox (37.56313pt too wide) in paragraph at lines 977--978
+] [17] [18] [19] [20] [21] [22]
+Overfull \hbox (37.56313pt too wide) in paragraph at lines 989--990
 \OT1/cmr/m/n/10.95 Zur Be-rech-nung der Druck-be-schleu-ni-gung wird die al-ter-na-ti-ve Form der SPH-Approximation
  []
 
-[22] [23] [24] [25] [26] [27]
+[23] [24] [25] [26] [27] [28]
 chapter 5.
-<./Abbildungen/Dammbruch.png, id=128, 3345.49875pt x 2090.81125pt>
+<./Abbildungen/Dammbruch.png, id=132, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Dammbruch.png Graphic file (type png)
 <use ./Abbildungen/Dammbruch.png>
-Package pdftex.def Info: ./Abbildungen/Dammbruch.png  used on input line 1178.
+Package pdftex.def Info: ./Abbildungen/Dammbruch.png  used on input line 1190.
 (pdftex.def)             Requested size: 179.25116pt x 112.01202pt.
-<./Abbildungen/Dammleck.png, id=129, 3345.49875pt x 2090.81125pt>
+<./Abbildungen/Dammleck.png, id=133, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Dammleck.png Graphic file (type png)
 <use ./Abbildungen/Dammleck.png>
-Package pdftex.def Info: ./Abbildungen/Dammleck.png  used on input line 1183.
+Package pdftex.def Info: ./Abbildungen/Dammleck.png  used on input line 1195.
 (pdftex.def)             Requested size: 179.25116pt x 112.01202pt.
-<./Abbildungen/Fallend.png, id=130, 3345.49875pt x 2090.81125pt>
+<./Abbildungen/Fallend.png, id=134, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Fallend.png Graphic file (type png)
 <use ./Abbildungen/Fallend.png>
-Package pdftex.def Info: ./Abbildungen/Fallend.png  used on input line 1188.
+Package pdftex.def Info: ./Abbildungen/Fallend.png  used on input line 1200.
 (pdftex.def)             Requested size: 179.25116pt x 112.01202pt.
 
-Underfull \hbox (badness 1354) in paragraph at lines 1189--1189
+Underfull \hbox (badness 1354) in paragraph at lines 1201--1201
 [][]|\OT1/cmr/m/n/10.95 Von ei-ner Platt-form
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1189--1189
+Underfull \hbox (badness 10000) in paragraph at lines 1201--1201
 \OT1/cmr/m/n/10.95 her-un-ter-fal-len-de
  []
 
-<./Abbildungen/Herunterfließend.png, id=131, 3345.49875pt x 2090.81125pt>
+<./Abbildungen/Herunterfließend.png, id=135, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Herunterfließend.png Graphic file (type png)
 <use ./Abbildungen/Herunterfließend.png>
-Package pdftex.def Info: ./Abbildungen/Herunterfließend.png  used on input line 1193.
+Package pdftex.def Info: ./Abbildungen/Herunterfließend.png  used on input line 1205.
 (pdftex.def)             Requested size: 179.25116pt x 112.01202pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1194--1194
+Underfull \hbox (badness 10000) in paragraph at lines 1206--1206
 [][]|\OT1/cmr/m/n/10.95 Von ei-ner schie-fen
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1194--1194
+Underfull \hbox (badness 10000) in paragraph at lines 1206--1206
 \OT1/cmr/m/n/10.95 Ebe-ne her-un-ter-flie-
  []
 
-<./Abbildungen/Ruhend.png, id=132, 3345.49875pt x 2090.81125pt>
+<./Abbildungen/Ruhend.png, id=136, 3345.49875pt x 2090.81125pt>
 File: ./Abbildungen/Ruhend.png Graphic file (type png)
 <use ./Abbildungen/Ruhend.png>
-Package pdftex.def Info: ./Abbildungen/Ruhend.png  used on input line 1198.
+Package pdftex.def Info: ./Abbildungen/Ruhend.png  used on input line 1210.
 (pdftex.def)             Requested size: 179.25116pt x 112.01202pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1177--1202
+Underfull \hbox (badness 10000) in paragraph at lines 1189--1214
 [][] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1177--1202
+Underfull \hbox (badness 10000) in paragraph at lines 1189--1214
 [] []
  []
 
-[28
+[29
 
-] [29 <./Abbildungen/Dammbruch.png> <./Abbildungen/Dammleck.png> <./Abbildungen/Fallend.png> <./Abbildungen/Herunterfließend.png> <./Abbildungen/Ruhend.png>]
-<./Abbildungen/Dammbruch_Experiment1.png, id=144, 300.3722pt x 452.4403pt>
+] [30 <./Abbildungen/Dammbruch.png> <./Abbildungen/Dammleck.png> <./Abbildungen/Fallend.png> <./Abbildungen/Herunterfließend.png> <./Abbildungen/Ruhend.png>]
+<./Abbildungen/Dammbruch_Experiment1.png, id=148, 300.3722pt x 452.4403pt>
 File: ./Abbildungen/Dammbruch_Experiment1.png Graphic file (type png)
 <use ./Abbildungen/Dammbruch_Experiment1.png>
-Package pdftex.def Info: ./Abbildungen/Dammbruch_Experiment1.png  used on input line 1230.
+Package pdftex.def Info: ./Abbildungen/Dammbruch_Experiment1.png  used on input line 1242.
 (pdftex.def)             Requested size: 125.47525pt x 188.99498pt.
-<./Abbildungen/Dammleck_Experiment2.png, id=146, 151.3153pt x 678.28406pt>
+<./Abbildungen/Dammleck_Experiment2.png, id=150, 151.3153pt x 678.28406pt>
 File: ./Abbildungen/Dammleck_Experiment2.png Graphic file (type png)
 <use ./Abbildungen/Dammleck_Experiment2.png>
-Package pdftex.def Info: ./Abbildungen/Dammleck_Experiment2.png  used on input line 1237.
+Package pdftex.def Info: ./Abbildungen/Dammleck_Experiment2.png  used on input line 1249.
 (pdftex.def)             Requested size: 53.7759pt x 241.05644pt.
 
-Underfull \hbox (badness 1383) in paragraph at lines 1238--1238
+Underfull \hbox (badness 1383) in paragraph at lines 1250--1250
 [][]|\OT1/cmr/m/n/10.95 Damm-leck mit 7199
  []
 
-[30
+[31
 
- <./Abbildungen/Dammbruch_Experiment1.png> <./Abbildungen/Dammleck_Experiment2.png>] [31] [32] [33] [34]
+ <./Abbildungen/Dammbruch_Experiment1.png> <./Abbildungen/Dammleck_Experiment2.png>] [32] [33] [34] [35]
 chapter 6.
-[35
+[36
 
-] (/home/pascal/Bachelorarbeit/src/main.bbl [36]) [37
+] (/home/pascal/Bachelorarbeit/src/main.bbl [37]) [38
 
 ] (/home/pascal/Bachelorarbeit/src/main.aux) ) 
 Here is how much of TeX's memory you used:
- 12459 strings out of 483057
- 246847 string characters out of 5962301
- 575931 words of memory out of 5000000
- 27319 multiletter control sequences out of 15000+600000
- 549748 words of font info for 85 fonts, out of 8000000 for 9000
+ 12508 strings out of 483057
+ 247925 string characters out of 5962301
+ 576931 words of memory out of 5000000
+ 27358 multiletter control sequences out of 15000+600000
+ 550144 words of font info for 88 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  47i,23n,72p,10158b,625s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cbfonts/grmn1095.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on /home/pascal/Bachelorarbeit/src/main.pdf (43 pages, 688428 bytes).
+ </home/pascal/.texlive2019/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.657pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cbfonts/grmn1095.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on /home/pascal/Bachelorarbeit/src/main.pdf (44 pages, 689403 bytes).
 PDF statistics:
- 244 PDF objects out of 1000 (max. 8388607)
- 162 compressed objects within 2 object streams
+ 252 PDF objects out of 1000 (max. 8388607)
+ 168 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

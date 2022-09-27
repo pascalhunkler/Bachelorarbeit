@@ -26,6 +26,7 @@ ngerman]{scrreprt}
 \usepackage{titling}
 \usepackage{acronym}
 \usepackage{titleref}
+\usepackage{bbm}
 
 \graphicspath{{./Abbildungen/}}
 \title{Analyse der Druckberechnung mithilfe einer Zustandsgleichung im Vergleich zur Lösung eines Gleichungssystems in SPH-Flüssigkeitssimulationen}
@@ -131,11 +132,12 @@ auszugsweise, bereits für eine andere Prüfung angefertigt wurde.
 \listoftables
 
 \chapter*{Abkürzungsverzeichnis}
-\begin{acronym}[SPH]
+\begin{acronym}
     \acro{sph}[SPH]{Smoothed Particle Hydrodynamics}
     \acro{isph}[ISPH]{Incompressible SPH}
     \acro{iisph}[IISPH]{Implicit Incompressible SPH}
     \acro{ssph}[SSPH]{Standard SPH}
+    \acro{cfl-bedingung}[CFL-Bedingung]{Courant–Friedrichs–Lewy-Bedingung}
 \end{acronym}
 
 %\chapter{Abstract}
@@ -255,7 +257,7 @@ Es eignet sich daher gut für partikelbasierte Simulationen.
 
 \subsection{Diskretisierung mit SPH}
 Die Inhalte dieses Abschnittes basieren auf den Arbeiten
-von Monaghan \cite{monaghan_smoothed_2005}, von Price \cite{price_smoothed_2012} und von Koshier et al. \cite{koschier_smoothed_2020}.
+von Monaghan \cite{monaghan_smoothed_2005}, von Price \cite{price_smoothed_2012} und von Koschier et al. \cite{koschier_smoothed_2020}.
 Für eine beliebige skalare Variable A gilt die Identität
 \begin{equation}
     \label{equation:dirac_integral}
@@ -329,7 +331,7 @@ Diese Approximation hat eine Genauigkeit 0-ter Ordnung, wenn folgende Bedingung 
 \end{equation}
 Wird zusätzlich die Bedingung
 \begin{equation}
-    \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} (\textbf{x}_{f_f} - \textbf{x}_f) \otimes \nabla W_{ff_f} = \mathbb{1}
+    \sum_{f_f} \frac{m_{f_f}}{\rho_{f_f}} (\textbf{x}_{f_f} - \textbf{x}_f) \otimes \nabla W_{ff_f} = \mathbbm{1}
 \end{equation}
 erfüllt, hat sie eine Genauigkeit erster Ordnung.
 Ist $\textbf{A}$ höherdimensional, so können komplexere Differentialoperatoren wie folgt diskretisiert werden:
@@ -350,7 +352,7 @@ Zwei davon werden im nächsten Unterabschnitt gezeigt.
 
 
 \subsection{SPH in partikelbasierten Simulationen}
-Dieser Unterabschnitt basiert auf die Arbeit von Koshier et al. \cite{koschier_smoothed_2020}.
+Dieser Unterabschnitt basiert auf die Arbeit von Koschier et al. \cite{koschier_smoothed_2020}.
 Ziel einer partikelbasierten Simulation ist es, die Beschleunigungen zu bestimmen, die in der Navier-Stokes-Gleichung angegeben sind.
 Die Navier-Stokes-Gleichung für einen partikelbasierten Ansatz hat folgende Form:
 \begin{equation}
@@ -374,7 +376,7 @@ Für die Berechnung der Druckbeschleunigung $-\frac{1}{\rho_f} \nabla p_f$ wird 
 Wie der Druck berechnet werden kann, wird im nächsten Kapitel vorgestellt.
 Ist der Druck berechnet, ist es naheliegend, die normale SPH Diskretisierung für den Gradienten zu verwenden:
 \begin{equation}
-    -\frac{1}{\rho_f} \nabla p_f \approx -\frac{1}{\rho_f} \sum_{f_f} A_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \nabla W_{ff_f}
+    -\frac{1}{\rho_f} \nabla p_f \approx -\frac{1}{\rho_f} \sum_{f_f} p_{f_f} \frac{m_{f_f}}{\rho_{f_f}} \nabla W_{ff_f}
 \end{equation}
 Das Problem bei dieser Näherung ist jedoch, dass die daraus resultierende Beschleunigung nicht den Impuls und Drehimpuls der Flüssigkeit erhält,
 was zu einer instabilen Simulation führt.
@@ -421,7 +423,7 @@ Zudem wird der Impuls und Drehimpuls erhalten.
 \section{Zeitintegration}
 Sind in einer partikelbasierten Simulation die Beschleunigungen für den Druck, die Viskosität und die restlichen Beschleunigungen, wie z.B. die Gravitation berechnet,
 muss eine numerische Zeitintegration durchgeführt werden, um die Geschwindigkeiten und Positionen der Partikel zu aktualisieren.
-Häufig wird dazu das Euler-Cromer Verfahren genutzt. \cite{koschier_smoothed_2020}
+Nach Koschier et al. \cite{koschier_smoothed_2020} wird das Euler-Cromer Verfahren bei weitem am häufigsten genutzt.
 
 Die Position $\textbf{x}_f^{t + \Delta t}$ und Geschwindigkeit $\textbf{v}_f^{t + \Delta t}$ eines Partikels $f$ zum Zeitpunkt $t + \Delta t$ 
 wird hier aus der berechneten Beschleunigung $\textbf{a}_f^t$ zum Zeitpunkt $t$ wie folgt aktualisiert:
@@ -435,13 +437,15 @@ Die Wahl des Zeitschritts $\Delta t$ ist entscheidend für die Performanz und St
 Generell ist es gewollt, möglichst wenige Simulationsschritte berechnen zu müssen, damit die Simulation insgesamt schneller berechnet wird.
 Daher wird ein möglichst großer Zeitschritt $\Delta t$ gewählt.
 Ist der Zeitschritt jedoch zu groß gewählt, wird die numerische Integration ungenauer, was zu instabilen Simulationen führt, die zusammenbrechen.
-Um einen möglichst großen Zeitschritt zu wählen, der noch zu einer stabilen Simulation führt, kann sich an der CFL-Bedingung orientiert werden.
+Um einen möglichst großen Zeitschritt zu wählen, der noch zu einer stabilen Simulation führt,
+kann sich an der Courant–Friedrichs–Lewy-Bedingung (CFL-Bedingung) orientiert werden.
 Die CFL-Bedingung begrenzt den Zeitschritt $\Delta t$ abhängig eines Parameters $\lambda$, 
 der Partikelgröße $\hbar$, und der Geschwindigkeit des schnellsten Partikels $\textbf{v}^{max}$:
 \begin{equation}
     \Delta t \leq \lambda \frac{\hbar}{\|\textbf{v}^{max}\| }
 \end{equation}
-Die Idee dahinter ist, dass für z.B. $\lambda = 1$ sich die Partikel nicht weiter als eine Partikelgröße bewegen. \cite{koschier_smoothed_2020}
+Die Idee dahinter ist, dass für z.B. $\lambda = 1$ sich die Partikel nicht weiter als eine Partikelgröße bewegen.
+In der Literatur werden für $\lambda$ gewöhnlich Werte unter 1 gewählt, wie z.B. $\lambda \approx 0.4$.
 
 
 \section{Grundlegender Aufbau einer partikelbasierten Flüssigkeitssimulation}
@@ -472,12 +476,14 @@ Anschließend werden die Geschwindigkeit und Position jedes Partikels aktualisie
     \textbf{v}_f^{t + \Delta t} &= \textbf{v}_f^* + \Delta t \textbf{a}_f^p\\
     \textbf{x}_f^{t + \Delta t} &= \textbf{x}_f^t + \Delta t \textbf{v}_f^{t + \Delta t}
 \end{align}
+Mit diesen Schritten lässt sich ein Simulationsschritt berechnen.
 
 % \section{Nachbarschaftssuche}
 % \subsection{Uniformes Gitter}
 % \subsection{Weitere Methoden zur effizienteren Nachbarschaftssuche}
 % \section{Grenzbehandlung}
 \chapter{Druckberechnung}
+\label{chapter:pressure_computation}
 Dieses Kapitel behandelt die Druckberechnung in partikelbasierten Flüssigkeitssimulationen.
 Die Berechnung des Drucks ist Voraussetzung für die Bestimmung der Druckbeschleunigung, welche Teil der Navier-Stokes-Gleichung ist.
 Es werden zwei Methoden vorgestellt, um den Druck zu bestimmen:
@@ -500,7 +506,8 @@ Die Konstante $k$ ist eine Steifigkeitskonstante.
 In der Arbeit von Koschier et al. \cite{koschier_smoothed_2020} ist beschrieben, dass die Wahl von $k$ einen Einfluss auf die Dichteabweichung hat.
 Größere Werte für $k$ führen zu einer geringeren Dichteabweichung, jedoch muss ein kleinerer Zeitschritt gewählt werden, da die Simulation sonst instabil wird.
 Kleinere Werte für $k$ hingegen führen zu größeren Dichteabweichungen und damit auch zu weniger realistischen Simulationen.
-Anschaulich erklären lässt sich dies anhand eines Beispiels mit einer ruhenden Flüssigkeit, die unter dem Einfluss von Gravitation steht.
+Anschaulich erklären lässt sich dies anhand eines Beispiels aus der Arbeit von Koschier et al. \cite{koschier_smoothed_2020} mit einer ruhenden Flüssigkeit,
+die unter dem Einfluss von Gravitation steht.
 Da die Flüssigkeit ruht, gilt
 \begin{equation}
     \textbf{g} - \frac{1}{\rho_f}\nabla p_f = \textbf{0}
@@ -634,6 +641,8 @@ Der iterative Schritt in \eqref{equation:iterative_pressure_update} kann nun ber
     &\sum_{f_f} m_{f_f} \biggl(\sum_{f_f} \textbf{d}_{ff_f} p_{f_f} -
     \textbf{d}_{f_f f_f} p_{f_f} - \sum_{f_{f_f} \neq f} \textbf{d}_{f_f f_{f_f}} p_{f_{f_f}} \biggr) \nabla W_{ff_f}\Biggr)
 \end{align}
+Dieser Schritt wird solange berechnet, bis ein vorgegebener Dichtefehler unterschritten wird.
+Näheres dazu findet sich im Abschnitt \textit{\titleref{sec:pressure_computation}} im folgenden Kapitel.
 
 
 \chapter{Implementierung}
@@ -653,7 +662,8 @@ und OpenGL Mathematics (GLM) für mathematische Strukturen und Berechnungen.
 Neben den Flüssigkeitspartikeln gibt es in der Implementierung auch Grenzpartikel.
 In der Notation werden die Grenzpartiel mit dem Index $b$ und somit auch die Nachbarn eines Flüssigkeitspartikels $f$,
 welche zur Grenze gehören, mit dem Index $f_b$ identifiziert.
-Für die Grenzbehandlung wird der Ansatz aus \cite{koschier_smoothed_2020} verwendet, wo es mehrere Schichten von Grenzpartikel mit identischer Größe und Masse gibt.
+Für die Grenzbehandlung wird der Ansatz aus der Arbeit von Koschier et al. \cite{koschier_smoothed_2020} verwendet,
+wo es mehrere Schichten von Grenzpartikel mit identischer Größe und Masse gibt.
 
 Die Grenzpartikel sind fest an einem Ort und verhindern, dass die Flüssigkeit auseinanderfließt.
 Die Grenze besteht aus drei Schichten von Grenzpartikel.
@@ -827,12 +837,13 @@ Algorithmus \ref{alg:uniform_grid_neighborhood_search} zeigt, wie die Ermittlung
 \section{Berechnung der Dichte}
 Zur Implementierung der Dichteberechnung wird die normale SPH Approximation der Dichte benutzt:
 \begin{equation}
-    \rho_f = \sum_{f_i} m_{fi} W_{f f_i}
+    \rho_f = \sum_{f_j} m_{f_j} W_{f f_j}
 \end{equation}
-In der Implementierung ist die Masse aller Partikel identisch, daher kann die Masse der Nachbarpartikel $m_{fi}$ durch $m_f$ ersetzt werden
+Der Index $f_j$ beschreibt die Nachbarpartikel von $f$, einschließlich der Grenzpartikel.
+In der Implementierung ist die Masse aller Partikel identisch, daher kann die Masse der Nachbarpartikel $m_{f_j}$ durch $m_f$ ersetzt werden
 und stattdessen die Dichte wie folgt berechnet werden:
 \begin{equation}
-    \rho_f = m_f \sum_{f_i} W_{f f_i}
+    \rho_f = m_f \sum_{f_j} W_{f f_j}
 \end{equation}
 
 \begin{algorithm}
@@ -840,12 +851,13 @@ und stattdessen die Dichte wie folgt berechnet werden:
     \label{alg:density}
     \begin{algorithmic}
         \ForAll{fluid particle f}
-            \State $\rho_f \gets m_f \sum_{f_i} W_{f f_i}$
+            \State $\rho_f \gets m_f \sum_{f_j} W_{f f_j}$
         \EndFor
     \end{algorithmic}
 \end{algorithm}
 
 \section{Berechnung des Drucks}
+\label{sec:pressure_computation}
 Beim Start der Simulation kann ausgewählt werden, ob der Druck durch eine Zustandsgleichung oder durch IISPH berechnet wird.
 Daher gibt es für die Druckberechnung zwei verschiedene Implementierungen.
 
@@ -868,7 +880,7 @@ Die Implementierung durch einen Algorithmus ist trivial.
 Alternativ kann der Druck durch IISPH \cite{ihmsen_implicit_2014} berechnet werden.
 Dazu muss ein Gleichungssystem der Form $\textbf{A} \textbf{p} = \textbf{s}$ gelöst werden.
 Bevor das Gleichungssystem gelöst wird, werden die Diagonalwerte $A_{ff}$ der Matrix $A$ und die Komponenten $s_f$ des Lösungsvektors $\textbf{s}$ berechnet.
-Im Kapitel "`Druckberechnung"' wurde zur Bestimmung der Diagonalwerte folgende Gleichung aus \cite{ihmsen_implicit_2014} verwendet,
+Im Kapitel \textit{\titleref{chapter:pressure_computation}} wurde zur Bestimmung der Diagonalwerte folgende Gleichung aus \cite{ihmsen_implicit_2014} verwendet,
 die aus Notationsgründen modifiziert ist:
 \begin{equation}
     A_{ff} = \sum_{f_f} m_{f_f} \left(\textbf{d}_{ff} - \textbf{d}_{f_f f}\right)  \nabla W_{ff_f}
@@ -891,10 +903,9 @@ Da in der Implementierung die Massen der Partikel identisch sind, vereinfacht si
         &= - \Delta t^2 \frac{m_f^2}{\rho_f^2} \sum_{f_f} \left(\left(\sum_{f_f} \nabla W_{ff_f}\right) + \nabla W_{ff_f}\right) \nabla W_{ff_f}
 \end{align}
 Bezieht man die Partikel der Grenze mit ein, erhält man:
-\begin{align}
-    A_{ff} = - \Delta t^2 \frac{m_f^2}{\rho_f^2} \Biggl(&\sum_{f_f} \biggl(\Bigl(\sum_{f_f} \nabla W_{ff_f}\Bigr) + \nabla W_{ff_f}\biggr) \nabla W_{ff_f}+\\
-        &\sum_{f_b} \biggl(\Bigl(\sum_{f_b} \nabla W_{ff_b}\Bigr) + \nabla W_{ff_b}\biggr) \nabla W_{ff_b}\Biggr)
-\end{align}
+\begin{equation}
+    A_{ff} = - \Delta t^2 \frac{m_f^2}{\rho_f^2} \sum_{f_j} \left(\left(\sum_{f_j} \nabla W_{ff_j}\right) + \nabla W_{ff_j}\right) \nabla W_{ff_j}
+\end{equation}
 $s_f$ hat folgende Form:
 \begin{equation}
     s_f = \rho_f^0 - \rho_f^*
@@ -933,7 +944,8 @@ was zu unerwünschten Effekten führt, wie in \cite{ihmsen_implicit_2014} beschr
 
 Es wird ebenfalls der durchschnittliche Dichtefehler $\frac{1}{n} \sum_{f} \frac{(\textbf{A}\textbf{p})_f - s_f}{\rho_f^0}$ berechnet.
 In diese Summe werden nur die Partikel einbezogen, die aus der vorigen Berechnung einen positiven Druck besitzen, und nicht den Wert 0 zugewiesen bekommen haben.
-Ist dieser Fehler unter dem Wert von 0.001, so wird der letzte berechnete Wert des Druckes genommen, andernfalls wird weiter iteriert und ein neuer Druck berechnet.
+Ist dieser Fehler unter dem vorgegebenen maximal erlaubten durchschnittlichen Dichtefehler $\eta$,
+so wird der letzte berechnete Wert des Druckes genommen, andernfalls wird weiter iteriert und ein neuer Druck berechnet.
 Ihmsen et al. \cite{ihmsen_implicit_2014} empfiehlt, als Konvergenzkriterium für den durchschnittlichen Dichtefehler Werte von 0.1 \% oder geringer zu verwenden.
 Zudem sollten mindestens zwei Iterationen durchlaufen werden.
 
@@ -950,7 +962,7 @@ Algorithmus \ref{alg:pressure_iisph} zeigt die Implementierung der Druckberechnu
         \EndFor
          \State $e \gets \infty$
          \State $iterations \gets 0$
-         \While{$e \geq 0.001 \textbf{ or } iterations < 2$}
+         \While{$e \geq \eta \textbf{ or } iterations < 2$}
             \State $e \gets 0$
             \State $n \gets 0$
             \State Compute pressure accelerations $\textbf{a}_f^p$ using algorithm \ref{alg:pressure_acceleration}
@@ -1249,8 +1261,8 @@ Abhängig des Zeitschritts $\Delta t$ ergab sich damit eine unterschiedliche Anz
 Berechnet wurden die Simulation auf dem \textit{Intel~Core~i5-6600K} Prozessor mit vier Kernen und Taktfrequenz 4.00~GHz.
 
 Für die IISPH-Simulationen wurde ebenfalls die durchschnittliche Anzahl an Iterationen erfasst,
-die während der Druckberechnung benötigt werden, um einen Dichtefehler unter 0.01\% zu ereichen.
-Zudem wurde die Zeit gemessen, die für die Druckberechnung und für den Simulationsschritt jeweils benötigt wurde.
+die während der Druckberechnung benötigt werden, um einen Dichtefehler unter $0.1~\%$ zu ereichen.
+Zudem wurde die Zeit gemessen, die für die Druckberechnung und für den Simulationsschritt jeweils insgesamt benötigt wurde.
 Die Daten dazu sind in Tabelle \ref{table:iisph_performance_experiment1} dargestellt.
 
 \begin{table}[htb]
@@ -1289,7 +1301,7 @@ Insgesamt erreicht die IISPH-Simulation mit Zeitschritt $\Delta t = 0.04$ die be
 da die absolute Berechnungszeit für den Simulationsschritt hier mit 62.38 Sekunden am geringsten ist.
 
 Um die Performanz von IISPH mit SSPH vergleichen zu können, wurde auch eine vergleichbare SSPH-Simulation durchgeführt.
-Es wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^5$ gewählt, um den durchschnittlichen Dichtefehler zuverlässig im Bereich unter 0.01\% zu halten.
+Es wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^5$ gewählt, um den durchschnittlichen Dichtefehler zuverlässig im Bereich unter $0.1~\%$ zu halten.
 Wie im Abschnitt \textit{\titleref{sec:pressure_computation_state_equation}} beschrieben,
 besitzt die Steifigkeitskonstante $k$ einen Einfluss auf die Dichteabweichung.
 Größere Werte für $k$ ergeben geringere Dichtefehler und vice versa.
@@ -1298,7 +1310,7 @@ Die Wahl des Zeitschritts gestaltete sich schwierig, da es keine eindeutige Gren
 Für Zeitschritte $\Delta t \geq 0.019$ ist deutlich zu sehen, dass die Simulation instabil ist.
 In diesem Fall bewegen sich die Partikel mit sehr hoher Geschwindigkeit in alle Richtungen auseinander.
 Ebenfalls kann auch noch für Zeitschritte von etwa $0.011 \leq t < 0.019$ beobachtet werden, dass einzelne Partikel sich nicht sinnvoll verhalten,
-auch wenn die Durchschnittsdichte unter $0.01~\%$ liegt.
+auch wenn die Durchschnittsdichte unter $0.1~\%$ liegt.
 Daher wurde der Zeitschritt $\Delta t = 0.01$ als obere Grenze festgelegt, in der die Simulation noch stabil ist.
 Es ergab sich daraus insgesamt eine Berechnungszeit von 98.09 Sekunden für den Simulationsschritt.
 Die Druckberechnungszeit ist hier mit 0.241 Sekunden vernachlässigbar.
@@ -1306,7 +1318,7 @@ Die Druckberechnungszeit ist hier mit 0.241 Sekunden vernachlässigbar.
 Vergleicht man die Zeit von 98.09 Sekunden für die SSPH-Simulation mit der Berechnungszeit der performantesten IISPH-Simulation mit 62.38 Sekunden,
 so ist zu erkennnen, dass sich die Simulation mit IISPH insgesamt etwas schneller berechnen lässt.
 Ein weiterer Vorteil von IISPH gegenüber SSPH ist,
-dass für einen vorgegebenen maximalen Dichtefehler von $0.01 \%$ lediglich der Zeitschritt $\Delta t$ gewählt werden muss.
+dass für einen vorgegebenen maximalen Dichtefehler von $0.1~\%$ lediglich der Zeitschritt $\Delta t$ gewählt werden muss.
 Für $0.03 \leq \Delta t \leq 0.06$ ist die Performanz recht ähnlich.
 Bei SSPH muss zunächst anhand von vorherigen Simulationen der durchschnittliche Dichtefehler ermittelt werden,
 und abhängig davon wird die Steifigkeitskonstante $k$ gewählt.
@@ -1352,12 +1364,12 @@ Es wurde ebenfalls eine möglichst vergleichbare SSPH-Simulation durchgeführt.
 Hier wurde eine Steifigkeitskonstante von $k = 7 \cdot 10^6$ gewählt,
 damit die durchschnittliche Dichte unter $0.01 \%$ bleibt.
 Im Vergleich zur Simulation mit erlaubten Dichtefehler von $0.1 \%$ ist $k$ hier um den Faktor 10 größer.
-Die Steifigkeitskonstante und der Dichtefehler scheinen damit sich antiproportional zueinander zu verhalten.
+Die Steifigkeitskonstante und der Dichtefehler scheinen damit sich ungefähr antiproportional zueinander zu verhalten.
 Aus dieser Steifigkeitskonstante ergab sich damit ein maximaler Zeitschritt von $\Delta t = 0.004$.
 Auch hier war die Wahl dieses maximalen Zeitschritts nicht so einfach.
 Die Berechnungszeit für den Simulationsschritt betrug damit 244.73 Sekunden und 0.699 Sekunden für die Druckberechnung.
 
-Im Vergleich zur besten IISPH-Simulation ist die SSPH-Simulation somit etwas langsamer, wobei der Unterschied hier weniger stark ausfällt.
+Im Vergleich zur schnellsten IISPH-Simulation ist die SSPH-Simulation somit etwas langsamer, wobei der Unterschied hier weniger stark ausfällt.
 Der Vergleich der Berechnungsgeschwindigkeit ist jedoch etwas unpräzise,
 weil die Wahl des Zeitschritts bei SSPH schwierig ist und gleichzeitig einen großen Einfluss auf die Berechnungszeit hat.
 Auch hier ist bei IISPH die Wahl des Zeitschritts einfacher, weil der Einfluss des Zeitschritts auf die Geschwindigkeit der Berechnung weniger stark ausfällt.
@@ -1422,10 +1434,13 @@ die den gewünschten Dichtefehler unterschreitet und zusätzlich ist die Wahl de
 weil dieser möglichst groß sein muss für eine schnelle Berechnungszeit und gleichzeitig klein genug sein muss, damit die Simulation stabil bleibt.
 
 Die schnellere Berechnung für die SSPH-Simulation erscheint überraschend, weil dieses Szenario etwas komplexer gestaltet ist als die vorherigen.
-Nach Koshier et al. \cite{koschier_smoothed_2020} erzielen globale Druckberechnungsmethoden in komplexeren Szenarien,
+Nach Koschier et al. \cite{koschier_smoothed_2020} erzielen globale Druckberechnungsmethoden in komplexeren Szenarien,
 die sich vor allem durch eine höhere Säule an Partikel unter dem Einfluss von Gravitation auszeichnen,
 bessere Ergebnisse als Druckberechnungsmethoden durch Zustandsgleichungen.
 Dieses Verhalten konnte in den beschriebenen Simulationsszenarien nicht beobachtet werden.
+Gründe für diese Beobachtung könnten sein, dass die Simulation noch nicht komplex genug ist,
+um einen eindeutigen Performanzgewinn von IISPH im Vergleich zu SSPH zu beobachten.
+Auch könnten die Simulationen durch die geringere Geschwindigkeit der Partikel stabiler sein, weswegen der Zeitschreitt bei SSPH höher angesetzt wurde.
 
 
 \chapter{Fazit und Ausblick}
@@ -1445,7 +1460,7 @@ Wird der erlaubte Dichtefehler etwas niedriger gesetzt, so zeigt sich ein ähnli
 Hier muss bei IISPH ein geringerer Zeitschritt gewählt werden, damit die Druckberechnung nicht zu lange dauert, da die Anzahl an Iterationen bei größeren Zeitschritten zunimmt.
 Ebenso muss bei SSPH eine größere Steifigkeitskonstante $k$ gewählt werden, um den Dichtefehler zu verkleinern.
 Hier muss ebenso ein geringerer Zeitschritt gewählt werden, damit die Simulation bei größeren Werten für $k$ stabil bleibt.
-Im Dammleckszenario mit größerer Flüssigkeitssäule und mehr Partikeln dagegen war die Druckberechnung mit der Zustandsgleichung etwas schneller.
+Im Dammleckszenario mit höherer Flüssigkeitssäule und mehr Partikeln dagegen war die Druckberechnung mit der Zustandsgleichung etwas schneller.
 
 Berücksichtigt werden muss auch, dass bei IISPH für einen gegebenen erlaubten maximalen Dichtefehler lediglich der Zeitschritt gewählt werden muss.
 Dieser Zeitschritt kann großzügig gewählt werden, da für größere Zeitschritte zwar mehr Iterationen berechnet werden,
